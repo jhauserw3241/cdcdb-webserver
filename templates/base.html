@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+<link href='https://fonts.googleapis.com/css?family=Lato:400,700|Lora' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/static/style.css" />
+<link rel="icon" href="/static/favicon.ico" />
+<title>{{ app_name }} - {% block title %}{{ app_tagline }}{% endblock %}</title>
+{% endblock %}
+</head>
+<body>
+{% block header %}
+<div id='headerwrapper'>
+<div id='header' class='regwidth'>
+	<div id='title'>
+		<h1>{{ app_name }}</h1>
+		<h2>{{ app_tagline }}</h2>
+	</div>
+	<ul id='nav'>
+	<li><a href='/'>Home</a></li>
+	<li><a href='/'>Events</a></li>
+	<li><a href='/'>Officers</a></li>
+	{% if session.person_id %}
+	<!-- <li><a href='/people/{{ session.hashed_person_id }}'>Profile</a></li> -->
+	{% endif %}
+	{% if session.is_admin %}
+	<li><p>Officer</p>
+		<ul>
+		<li><a href='/'>People</a></li>
+		<li><a href='/'>Positions</a></li>
+		<li><a href='/'>VMs</a></li>
+		</ul>
+	</li>
+	{% endif %}
+	</ul>
+	<div id='user-box'>
+		{% if session.username is not defined %}
+			<a href='/login'>Login</a>
+		{% else %}
+			Hey, {{ session.username }}
+			<img id='header-user-img' src='https://robohash.org/{{ session.hashed_person_id }}?size=50x50'></img>
+			<a href='/logout'>Logout</a>
+		{% endif %}
+	</div>
+</div>
+</div>
+<div id='contentwrapper'>
+<div id='content' class='regwidth'>
+{% endblock %}
+{% block body %}
+{% endblock %}
+{% block footer %}
+</div>
+</div>
+<div id='footerwrapper'>
+<div id='footer' class='regwidth'>
+	GNU 560/2<br />
+	<a href=/test>Test</a> | <a href=/help>Help and About</a>
+</div>
+</div>
+{% endblock %}
+</body>

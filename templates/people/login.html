@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>{{ app_name }}</h1>
+{% if error is defined %}
+<h2 class='error'>{{ error }}</h2>
+{% endif %}
+<form action='/login/' method='POST'>
+<label for='username'>Username:</label>
+<input name='username' type='text' />
+<br/>
+<label for='password'>Password:</label>
+<input name='password' type='password' />
+<br/>
+<input type='submit' value='Login' />
+<a href='/register'>Or register</a>
+</form>
+{% endblock %}

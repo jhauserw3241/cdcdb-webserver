@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block title %}Test{% endblock %}
+{% block body %}
+<h1>Return code tests</h1>
+<table>
+{% for test in return_code_tests %}
+{% if test.good %}
+<tr style='color:green'>
+<td>✓</td>
+{% else %}
+<tr style='color:red'>
+<td>✗</td>
+{% endif %}
+<td>
+{{ test.code }}
+</td>
+<td>
+{{ test.url }}
+</td>
+<td>
+<a href='{{ test.url }}'>link</a>
+</td>
+</tr>
+{% endfor %}
+</table>
+<h1>Credential tests</h1>
+<table>
+{% for test in login_tests %}
+{% if test.good %}
+<tr style='color:green'>
+<td>✓</td>
+{% else %}
+<tr style='color:red'>
+<td>✗</td>
+{% endif %}
+<td>{{ test.username }}</td>
+<td>{{ test.password }}</td>
+<td>{{ "not " if not test.valid }}valid</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
