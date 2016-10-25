@@ -10,4 +10,26 @@
 <li>and cheap for them</li>
 <li><a href='https://www.youtube.com/watch?v=EM4u94NaEG8'>youtube</a></li>
 </ul>
+<table>
+<tr>
+	<th>Item</th>
+	<th>Serial</th>
+	<th>Make</th>
+	<th>Model</th>
+	<th>Manufacturer</th>
+	<th>Location</th>
+	<th>Notes</th>
+</tr>
+{% for item in items %}
+<tr>
+	<td>{{ item.name }}</td>
+	<td>{{ item.serial_number }}</td>
+	<td>{{ item.make }}</td>
+	<td>{{ item.model }}</td>
+	<td>{{ item.manufacturer }}</td>
+	<td>{{ item.location }}</td>
+	<td>{% if item.other_notes is not none %}{{ item.other_notes }}{% endif %}</td>
+</tr>
+{% endfor %}
+</table>
 {% endblock %}

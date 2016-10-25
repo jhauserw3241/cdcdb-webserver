@@ -18,5 +18,8 @@ class Inventory:
         if request.method == 'GET':
             if 'person_id' not in session:
                 abort(403)
-            return render_template('inventory/index.html')
+            with DatabaseConnection() as db:
+                inventory, _ = db.get_table("inventory")
+                db.select(inventory)
+            return render_template('inventory/index.html', items=db.fetchall())
         abort(405)

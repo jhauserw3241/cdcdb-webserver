@@ -1,10 +1,8 @@
-from bs4 import BeautifulSoup
 from hashids import Hashids
-from database_connection import DatabaseConnection
+from sqlalchemy import create_engine
 from datetime import datetime
 from datetime import timedelta
 import requests
-
 import configparser
 import binascii
 import hashlib
@@ -29,6 +27,7 @@ class globals:
         salt=config['b58']['salt'],
         min_length=int(config['b58']['min_length']))
     config = config
+    db_engine = create_engine('postgresql://webapp:imawebapp@localhost/ksucdc')
     def encode_id(thing):
         thing['id'] = globals.base58_hashids.encode(thing['id'])
         return thing
