@@ -23,7 +23,7 @@
 	{% if session.person_id %}
 	<!-- <li><a href='/people/{{ session.hashed_person_id }}'>Profile</a></li> -->
 	{% endif %}
-	{% if session.is_admin %}
+	{% if session.is_officer %}
 	<li><p>Officer</p>
 		<ul>
 		<li><a href='/'>People</a></li>
