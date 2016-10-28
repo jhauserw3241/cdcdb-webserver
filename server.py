@@ -39,8 +39,7 @@ def index():
 def help_():
     if request.method == 'GET':
         return help.index(request, session)
-    else:
-        abort(405)
+    else: abort(405)
 
 @app.route('/login/', methods=['GET', 'POST'])
 def people_login():
@@ -53,8 +52,7 @@ def people_login():
 def people_logout():
     if request.method == 'GET':
         return people.logout(request, session)
-    else:
-        abort(405)
+    else: abort(405)
 
 @app.route('/register/', methods=['GET', 'POST'])
 def people_register():
@@ -67,15 +65,14 @@ def people_register():
 def inventory_():
     if request.method == 'GET':
         return inventory.index(request, session)
-    else:
-        abort(405)
+    else: abort(405)
+
 
 @app.route('/test', methods=['GET'])
 def test_():
     if request.method == 'GET':
         return test.do(request, session)
-    else:
-        abort(405)
+    else: abort(405)
 
 if __name__=='__main__':
     app.debug = True

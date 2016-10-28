@@ -24,11 +24,13 @@ class DatabaseConnection:
         if not self.last_result:
             raise Exception("Can't fetch without selecting first")
         return self.last_result.fetchone()
+
     def fetchall(self):
         if not self.last_result:
             raise Exception("Can't fetch without selecting first")
         for row in self.last_result.fetchall():
             yield row
+
     def get_table(self, table_name):
         meta = MetaData()
         table = Table(table_name, meta, autoload=True, autoload_with=self.engine)

@@ -28,24 +28,29 @@ class globals:
         min_length=int(config['b58']['min_length']))
     config = config
     db_engine = create_engine('postgresql://webapp:imawebapp@localhost/ksucdc')
+
     def encode_id(thing):
         thing['id'] = globals.base58_hashids.encode(thing['id'])
         return thing
+
     def decode_id(thing):
         thing['id'] = globals.base58_hashids.decode(thing['id'])
         return thing
+
     def hash_password(plain_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
         salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
         hash = binascii.hexlify(hash)
         return hash
+
     def check_password(plain_text, cipher_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
         salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
         hash = binascii.hexlify(hash)
         return hash == cipher_text
+
     def sqltimestamp_to_relative(timestamp):
         now = datetime.utcnow()
         timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
