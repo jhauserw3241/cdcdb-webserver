@@ -48,10 +48,8 @@ class Inventory:
 
     def index(self, request, session):
         if request.method == 'GET':
-            if 'person_id' not in session:
-                abort(403)
-            with DatabaseConnection() as db:
-                inventory, _ = db.get_table("inventory")
-                db.select(inventory)
-            return render_template('inventory/index.html', items=db.fetchall())
+            if not self.__can_index(session): abort(403)
+            items = self.__db_get_inventory()
+            return render_template('inventory/index.html', items=items)
+        abort(405)
         abort(405)
