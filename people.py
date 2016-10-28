@@ -27,14 +27,38 @@ class People:
             else:
                 return redirect(url_for('index'))
         elif request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
-            if username == "test" and password == "test":
-                session['username'] = "test"
+            u = request.form['username']
+            p = request.form['password']
+            if u == "root" and p == "root":
+                session['username'] = u
                 session['person_id'] = 1
                 session['hashed_person_id'] = self.b58.encode(session['person_id'])
                 session['is_admin'] = True if True else False
                 session['is_officer'] = True if True else False
+                session['is_student'] = True if True else False
+                return redirect(url_for('index'))
+            elif u == "admin" and p == "admin":
+                session['username'] = u
+                session['person_id'] = 2
+                session['hashed_person_id'] = self.b58.encode(session['person_id'])
+                session['is_admin'] = True if True else False
+                session['is_officer'] = False if True else False
+                session['is_student'] = True if True else False
+                return redirect(url_for('index'))
+            elif u == "officer" and p == "officer":
+                session['username'] = u
+                session['person_id'] = 3
+                session['hashed_person_id'] = self.b58.encode(session['person_id'])
+                session['is_admin'] = False if True else False
+                session['is_officer'] = True if True else False
+                session['is_student'] = True if True else False
+                return redirect(url_for('index'))
+            elif u == "student" and p == "student":
+                session['username'] = u
+                session['person_id'] = 4
+                session['hashed_person_id'] = self.b58.encode(session['person_id'])
+                session['is_admin'] = False if True else False
+                session['is_officer'] = False if True else False
                 session['is_student'] = True if True else False
                 return redirect(url_for('index'))
         abort(405)
