@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Inventory - {{ item.name }}{% endblock %}
+{% block body %}
+<h1><a href='/inventory/'>Inventory</a></h1>
+<h2>{{ item.name }}</h2>
+<form action='' method='POST'>
+<table>
+<tr>
+	<td>Name</td>
+	<td><input type='text' name='name' value='{{ item.name }}'></input></td>
+</tr>
+<tr>
+	<td>Serial Number</td>
+	<td><input type='text' name='serial_number' value='{{ item.serial_number }}'></input></td>
+</tr>
+<tr>
+	<td>Make</td>
+	<td><input type='text' name='make' value='{{ item.make }}'></input></td>
+</tr>
+<tr>
+	<td>Model</td>
+	<td><input type='text' name='model' value='{{ item.model }}'></input></td>
+</tr>
+<tr>
+	<td>Manufacturer</td>
+	<td><input type='text' name='manufacturer' value='{{ item.manufacturer }}'></input></td>
+</tr>
+<tr>
+	<td>Location</td>
+	<td><input type='text' name='location' value='{{ item.location }}'></input></td>
+</tr>
+<tr>
+	<td>Notes</td>
+	<td><textarea name='other_notes'>{% if item.other_notes is not none() %}
+	{{ item.other_notes }}{% endif %}</textarea></td>
+</tr>
+<tr>
+	<td><input type='submit' name='update' value='Update'></input></td>
+	<td></td>
+</tr>
+</table>
+</form>
+{% endblock %}

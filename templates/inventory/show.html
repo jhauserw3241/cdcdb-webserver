@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Inventory - {{ item.name }}{% endblock %}
+{% block body %}
+<h1><a href='/inventory/'>Inventory</a></h1>
+<h2>{{ item.name }}</h2>
+<p><a href='/inventory/{{ item.id }}/edit'>Edit</a></p>
+<p>
+Serial Number: {{ item.serial_number }}<br/>
+Make: {{ item.make }}<br/>
+Model: {{ item.model }}<br/>
+Manufacturer: {{ item.manufacturer }}<br/>
+</p>
+<h3>Location</h3>
+<p>{{ item.location }}<p>
+<h3>Notes</h3>
+<p>{% if item.other_notes is not none %}{{ item.other_notes }}{% endif %}</p>
+{% endblock %}

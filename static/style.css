@@ -140,6 +140,14 @@ table th:not(:last-of-type) {
 input#done {
 	margin: 0 auto 50px 100px;
 }
+table#inventory-table {
+	margin:40px auto 40px auto;
+}
+table#inventory-table td {
+	max-width: 100px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 :root {
 --color-background-1: #D3F1C8;

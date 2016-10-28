@@ -52,4 +52,30 @@ class Inventory:
             items = self.__db_get_inventory()
             return render_template('inventory/index.html', items=items)
         abort(405)
+
+    def show(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_show(session): abort(403)
+            item = self.__db_get_item(id)
+            if not item:
+                abort(404)
+            return render_template('inventory/show.html', item=item)
+        abort(405)
+
+    def edit(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_edit(session): abort(403)
+            item = self.__db_get_item(id)
+            if not item: abort(404)
+            return render_template('inventory/edit.html', item=item)
+        abort(405)
+
+    def update(self, request, session, id):
+        if request.method == 'POST':
+            if not self.__can_update(session): abort(403)
+            item = self.__db_get_item(id)
+            if not item: abort(404)
+            print(dict(request.form))
+            print(dict(request.args))
+            return str(dict(request.form))
         abort(405)

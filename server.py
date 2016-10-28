@@ -21,7 +21,9 @@ people = People()
 inventory = Inventory()
 
 config = globals.config
-b58 = globals.base58_hashids
+
+def decode_id(id):
+    return globals.base58_hashids.decode(id)
 
 # here all the valid routes are defined, as well as the valid verbs
 # for each
@@ -67,6 +69,23 @@ def inventory_():
         return inventory.index(request, session)
     else: abort(405)
 
+@app.route('/inventory/<id>', methods=['GET'])
+def inventory_id(id):
+    id = decode_id(id)
+    if not id: abort(404)
+    if request.method == 'GET':
+        return inventory.show(request, session, id)
+    else: abort(405)
+
+@app.route('/inventory/<id>/edit', methods=['GET','POST'])
+def inventory_id_edit(id):
+    id = decode_id(id)
+    if not id: abort(404)
+    if request.method == 'GET':
+        return inventory.edit(request, session, id)
+    if request.method == 'POST':
+        return inventory.update(request, session, id)
+    else: abort(405)
 
 @app.route('/test', methods=['GET'])
 def test_():
