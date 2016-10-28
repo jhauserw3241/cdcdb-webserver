@@ -13,13 +13,21 @@ class DatabaseConnection:
         self.last_result = None
         return self
     def __exit__(self, type, value, traceback):
-        pass
-    def select(self, table):
         if self.last_result:
             self.last_result.close()
             self.last_result = None
-        s = select([table])
+        self.conn.close()
+        self.conn = None
+
+    def select(self, columns=None, whereclause=None, from_obj=None,
+        distinct=False, having=None, correlate=True, prefixes=None,
+        suffixes=None, **kwargs):
+        if self.last_result:
+            self.last_result.close()
+            self.last_result = None
+        s = select(columns, whereclause)
         self.last_result = self.conn.execute(s)
+
     def fetchone(self):
         if not self.last_result:
             raise Exception("Can't fetch without selecting first")
