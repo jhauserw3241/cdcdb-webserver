@@ -59,7 +59,8 @@ class Inventory:
             item = self.__db_get_item(id)
             if not item:
                 abort(404)
-            return render_template('inventory/show.html', item=item)
+            return render_template('inventory/show.html', item=item,
+            can_edit=self.__can_edit(session))
         abort(405)
 
     def edit(self, request, session, id):

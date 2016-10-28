@@ -3,7 +3,9 @@
 {% block body %}
 <h1><a href='/inventory/'>Inventory</a></h1>
 <h2>{{ item.name }}</h2>
+{% if can_edit %}
 <p><a href='/inventory/{{ item.id }}/edit'>Edit</a></p>
+{% endif %}
 <p>
 Serial Number: {{ item.serial_number }}<br/>
 Make: {{ item.make }}<br/>
