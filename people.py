@@ -21,16 +21,12 @@ class People:
         self.hash_password = globals.hash_password
         self.encode_id = globals.encode_id
 
-    def __db_get_table(self, db, table):
-        t, md  = db.get_table(table)
-        return t, md
-
     def __db_get_people(self):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = self.__db_get_table(db, "persons")
-            studs, studs_md = self.__db_get_table(db, "students")
-            pos, pos_md = self.__db_get_table(db, "positions")
+            ppl, ppl_md = db.get_table("persons")
+            studs, studs_md = db.get_table("students")
+            pos, pos_md = db.get_table("positions")
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
@@ -48,9 +44,9 @@ class People:
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = self.__db_get_table(db, "persons")
-            studs, studs_md = self.__db_get_table(db, "students")
-            pos, pos_md = self.__db_get_table(db, "positions")
+            ppl, ppl_md = db.get_table("persons")
+            studs, studs_md = db.get_table("students")
+            pos, pos_md = db.get_table("positions")
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
                 add_columns(ppl.c.company, ppl.c.email).\

@@ -15,13 +15,9 @@ class Inventory:
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
-    def __db_get_table(self, db):
-        i, _ = db.get_table("inventory")
-        return i
-
     def __db_get_inventory(self):
         with DatabaseConnection() as db:
-            inv = self.__db_get_table(db)
+            inv, inv_md = db.get_table("inventory")
             q = db.query().\
                 add_columns(
                     inv.c.id, inv.c.name, inv.c.serial_number, inv.c.make,
@@ -32,7 +28,7 @@ class Inventory:
 
     def __db_get_item(self, id):
         with DatabaseConnection() as db:
-            inv = self.__db_get_table(db)
+            inv, inv_md = db.get_table("inventory")
             q = db.query().\
                 add_columns(
                     inv.c.id, inv.c.name, inv.c.serial_number, inv.c.make,
