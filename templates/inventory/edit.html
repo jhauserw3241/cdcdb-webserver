@@ -31,8 +31,7 @@
 </tr>
 <tr>
 	<td>Notes</td>
-	<td><textarea name='other_notes'>{% if item.inventory_other_notes is not none() %}
-	{{ item.inventory_other_notes }}{% endif %}</textarea></td>
+	<td><textarea name='other_notes'>{% if item.inventory_other_notes is not none() %}{{ item.inventory_other_notes }}{% endif %}</textarea></td>
 </tr>
 <tr>
 	<td><input type='submit' name='update' value='Update'></input></td>
