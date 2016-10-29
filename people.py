@@ -22,30 +22,49 @@ class People:
         self.encode_id = globals.encode_id
 
     def __db_get_table(self, db, table):
-        i, _ = db.get_table(table)
-        return i
+        t, md  = db.get_table(table)
+        return t, md
 
     def __db_get_people(self):
         with DatabaseConnection() as db:
-            ppl = self.__db_get_table(db, "persons")
-            studs = self.__db_get_table(db, "students")
-            pos = self.__db_get_table(db, "positions")
-            stmt = db.select([ ppl.c.id, ppl.c.first_name, ppl.c.last_name,
-                ppl.c.email, ppl.c.company, studs.c.year, studs.c.major ])
-            stmt = db.join(stmt, ppl, studs, ppl.c.id == studs.c.id, True)
-            db.execute(stmt)
-            return [ self.encode_id(dict(row)) for row in db.fetchall() ]
+            current_year = globals.current_datetime("%Y")
+            ppl, ppl_md = self.__db_get_table(db, "persons")
+            studs, studs_md = self.__db_get_table(db, "students")
+            pos, pos_md = self.__db_get_table(db, "positions")
+            q = db.query().\
+                add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
+                add_columns(ppl.c.company, ppl.c.email).\
+                add_columns(studs.c.major, studs.c.year).\
+                add_columns(pos.c.title).\
+                outerjoin(studs, studs.c.id == ppl.c.id).\
+                outerjoin(pos,
+                    (pos.c.person_id == ppl.c.id) &
+                    (pos.c.year == current_year)
+                )
+            db.execute(q)
+            return [ self.encode_id(dict(row), 'persons_id') for row in
+                db.fetchall() ]
 
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
-            ppl = self.__db_get_table(db, "persons")
-            studs = self.__db_get_table(db, "students")
-            stmt = db.select([ ppl.c.id, ppl.c.first_name, ppl.c.last_name,
-                ppl.c.email, studs.c.year, studs.c.major ],
-                ppl.c.id == id)
-            stmt = db.join(stmt, ppl, studs, ppl.c.id == studs.c.id, True)
-            db.execute(stmt)
-            rows = [ self.encode_id(dict(row)) for row in db.fetchall() ]
+            current_year = globals.current_datetime("%Y")
+            ppl, ppl_md = self.__db_get_table(db, "persons")
+            studs, studs_md = self.__db_get_table(db, "students")
+            pos, pos_md = self.__db_get_table(db, "positions")
+            q = db.query().\
+                add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
+                add_columns(ppl.c.company, ppl.c.email).\
+                add_columns(studs.c.major, studs.c.year).\
+                add_columns(pos.c.title).\
+                outerjoin(studs, studs.c.id == ppl.c.id).\
+                outerjoin(pos,
+                    (pos.c.person_id == ppl.c.id) &
+                    (pos.c.year == current_year)
+                ).\
+                filter(ppl.c.id == id)
+            db.execute(q)
+            rows = [ self.encode_id(dict(row), 'persons_id') for row in
+                db.fetchall() ]
             if len(rows) != 1:
                 return None
             return rows[0]

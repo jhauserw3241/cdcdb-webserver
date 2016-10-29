@@ -1,4 +1,5 @@
 from sqlalchemy import select, join
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, Table
 from globals import globals
 # manages a connection to a database
@@ -9,33 +10,33 @@ from globals import globals
 class DatabaseConnection:
     def __enter__(self):
         self.engine = globals.db_engine
-        self.conn = self.engine.connect()
+        self.Session = sessionmaker(bind=self.engine)
+        self.sess = self.Session()
         self.last_result = None
         return self
     def __exit__(self, type, value, traceback):
         if self.last_result:
             self.last_result.close()
             self.last_result = None
-        self.conn.close()
-        self.conn = None
+        self.sess.close()
+        self.sess = None
 
     def execute(self, statement):
         if self.last_result:
             self.last_result.close()
             self.last_result = None
-        self.last_result = self.conn.execute(statement)
+        self.last_result = self.sess.execute(statement)
+
+    def query(self, *entities, **kwargs):
+        return self.sess.query(*entities, **kwargs)
 
     def select(self, columns=None, whereclause=None, from_obj=None,
         distinct=False, having=None, correlate=True, prefixes=None,
         suffixes=None, **kwargs):
         return select(columns, whereclause, **kwargs)
 
-    def join(self, stmt, left, right, onclause=None, isouter=None):
-        j = left.join(right, onclause, isouter)
-        return stmt.select_from(j)
-
-    #def join(self, stmt, right, onclause=None, isouter=None):
-    #    return stmt.join(right, onclause, isouter)
+    def join(self, left, right, onclause=None, isouter=None):
+        return left.join(right, onclause, isouter)
 
     def fetchone(self):
         if not self.last_result:
@@ -49,6 +50,6 @@ class DatabaseConnection:
             yield row
 
     def get_table(self, table_name):
-        meta = MetaData()
+        meta = MetaData(self.engine)
         table = Table(table_name, meta, autoload=True, autoload_with=self.engine)
         return table, meta

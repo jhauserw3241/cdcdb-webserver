@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}{{ person.first_name }} {{ person.last_name }}{% endblock %}
+{% block title %}{{ person.persons_first_name }} {{ person.persons_last_name }}{% endblock %}
 {% block body %}
 <h1><a href='/people'>People</a></h1>
-<h2>{{ person.first_name }} {{ person.last_name }}</h2>
+<h2>{{ person.persons_first_name }} {{ person.persons_last_name }}</h2>
 <p>
-Email: {{ person.email }}<br/>
-{% if person.company is not none() %}Company: {{ person.company }}<br />{% endif %}
+Email: {{ person.persons_email }}<br/>
+{% if person.persons_company is not none() %}Company: {{ person.persons_company }}<br />{% endif %}
 </p>
-{% if person.year is not none() or person.major is not none() %}
+{% if person.students_year is not none() or person.students_major is not none() %}
 <p>
-Year: {{ person.year }}<br/>
-Major: {{ person.major }}<br/>
+Year: {{ person.students_year }}<br/>
+Major: {{ person.students_major }}<br/>
 </p>
 {% endif %}
 {% endblock %}
