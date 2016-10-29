@@ -86,3 +86,9 @@ class globals:
         else:
             value = "a long time"
         return value + " ago"
+
+    def current_datetime(frmt="%x %X", utc=False):
+        if utc:
+            return datetime.utcnow().strftime(frmt)
+        else:
+            return datetime.now().strftime(frmt)
