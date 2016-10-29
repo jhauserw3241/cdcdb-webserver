@@ -29,8 +29,9 @@ class globals:
     config = config
     db_engine = create_engine('postgresql://webapp:imawebapp@localhost/ksucdc')
 
-    def encode_id(thing):
-        thing['id'] = globals.base58_hashids.encode(thing['id'])
+    def encode_id(thing, column=None):
+        if column == None: column='id'
+        thing[column] = globals.base58_hashids.encode(thing[column])
         return thing
 
     def decode_id(thing):

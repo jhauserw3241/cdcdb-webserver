@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, join
 from sqlalchemy import MetaData, Table
 from globals import globals
 # manages a connection to a database
@@ -19,14 +19,23 @@ class DatabaseConnection:
         self.conn.close()
         self.conn = None
 
-    def select(self, columns=None, whereclause=None, from_obj=None,
-        distinct=False, having=None, correlate=True, prefixes=None,
-        suffixes=None, **kwargs):
+    def execute(self, statement):
         if self.last_result:
             self.last_result.close()
             self.last_result = None
-        s = select(columns, whereclause)
-        self.last_result = self.conn.execute(s)
+        self.last_result = self.conn.execute(statement)
+
+    def select(self, columns=None, whereclause=None, from_obj=None,
+        distinct=False, having=None, correlate=True, prefixes=None,
+        suffixes=None, **kwargs):
+        return select(columns, whereclause, **kwargs)
+
+    def join(self, stmt, left, right, onclause=None, isouter=None):
+        j = left.join(right, onclause, isouter)
+        return stmt.select_from(j)
+
+    #def join(self, stmt, right, onclause=None, isouter=None):
+    #    return stmt.join(right, onclause, isouter)
 
     def fetchone(self):
         if not self.last_result:

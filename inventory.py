@@ -22,13 +22,15 @@ class Inventory:
     def __db_get_inventory(self):
         with DatabaseConnection() as db:
             inv = self.__db_get_table(db)
-            db.select([inv])
+            stmt = db.select([inv])
+            db.execute(stmt)
             return [ self.encode_id(dict(row)) for row in db.fetchall() ]
 
     def __db_get_item(self, id):
         with DatabaseConnection() as db:
             inv = self.__db_get_table(db)
-            db.select([inv], inv.c.id == id)
+            stmt = db.select([inv], inv.c.id == id)
+            db.execute(stmt)
             rows = [ self.encode_id(dict(row)) for row in db.fetchall() ]
             if len(rows) != 1:
                 return None

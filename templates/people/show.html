@@ -1,82 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}{{ user.username }}{% endblock %}
+{% block title %}{{ person.first_name }} {{ person.last_name }}{% endblock %}
 {% block body %}
-<div id='user-info'>
-<img src='https://robohash.org/{{ user.hashed_id }}?size=50x50' />
-<h1>{{ user.username }}</h1><br />
-<strong>{{ user.listen_count }} listens</strong><br />
-{{ user.artist_count }} artist{% if user.artist_count != 1 %}s{% endif %},
-{{ user.song_count }} song{% if user.song_count != 0 %}s{% endif %}<br />
-{% if session and session.user_id != user.id %}
-<a href='#' onclick='addFriend("/users/{{ session.hashed_user_id }}/friends/", "{{ user.hashed_id }}");'>
-{% if not is_friend %}Add{% else %}Remove{% endif %} as friend</a>
+<h1><a href='/people'>People</a></h1>
+<h2>{{ person.first_name }} {{ person.last_name }}</h2>
+<p>
+Email: {{ person.email }}<br/>
+{% if person.company is not none() %}Company: {{ person.company }}<br />{% endif %}
+</p>
+{% if person.year is not none() or person.major is not none() %}
+<p>
+Year: {{ person.year }}<br/>
+Major: {{ person.major }}<br/>
+</p>
 {% endif %}
-</div>
-<div id='quick-playlists'>
-<h1>Quick Playlists</h1>
-<ul>
-<li><a href='/users/{{ user.hashed_id }}/playlists/last-week'>Last week</a></li>
-<li><a href='/users/{{ user.hashed_id }}/playlists/last-30-days'>Last 30 days</a></li>
-<li><a href='/users/{{ user.hashed_id }}/playlists/last-6-months'>Last 6 months</a></li>
-<li><a href='/users/{{ user.hashed_id }}/playlists/top-artists'>Top artists</a></li>
-{% if session and session.user_id == user.id %}
-<li>or <a href='/users/{{ user.hashed_id }}/playlists'>build a custom playlist</a></li>
-{% endif %}
-</ul>
-</div>
-{% if friends %}
-<div id='friends'>
-<h1>Friends</h1>
-<ul id='friends-list'>
-{% for friend in friends %}
-<li style='list-style-image:url(https://robohash.org/{{ friend.hashed_id }}?size=20x20);'>
-<a href='/users/{{ friend.hashed_id }}'>{{ friend.username }}</a>
-</li>
-{% endfor %}
-</ul>
-</div>
-{% endif %}
-<div id='user-top-artists'>
-{% if user.top_artists %}
-<h1>Top Artists</h1>
-<table>
-{% for artist in user.top_artists %}
-<tr>
-<td><a href='/artists/{{ artist.artist_id }}'>{{ artist.artist_name }}</a></td>
-<td>{{ artist.play_count }} play{% if artist.play_count != 1 %}s{% endif %}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
-</div>
-<div id='user-top-songs'>
-{% if user.top_songs %}
-<h1>Top Songs</h1>
-<table>
-{% for song in user.top_songs %}
-<tr>
-<td class='song-name'><a href='/songs/{{ song.song_id }}'>{{ song.song_name }}</a></td>
-<td>by <a href='/artists/{{ song.artist_id }}'>{{ song.artist_name }}</a></td>
-<td>{{ song.play_count }} play{% if song.play_count != 1 %}s{% endif %}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
-</div>
-<div id='listens'>
-{% if listens %}
-<h1>Recent Listens</h1>
-<table id='profile-listens'>
-{% for listen in listens %}
-<tr>
-<td class='song-name'><a href='/songs/{{ listen.song_id }}'>{{ listen.song_name }}</a></td>
-<td>by <a href='/artists/{{ listen.artist_id }}'>{{ listen.artist_name }}</a></td>
-<td>{{ listen.play_count }} play{% if listen.play_count != 1 %}s{% endif %}</td>
-<td>Last listened {{ listen.time }}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
-</div>
-<script src='/static/users.js'></script>
 {% endblock %}
