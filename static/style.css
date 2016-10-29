@@ -148,8 +148,9 @@ table#inventory-table td {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-table#inventory-table td:last-of-type {
-	max-width: 200px;
+table#inventory-table td.serial ,
+table#inventory-table td.notes {
+	max-width: 250px;
 }
 
 :root {
