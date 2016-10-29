@@ -30,14 +30,6 @@ class DatabaseConnection:
     def query(self, *entities, **kwargs):
         return self.sess.query(*entities, **kwargs)
 
-    def select(self, columns=None, whereclause=None, from_obj=None,
-        distinct=False, having=None, correlate=True, prefixes=None,
-        suffixes=None, **kwargs):
-        return select(columns, whereclause, **kwargs)
-
-    def join(self, left, right, onclause=None, isouter=None):
-        return left.join(right, onclause, isouter)
-
     def fetchone(self):
         if not self.last_result:
             raise Exception("Can't fetch without selecting first")

@@ -14,13 +14,13 @@
 </tr>
 {% for item in items %}
 <tr>
-	<td><a href='/inventory/{{ item.id }}'>{{ item.name }}</a></td>
-	<td>{{ item.serial_number }}</td>
-	<td>{{ item.make }}</td>
-	<td>{{ item.model }}</td>
-	<td>{{ item.manufacturer }}</td>
-	<td>{{ item.location }}</td>
-	<td>{% if item.other_notes is not none %}{{ item.other_notes }}{% endif %}</td>
+	<td><a href='/inventory/{{ item.inventory_id }}'>{{ item.inventory_name }}</a></td>
+	<td>{{ item.inventory_serial_number }}</td>
+	<td>{{ item.inventory_make }}</td>
+	<td>{{ item.inventory_model }}</td>
+	<td>{{ item.inventory_manufacturer }}</td>
+	<td>{{ item.inventory_location }}</td>
+	<td>{% if item.inventory_other_notes is not none %}{{ item.inventory_other_notes }}{% endif %}</td>
 </tr>
 {% endfor %}
 </table>
