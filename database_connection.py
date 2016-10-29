@@ -1,4 +1,3 @@
-from sqlalchemy import select, join
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, Table
 from globals import globals
@@ -29,6 +28,9 @@ class DatabaseConnection:
 
     def query(self, *entities, **kwargs):
         return self.sess.query(*entities, **kwargs)
+
+    def commit(self):
+        self.sess.commit()
 
     def fetchone(self):
         if not self.last_result:
