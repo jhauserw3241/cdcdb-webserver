@@ -21,7 +21,7 @@ class People:
         self.hash_password = globals.hash_password
         self.encode_id = globals.encode_id
 
-    def __db_get_people(self):
+    def __db_get_people(self, limit):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
             ppl, ppl_md = db.get_table("persons")
@@ -31,12 +31,19 @@ class People:
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
                 add_columns(studs.c.major, studs.c.year).\
-                add_columns(pos.c.title).\
-                outerjoin(studs, studs.c.id == ppl.c.id).\
-                outerjoin(pos,
-                    (pos.c.person_id == ppl.c.id) &
-                    (pos.c.year == current_year)
-                )
+                add_columns(pos.c.title)
+            if limit == 'officers':
+                q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
+                    join(pos,
+                        (pos.c.person_id == ppl.c.id) &
+                        (pos.c.year == current_year)
+                    )
+            else:
+                q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
+                    outerjoin(pos,
+                        (pos.c.person_id == ppl.c.id) &
+                        (pos.c.year == current_year)
+                    )
             db.execute(q)
             return [ self.encode_id(dict(row), 'persons_id') for row in
                 db.fetchall() ]
@@ -65,8 +72,11 @@ class People:
                 return None
             return rows[0]
 
-    def __can_index(self, session):
-        return 'is_student' in session and session['is_student']
+    def __can_index(self, session, limit):
+        if limit == 'officers':
+            return True
+        else:
+            return 'is_officer' in session and session['is_officer']
 
     def __can_show(self, session):
         return 'is_student' in session and session['is_student']
@@ -128,8 +138,12 @@ class People:
 
     def index(self, request, session):
         if request.method == 'GET':
-            if not self.__can_index(session): abort(403)
-            ppl = self.__db_get_people()
+            if request.args and request.args['limit']:
+                limit = request.args['limit']
+            else:
+                limit = None
+            if not self.__can_index(session, limit): abort(403)
+            ppl = self.__db_get_people(limit)
             return render_template('people/index.html', people=ppl)
         abort(405)
 
