@@ -23,7 +23,9 @@ inventory = Inventory()
 config = globals.config
 
 def decode_id(id):
-    return globals.base58_hashids.decode(id)
+    id = globals.base58_hashids.decode(id)
+    if not id: return None
+    return id[0]
 
 # here all the valid routes are defined, as well as the valid verbs
 # for each
