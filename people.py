@@ -24,9 +24,9 @@ class People:
     def __db_get_people(self, limit):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = db.get_table("persons")
+            ppl, ppl_md = db.get_table("people")
             studs, studs_md = db.get_table("students")
-            pos, pos_md = db.get_table("positions")
+            pos, pos_md = db.get_table("position")
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
@@ -41,11 +41,11 @@ class People:
             else:
                 q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
                     outerjoin(pos,
-                        (pos.c.person_id == ppl.c.id) &
+                        (pos.c.id == ppl.c.id) &
                         (pos.c.year == current_year)
                     )
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'persons_id') for row in
+            rows = [ self.encode_id(dict(row), 'people_id') for row in
                 db.fetchall() ]
             rows = [ globals.decode_year(r, 'students_year') for r in rows ]
             rows = [ globals.decode_major(r, 'students_major') for r in rows ]
@@ -54,9 +54,9 @@ class People:
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = db.get_table("persons")
+            ppl, ppl_md = db.get_table("people")
             studs, studs_md = db.get_table("students")
-            pos, pos_md = db.get_table("positions")
+            pos, pos_md = db.get_table("position")
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
@@ -64,12 +64,12 @@ class People:
                 add_columns(pos.c.title).\
                 outerjoin(studs, studs.c.id == ppl.c.id).\
                 outerjoin(pos,
-                    (pos.c.person_id == ppl.c.id) &
+                    (pos.c.id == ppl.c.id) &
                     (pos.c.year == current_year)
                 ).\
                 filter(ppl.c.id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'persons_id') for row in
+            rows = [ self.encode_id(dict(row), 'people_id') for row in
                 db.fetchall() ]
             rows = [ globals.decode_year(r, 'students_year') for r in rows ]
             rows = [ globals.decode_major(r, 'students_major') for r in rows ]

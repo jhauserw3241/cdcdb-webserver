@@ -14,12 +14,12 @@
 </tr>
 {% for person in people %}
 <tr>
-<td><img src='https://robohash.org/{{ person.persons_id }}?size=20x20'/></td>
+<td><img src='https://robohash.org/{{ person.people_id }}?size=20x20'/></td>
 <td>{% if person.positions_title is not none() %}{{ person.positions_title }}{% endif %}</td>
-<td><a href="/people/{{ person.persons_id }}">{{ person.persons_first_name }} {{
-person.persons_last_name }}</a></td>
-<td>{{ person.persons_email }}</td>
-<td>{% if person.persons_company is not none() %}{{ person.persons_company }}{% endif %}</td>
+<td><a href="/people/{{ person.people_id }}">{{ person.people_first_name }} {{
+person.people_last_name }}</a></td>
+<td>{{ person.people_email }}</td>
+<td>{% if person.people_company is not none() %}{{ person.people_company }}{% endif %}</td>
 <td>{% if person.students_year is not none() %}{{ person.students_year }}{% endif %}</td>
 <td>{% if person.students_major is not none() %}{{ person.students_major }}{% endif %}</td>
 </tr>

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Inventory - {{ item.inventory_name }}{% endblock %}
+{% block title %}Inventory - {{ item.inventory_description }}{% endblock %}
 {% block body %}
 <h1><a href='/inventory/'>Inventory</a></h1>
-<h2>{{ item.inventory_name }}</h2>
+<h2>{{ item.inventory_description }}</h2>
 {% if can_edit %}
 <p><a href='/inventory/{{ item.inventory_id }}/edit'>Edit</a></p>
 {% endif %}

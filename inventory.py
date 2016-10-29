@@ -20,7 +20,7 @@ class Inventory:
             inv, inv_md = db.get_table("inventory")
             q = db.query().\
                 add_columns(
-                    inv.c.id, inv.c.name, inv.c.serial_number, inv.c.make,
+                    inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
                     inv.c.model, inv.c.manufacturer, inv.c.location,
                     inv.c.other_notes)
             db.execute(q)
@@ -31,7 +31,7 @@ class Inventory:
             inv, inv_md = db.get_table("inventory")
             q = db.query().\
                 add_columns(
-                    inv.c.id, inv.c.name, inv.c.serial_number, inv.c.make,
+                    inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
                     inv.c.model, inv.c.manufacturer, inv.c.location,
                     inv.c.other_notes).\
                 filter(inv.c.id == id)
@@ -48,7 +48,7 @@ class Inventory:
             q = inv.update().\
                 where(inv.c.id == id).\
                 values(
-                    name=data['name'], serial_number=data['serial_number'],
+                    description=data['description'], serial_number=data['serial_number'],
                     make=data['make'], model=data['model'],
                     manufacturer=data['manufacturer'],
                     location=data['location'], other_notes=data['other_notes']
