@@ -24,7 +24,7 @@ config = globals.config
 
 def decode_id(id):
     id = globals.base58_hashids.decode(id)
-    if not id: return None
+    if id == None: return None
     return id[0]
 
 # here all the valid routes are defined, as well as the valid verbs
@@ -74,7 +74,7 @@ def inventory_():
 @app.route('/inventory/<id>', methods=['GET'])
 def inventory_id(id):
     id = decode_id(id)
-    if not id: abort(404)
+    if id == None: abort(404)
     if request.method == 'GET':
         return inventory.show(request, session, id)
     else: abort(405)
@@ -82,7 +82,7 @@ def inventory_id(id):
 @app.route('/inventory/<id>/edit', methods=['GET','POST'])
 def inventory_id_edit(id):
     id = decode_id(id)
-    if not id: abort(404)
+    if id == None: abort(404)
     if request.method == 'GET':
         return inventory.edit(request, session, id)
     if request.method == 'POST':
@@ -98,7 +98,7 @@ def people_():
 @app.route('/people/<id>', methods=['GET'])
 def people_id(id):
     id = decode_id(id)
-    if not id: abort(404)
+    if id == None: abort(404)
     if request.method == 'GET':
         return people.show(request, session, id)
     else: abort(405)

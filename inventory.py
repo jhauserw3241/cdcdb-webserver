@@ -82,7 +82,7 @@ class Inventory:
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
             item = self.__db_get_item(id)
-            if not item:
+            if item == None:
                 abort(404)
             return render_template('inventory/show.html', item=item,
             can_edit=self.__can_edit(session))
@@ -100,7 +100,7 @@ class Inventory:
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
             item = self.__db_get_item(id)
-            if not item: abort(404)
+            if item == None: abort(404)
             self.__db_update_item(id, request.form)
             return redirect(url_for('inventory_id', id=self.b58.encode(id)))
         abort(405)

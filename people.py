@@ -156,6 +156,6 @@ class People:
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
             person = self.__db_get_person(id)
-            if not person: abort(404)
+            if person == None: abort(404)
             return render_template('people/show.html', person=person)
         abort(405)
