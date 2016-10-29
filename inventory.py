@@ -41,6 +41,24 @@ class Inventory:
                 return None
             return rows[0]
 
+    def __db_update_item(self, id, data):
+        with DatabaseConnection() as db:
+            inv, inv_md = db.get_table("inventory")
+            print(id)
+            q = inv.update().\
+                where(inv.c.id == id).\
+                values(
+                    name=data['name'], serial_number=data['serial_number'],
+                    make=data['make'], model=data['model'],
+                    manufacturer=data['manufacturer'],
+                    location=data['location'], other_notes=data['other_notes']
+                )
+            print("q:", q)
+            db.execute(q)
+            db.commit()
+            print()
+            print("i:",self.__db_get_item(id))
+
     def __can_index(self, session):
         return 'is_student' in session and session['is_student']
 
@@ -83,7 +101,6 @@ class Inventory:
             if not self.__can_update(session): abort(403)
             item = self.__db_get_item(id)
             if not item: abort(404)
-            print(dict(request.form))
-            print(dict(request.args))
-            return str(dict(request.form))
+            self.__db_update_item(id, request.form)
+            return redirect(url_for('inventory_id', id=self.b58.encode(id)))
         abort(405)
