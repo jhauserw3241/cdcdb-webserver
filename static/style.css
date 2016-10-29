@@ -148,6 +148,9 @@ table#inventory-table td {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+table#inventory-table td:last-of-type {
+	max-width: 200px;
+}
 
 :root {
 --color-background-1: #D3F1C8;
