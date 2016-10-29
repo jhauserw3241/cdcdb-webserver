@@ -45,8 +45,11 @@ class People:
                         (pos.c.year == current_year)
                     )
             db.execute(q)
-            return [ self.encode_id(dict(row), 'persons_id') for row in
+            rows = [ self.encode_id(dict(row), 'persons_id') for row in
                 db.fetchall() ]
+            rows = [ globals.decode_year(r, 'students_year') for r in rows ]
+            rows = [ globals.decode_major(r, 'students_major') for r in rows ]
+            return rows
 
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
@@ -68,6 +71,8 @@ class People:
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'persons_id') for row in
                 db.fetchall() ]
+            rows = [ globals.decode_year(r, 'students_year') for r in rows ]
+            rows = [ globals.decode_major(r, 'students_major') for r in rows ]
             if len(rows) != 1:
                 return None
             return rows[0]

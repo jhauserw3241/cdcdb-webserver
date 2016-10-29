@@ -29,13 +29,20 @@ class globals:
     config = config
     db_engine = create_engine('postgresql://webapp:imawebapp@localhost/ksucdc')
 
-    def encode_id(thing, column=None):
-        if column == None: column='id'
+    def encode_id(thing, column='id'):
         thing[column] = globals.base58_hashids.encode(thing[column])
         return thing
 
     def decode_id(thing):
         thing['id'] = globals.base58_hashids.decode(thing['id'])
+        return thing
+
+    def decode_year(thing, column='year'):
+        thing[column] = globals.translate_year(thing[column])
+        return thing
+
+    def decode_major(thing, column='major'):
+        thing[column] = globals.translate_major(thing[column])
         return thing
 
     def hash_password(plain_text, salt):
@@ -92,3 +99,17 @@ class globals:
             return datetime.utcnow().strftime(frmt)
         else:
             return datetime.now().strftime(frmt)
+
+    def translate_year(year):
+        if   year == 'FR': return 'Freshman'
+        elif year == 'SO': return 'Sophomore'
+        elif year == 'JR': return 'Junior'
+        elif year == 'SR': return 'Senior'
+        elif year == 'GM': return 'Grad (Masters)'
+        elif year == 'GP': return 'Grad (Doctorate)'
+        else: return 'Unknown'
+
+    def translate_major(major):
+        if   major == 'IS': return 'IS (Information Systems)'
+        elif major == 'CS': return 'CS (Computer Science)'
+        else: return major
