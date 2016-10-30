@@ -53,11 +53,8 @@ class Inventory:
                     manufacturer=data['manufacturer'],
                     location=data['location'], other_notes=data['other_notes']
                 )
-            print("q:", q)
             db.execute(q)
             db.commit()
-            print()
-            print("i:",self.__db_get_item(id))
 
     def __can_index(self, session):
         return 'is_student' in session and session['is_student']
