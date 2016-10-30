@@ -25,6 +25,7 @@ config = globals.config
 def decode_id(id):
     id = globals.base58_hashids.decode(id)
     if id == None: return None
+    if len(id) != 1: return None
     return id[0]
 
 # here all the valid routes are defined, as well as the valid verbs
