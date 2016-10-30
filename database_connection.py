@@ -44,6 +44,12 @@ class DatabaseConnection:
         for row in self.last_result.fetchall():
             yield row
 
+    def lastrowid(self):
+        if not self.last_result:
+            raise Exception(
+                "Can't get lastrowid without inserting/updating first")
+        return self.last_result.fetchone()
+
     def get_table(self, table_name):
         meta = MetaData(self.engine)
         table = Table(table_name, meta, autoload=True, autoload_with=self.engine)
