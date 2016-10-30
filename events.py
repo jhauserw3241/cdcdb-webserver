@@ -77,6 +77,90 @@ class Events:
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __validate_generic(self, data):
+        # parse and validate *data* into *d* while also
+        # listing any errors in *errs*
+        errs = []
+        d = {}
+        if not data['name']:
+            errs.append('Name is required')
+        d['name'] = data['name']
+        d['description'] = data['description']
+        # start date is required
+        # store start date and start time in d['start_date']
+        try:
+            d['start_date'] = datetime.strptime(data['start_date'], '%m/%d/%Y')
+        except ValueError:
+            errs.append("Invalid start date")
+        else:
+            # start time is optional. If unset, assume 00:00
+            # If set, it must validate.
+            if data['start_time']:
+                try:
+                    start_time = datetime.strptime(data['start_time'],'%H:%M')
+                except ValueError:
+                    errs.append("Invalid start time")
+                else:
+                    d['start_date'] = d['start_date'] + timedelta(hours=start_time.hour)
+                    d['start_date'] = d['start_date'] + timedelta(minutes=start_time.minute)
+        # end date is optional. If unset, set to start date
+        # If set, it must validate
+        # store end date and end time in d['end_date']
+        if data['end_date']:
+            try:
+                d['end_date'] = datetime.strptime(data['end_date'], '%m/%d/%Y')
+            except ValueError:
+                errs.append("Invalid end date")
+            else:
+                # end date is optional. If unset, assume 00:00
+                # If set, it must validate
+                if data['end_time']:
+                    try:
+                        end_time= datetime.strptime(data['end_time'],'%H:%M')
+                    except ValueError:
+                        errs.append("Invalid end time")
+                    else:
+                        d['end_date'] = d['end_date'] + timedelta(hours=end_time.hour)
+                        d['end_date'] = d['end_date'] + timedelta(minutes=end_time.minute)
+        else:
+            if 'start_date' in d:
+                d['end_date'] = d['start_date']
+        return d, errs
+
+    def __validate_meeting(self, data):
+        d, errs = self.__validate_generic(data)
+        d['minutes'] = data['minutes']
+        d['required'] = ('required' in data)
+        return d, errs
+
+    def __validate_competition(self, data):
+        d, errs = self.__validate_generic(data)
+        d['documentation'] = data['documentation']
+        d['location'] = data['location']
+        return d, errs
+
+    def __create_generic(self, request, session, data):
+        v_data, errs = self.__validate_generic(data)
+        if errs:
+            return render_template('events/new.html', data=data,
+                errors=errs)
+        return "Done (generic) {}".format(v_data)
+
+
+    def __create_meeting(self, request, session, data):
+        v_data, errs = self.__validate_meeting(data)
+        if errs:
+            return render_template('events/new.html', data=data,
+                errors=errs)
+        return "Done (meeting) {}".format(v_data)
+
+    def __create_competition(self, request, session, data):
+        v_data, errs = self.__validate_competition(data)
+        if errs:
+            return render_template('events/new.html', data=data,
+                errors=errs)
+        return "Done (competition) {}".format(v_data)
+
     def future_events(self, request, session):
         if not self.__can_index(session): abort(403)
         return self.__db_get_events(future_only=True)
@@ -97,8 +181,22 @@ class Events:
                 can_edit=self.__can_edit(session))
         abort(405)
 
-    def create(self, request, session):
+    def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
-            return render_template('events/create.html')
+            return render_template('events/new.html', data={})
+        abort(405)
+
+    def create(self, request, session):
+        if request.method == 'POST':
+            data = request.form
+            if not 'type' in data:
+                return self.__create_generic(request, session, data)
+            elif data['type'] == 'meeting':
+                return self.__create_meeting(request, session, data)
+            elif data['type'] == 'competition':
+                return self.__create_competition(request, session, data)
+            else:
+                return render_template('events/new.html', data=data,
+                errors=['Didn\'t understand event type'])
         abort(405)

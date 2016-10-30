@@ -8,6 +8,12 @@ var competition_items = form.getElementsByClassName("competition");
 r_is_meeting.onchange = enable_meeting;
 r_is_competition.onchange = enable_competition;
 
+if (r_is_meeting.checked) {
+	enable_meeting();
+} else if (r_is_competition.checked) {
+	enable_competition();
+}
+
 function enable_meeting() {
 	for (i in meeting_items) {
 		var row = meeting_items[i];

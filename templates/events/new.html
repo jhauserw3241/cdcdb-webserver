@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Create Event{% endblock %}
+{% block body %}
+<h1><a href='/events/'>Events</a></h1>
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+<form id='event_form' action='/events/new/' method='POST'>
+<table id='create-meeting'>
+<tr>
+	<td>Name *</td>
+	<td colspan='2'><input type='text' name='name' value='{{ data.name }}'/></td>
+</tr>
+<tr>
+	<td>Description</td>
+	<td colspan='2'><input type='text' name='description' value='{{ data.description }}'/></td>
+</tr>
+<tr>
+	<td>Start date *</td>
+	<td><input type='text' name='start_date' value='{{ data.start_date}}'/></td>
+	<td><input type='text' name='start_time' value='{{ data.start_time }}'/></td>
+</tr>
+<tr>
+	<td>End date (optional)</td>
+	<td><input type='text' name='end_date' value='{{ data.end_date}}'/></td>
+	<td><input type='text' name='end_time' value='{{ data.end_time }}'/></td>
+</tr>
+<tr>
+	<td></td>
+	<td>mm/dd/yyyy</td>
+	<td>hh:mm</td>
+</tr>
+<tr>
+	<td></td>
+	<td colspan='2'>
+	<input type='radio' id='is_meeting' name='type' value='meeting' {% if data.type == 'meeting' %}checked{% endif %}>
+	<label for='is_meeting'>meeting</label></input>
+	<input type='radio' id='is_competition' name='type' value='competition' {% if data.type == 'competition' %}checked{% endif %}>
+	<label for='is_competition'>competition</label></input>
+	</td>
+</tr>
+<tr class='meeting hide'>
+	<td>Link to minutes</td>
+	<td><input type='text' name='minutes' value='{{ data.minutes }}'/></td>
+	<td></td>
+</tr>
+<tr class='meeting hide'>
+	<td></td>
+	<td>
+	<input type='checkbox' name='required' value='{{ data.required }}'>
+	<label for='required'>required</label></input>
+	</td>
+	<td></td>
+</tr>
+<tr class='competition hide'>
+	<td>Link to documentation</td>
+	<td><input type='text' name='documentation' value='{{ data.documentation }}'/></td>
+	<td></td>
+</tr>
+<tr class='competition hide'>
+	<td>Location</td>
+	<td><input type='text' name='location' value='{{ data.location }}'/></td>
+	<td></td>
+</tr>
+<tr>
+	<td><input type='submit' name='create' value='Create'/></td>
+	<td><a href=''>Start over</a></td>
+	<td></td>
+</tr>
+</table>
+</form>
+<script src='/static/events.js'></script>
+{% endblock %}

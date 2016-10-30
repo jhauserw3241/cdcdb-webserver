@@ -158,6 +158,10 @@ table#inventory-table td.notes {
 .hide {
 	display: none;
 }
+ul#errors li {
+	list-style-type: none;
+	color: red;
+}
 
 :root {
 --color-background-1: #D3F1C8;
