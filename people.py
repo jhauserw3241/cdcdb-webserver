@@ -91,7 +91,7 @@ class People:
             if 'person_id' not in session:
                 return render_template('people/login.html')
             else:
-                return redirect(url_for('index'))
+                return redirect(url_for('index_'))
         elif request.method == 'POST':
             u = request.form['username']
             p = request.form['password']
@@ -102,7 +102,7 @@ class People:
                 session['is_admin'] = True if True else False
                 session['is_officer'] = True if True else False
                 session['is_student'] = True if True else False
-                return redirect(url_for('index'))
+                return redirect(url_for('index_'))
             elif u == "admin" and p == "admin":
                 session['username'] = u
                 session['person_id'] = 2
@@ -110,7 +110,7 @@ class People:
                 session['is_admin'] = True if True else False
                 session['is_officer'] = False if True else False
                 session['is_student'] = True if True else False
-                return redirect(url_for('index'))
+                return redirect(url_for('index_'))
             elif u == "officer" and p == "officer":
                 session['username'] = u
                 session['person_id'] = 3
@@ -118,7 +118,7 @@ class People:
                 session['is_admin'] = False if True else False
                 session['is_officer'] = True if True else False
                 session['is_student'] = True if True else False
-                return redirect(url_for('index'))
+                return redirect(url_for('index_'))
             elif u == "student" and p == "student":
                 session['username'] = u
                 session['person_id'] = 4
@@ -126,7 +126,7 @@ class People:
                 session['is_admin'] = False if True else False
                 session['is_officer'] = False if True else False
                 session['is_student'] = True if True else False
-                return redirect(url_for('index'))
+                return redirect(url_for('index_'))
         abort(405)
 
     def logout(self, request, session):

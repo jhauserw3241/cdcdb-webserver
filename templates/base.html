@@ -18,8 +18,10 @@
 	</div>
 	<ul id='nav'>
 	<li><a href='/'>Home</a></li>
-	<li><a href='/'>Events</a></li>
+	<li><a href='/events'>Events</a></li>
+	{% if session.is_student %}
 	<li><a href='/inventory'>Inventory</a></li>
+	{% endif %}
 	<li><a href='/people?limit=officers'>Officers</a></li>
 	{% if session.is_officer %}
 	<li><p>Officer</p>

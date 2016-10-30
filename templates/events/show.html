@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Events - {{ event.event_name }}{% endblock %}
+{% block body %}
+<h1><a href='/events'>Events</a></h1>
+<h2>{{ event.event_name }}</h2>
+<p>{{ event.event_description }}</p>
+{% if can_edit %}
+<p><a href='/events/{{ event.event_id }}/edit'>Edit</a></p>
+{% endif %}
+{% endblock %}

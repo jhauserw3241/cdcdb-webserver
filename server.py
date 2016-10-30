@@ -9,16 +9,20 @@ from flask import url_for
 
 from globals import globals
 from help import Help
-from test import Test
-from people import People
+from events import Events
+from index import Index
 from inventory import Inventory
+from people import People
+from test import Test
 
 app = Flask(__name__)
 # The handler classes for each route type
 help = Help()
-test = Test()
-people = People()
+events = Events()
+index = Index()
 inventory = Inventory()
+people = People()
+test = Test()
 
 config = globals.config
 
@@ -35,9 +39,11 @@ def decode_id(id):
 # control to the appropriate handler class.
 # usually the hashed id from the url is checked for validitiy first
 
-@app.route('/')
-def index():
-    return render_template("index.html")
+@app.route('/', methods=['GET'])
+def index_():
+    if request.method == 'GET':
+        return index.index(request, session, events)
+    else: abort(405)
 
 @app.route('/help', methods=['GET'])
 def help_():
@@ -101,6 +107,19 @@ def people_id(id):
     if id == None: abort(404)
     if request.method == 'GET':
         return people.show(request, session, id)
+    else: abort(405)
+
+@app.route('/events/', methods=['GET'])
+def events_():
+    if request.method == 'GET':
+        return events.index(request, session)
+
+@app.route('/events/<id>', methods=['GET'])
+def events_id(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return events.show(request, session, id)
     else: abort(405)
 
 @app.route('/test', methods=['GET'])

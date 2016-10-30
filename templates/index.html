@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% block body %}
-<h1>{{ app_name }}</h1>
+<h1>Upcoming Events</h1>
 <ul>
-<li><a href='/inventory'>Boxed shit</a></li>
+{% for event in events %}
+<li><a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a> <span
+title='{{ event.event_start_timestamp }}'>{{ event.relative_start }}</span></li>
+</li>
+{% endfor %}
 </ul>
+<p><a href='/events'>All events</a>
 {% endblock %}
