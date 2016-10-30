@@ -84,7 +84,7 @@ class People:
             return 'is_officer' in session and session['is_officer']
 
     def __can_show(self, session):
-        return 'is_student' in session and session['is_student']
+        return 'is_officer' in session and session['is_officer']
 
     def login(self, request, session):
         if request.method == 'GET':
