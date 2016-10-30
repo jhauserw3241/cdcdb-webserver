@@ -35,7 +35,7 @@ class People:
             if limit == 'officers':
                 q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
                     join(pos,
-                        (pos.c.person_id == ppl.c.id) &
+                        (pos.c.id == ppl.c.id) &
                         (pos.c.year == current_year)
                     )
             else:
