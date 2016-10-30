@@ -2,6 +2,9 @@
 {% block title %}Events{% endblock %}
 {% block body %}
 <h1>Events</h1>
+{% if can_create %}
+<p><a href='/events/create'>Create new event</a></p>
+{% endif %}
 <table id='events-table'>
 <tr>
 	<th></th>

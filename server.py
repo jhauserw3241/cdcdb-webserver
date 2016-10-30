@@ -115,6 +115,13 @@ def people_id(id):
 def events_():
     if request.method == 'GET':
         return events.index(request, session)
+    else: abort(405)
+
+@app.route('/events/create/', methods=['GET'])
+def events_create():
+    if request.method == 'GET':
+        return events.create(request, session)
+    else: abort(405)
 
 @app.route('/events/<id>', methods=['GET'])
 def events_id(id):

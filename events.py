@@ -74,6 +74,9 @@ class Events:
     def __can_edit(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __can_create(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def future_events(self, request, session):
         if not self.__can_index(session): abort(403)
         return self.__db_get_events(future_only=True)
@@ -82,7 +85,8 @@ class Events:
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
             events = self.__db_get_events()
-            return render_template('events/index.html', events=events)
+            return render_template('events/index.html', events=events,
+                can_create=self.__can_create(session))
         abort(405)
 
     def show(self, request, session, id):
@@ -91,4 +95,10 @@ class Events:
             evt = self.__db_get_event(id)
             return render_template('events/show.html', event=evt,
                 can_edit=self.__can_edit(session))
+        abort(405)
+
+    def create(self, request, session):
+        if request.method == 'GET':
+            if not self.__can_create(session): abort(403)
+            return render_template('events/create.html')
         abort(405)

@@ -148,9 +148,15 @@ table#inventory-table td {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+table#create-meeting td {
+	min-width: 160px;
+}
 table#inventory-table td.serial ,
 table#inventory-table td.notes {
 	max-width: 250px;
+}
+.hide {
+	display: none;
 }
 
 :root {

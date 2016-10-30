@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Create Event{% endblock %}
+{% block body %}
+<h1><a href='/events'>Events</a></h1>
+<form id='event_form' action='/events/' method='POST'>
+<table id='create-meeting'>
+<tr>
+	<td>Name</td>
+	<td><input type='text' name='name'/></td>
+</tr>
+<tr>
+	<td>Description</td>
+	<td><input type='text' name='description'/></td>
+</tr>
+<tr>
+	<td>Start date</td>
+	<td><input type='date' name='start_date'/><input type='time'
+	name='start_time'/></td>
+</tr>
+<tr>
+	<td></td>
+	<td>
+	<input type='radio' id='is_meeting' name='type' value='meeting'>
+	<label for='is_meeting'>meeting</label></input>
+	<input type='radio' id='is_competition' name='type' value='competition'>
+	<label for='is_competition'>competition</label></input>
+	</td>
+</tr>
+<tr class='meeting hide'>
+	<td>Link to mintes</td>
+	<td><input type='text' name='minutes'/></td>
+</tr>
+<tr class='meeting hide'>
+	<td></td>
+	<td>
+	<input type='checkbox' name='required'>
+	<label for='required'>required</label></input>
+	</td>
+</tr>
+<tr class='competition hide'>
+	<td>Link to documentation</td>
+	<td><input type='text' name='documentation'/></td>
+</tr>
+<tr class='competition hide'>
+	<td>Location</td>
+	<td><input type='text' name='location'/></td>
+</tr>
+<tr>
+	<td><input type='submit' name='Create' value='Create'/></td>
+	<td></td>
+</tr>
+</table>
+</form>
+<script src='/static/events.js'></script>
+{% endblock %}
