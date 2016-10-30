@@ -44,7 +44,6 @@ class Inventory:
     def __db_update_item(self, id, data):
         with DatabaseConnection() as db:
             inv, inv_md = db.get_table("inventory")
-            print(id)
             q = inv.update().\
                 where(inv.c.id == id).\
                 values(
