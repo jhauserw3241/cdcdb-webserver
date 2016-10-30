@@ -80,6 +80,29 @@ class Events:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+    def __db_insert_meeting(self, data):
+        with DatabaseConnection() as db:
+            mts, mts_md = db.get_table("meeting")
+            q = mts.insert().\
+                values(
+                    id=data['id'],
+                    minutes=data['minutes'],
+                    required=data['required'])
+            db.execute(q)
+
+    def __db_insert_competition(self, data):
+        with DatabaseConnection() as db:
+            comps, comps_md = db.get_table("competition")
+            q = comps.insert().\
+                values(
+                    id=data['id'],
+                    documentation=data['documentation'],
+                    location=data['location'])
+            db.execute(q)
+
+    def __db_update_event(self, data):
+        pass
+
     def __can_index(self, session):
         return True
 
@@ -169,14 +192,24 @@ class Events:
         if errs:
             return render_template('events/new.html', data=data,
                 errors=errs)
-        return "Done (meeting) {}".format(v_data)
+        id = self.__db_insert_event(v_data)
+        if not id: abort(500)
+        v_data['id'] = id
+        self.__db_insert_meeting(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('events_id', id=id))
 
     def __create_competition(self, request, session, data):
         v_data, errs = self.__validate_competition(data)
         if errs:
             return render_template('events/new.html', data=data,
                 errors=errs)
-        return "Done (competition) {}".format(v_data)
+        id = self.__db_insert_event(v_data)
+        if not id: abort(500)
+        v_data['id'] = id
+        self.__db_insert_competition(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('events_id', id=id))
 
     def future_events(self, request, session):
         if not self.__can_index(session): abort(403)
