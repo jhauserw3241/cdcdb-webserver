@@ -26,6 +26,33 @@
 </tr>
 {% endfor %}
 </table>
+
+<h1>Credential return code tests</h1>
+<table>
+{% for test in cred_return_code_tests %}
+{% if test.good %}
+<tr style='color:green'>
+<td>✓</td>
+{% else %}
+<tr style='color:red'>
+<td>✗</td>
+{% endif %}
+<td>
+{{ test.code }}
+</td>
+<td>
+{{ test.url }}
+</td>
+<td>
+{{ test.u }}
+</td>
+<td>
+<a href='{{ test.url }}'>link</a>
+</td>
+</tr>
+{% endfor %}
+</table>
+
 <h1>Credential tests</h1>
 <table>
 {% for test in login_tests %}
@@ -36,8 +63,8 @@
 <tr style='color:red'>
 <td>✗</td>
 {% endif %}
-<td>{{ test.username }}</td>
-<td>{{ test.password }}</td>
+<td>{{ test.u }}</td>
+<td>{{ test.p }}</td>
 <td>{{ "not " if not test.valid }}valid</td>
 </tr>
 {% endfor %}
