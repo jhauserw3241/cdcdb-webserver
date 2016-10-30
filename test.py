@@ -54,6 +54,14 @@ class Test:
             {'url': '/inventory', 'code': 403},
             {'url': '/inventory/'+self.encode_id(0), 'code': 403},
             {'url': '/inventory/AAAAAAAAAA', 'code': 404},
+            {'url': '/robohash/', 'code': 404},
+            {'url': '/robohash/1l1l1l1l1l', 'code': 404},
+            {'url': '/robohash/1l1l1l1l1l?size=20x20', 'code': 404},
+            {'url': '/robohash/1l1l1l1l1l?size=20x201', 'code': 404},
+            {'url': '/robohash/'+self.encode_id(0), 'code': 200},
+            {'url': '/robohash/'+self.encode_id(0)+'?size=20x20', 'code': 200},
+            {'url': '/robohash/'+self.encode_id(0)+'?size=20', 'code': 404},
+            {'url': '/robohash/'+self.encode_id(0)+'?size=20x201', 'code': 404},
         ]
         for tuc in test_url_codes:
             return_code_tests.append({ 'url': tuc['url'],
