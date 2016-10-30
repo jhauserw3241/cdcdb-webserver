@@ -13,6 +13,7 @@ from events import Events
 from index import Index
 from inventory import Inventory
 from people import People
+from robohash import Robohash
 from test import Test
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ events = Events()
 index = Index()
 inventory = Inventory()
 people = People()
+robohash = Robohash()
 test = Test()
 
 config = globals.config
@@ -120,6 +122,12 @@ def events_id(id):
     if id == None: abort(404)
     if request.method == 'GET':
         return events.show(request, session, id)
+    else: abort(405)
+
+@app.route('/robohash/<s>', methods=['GET'])
+def robohash_s(s):
+    if request.method == 'GET':
+        return robohash.get(request, session, s)
     else: abort(405)
 
 @app.route('/test', methods=['GET'])

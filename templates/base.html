@@ -38,7 +38,7 @@
 			<a href='/login'>Login</a>
 		{% else %}
 			Hey, {{ session.username }}
-			<img id='header-user-img' src='https://robohash.org/{{ session.hashed_person_id }}?size=50x50'></img>
+			<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
 			<a href='/logout'>Logout</a>
 		{% endif %}
 	</div>
