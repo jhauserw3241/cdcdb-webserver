@@ -18,6 +18,13 @@ import hashlib
 # sqltimestamp_to_relative converts a sql-formatted date-time string into
 # a relative time ("4 hours ago") for nice human consumption
 
+sec_in_min = 60
+sec_in_hr = sec_in_min * 60
+sec_in_day = sec_in_hr * 24
+sec_in_wk = sec_in_day * 7
+sec_in_mon = sec_in_day * 30
+sec_in_yr = sec_in_day * 365
+
 config = configparser.ConfigParser()
 config.read("config.ini")
 
@@ -59,16 +66,29 @@ class globals:
         hash = binascii.hexlify(hash)
         return hash == cipher_text
 
+    def timedelta_to_relative(td):
+        v = td.seconds + td.days * sec_in_day
+        if v < sec_in_min:
+            return ""
+        elif v < sec_in_day:
+            hours = v//sec_in_hr
+            v -= sec_in_hr * hours
+            minutes = v//sec_in_min
+            ret = "{}h{}m".format(hours, minutes)
+        else:
+            days = v//sec_in_day
+            ret = str(days) + " day" + ("s" if days!=1 else "")
+        return ret
+
+
     def sqltimestamp_to_relative(timestamp):
         now = datetime.utcnow()
         timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
-        diff = now - timestamp
-        sec_in_min = 60
-        sec_in_hr = sec_in_min * 60
-        sec_in_day = sec_in_hr * 24
-        sec_in_wk = sec_in_day * 7
-        sec_in_mon = sec_in_day * 30
-        sec_in_yr = sec_in_day * 365
+        diff = globals.datetime_difference(timestamp, now)
+        is_negative = False
+        if diff < timedelta():
+            is_negative = True
+            diff = diff * -1
         diff = diff.seconds + diff.days * sec_in_day
         if diff < sec_in_min:
             return "just now"
@@ -92,13 +112,22 @@ class globals:
             value = str(value) + " year" + ("s" if value!=1 else"")
         else:
             value = "a long time"
-        return value + " ago"
+        if is_negative:
+            return "in " + value
+        else:
+            return value + " ago"
+
+    def format_datetime(dt, frmt="%x %X"):
+        return dt.strftime(frmt)
 
     def current_datetime(frmt="%x %X", utc=False):
         if utc:
-            return datetime.utcnow().strftime(frmt)
+            return globals.format_datetime(datetime.utcnow(), frmt)
         else:
-            return datetime.now().strftime(frmt)
+            return globals.format_datetime(datetime.now(), frmt)
+
+    def datetime_difference(dt_start, dt_end):
+        return dt_end - dt_start
 
     def translate_year(year):
         if   year == 'FR': return 'Freshman'
