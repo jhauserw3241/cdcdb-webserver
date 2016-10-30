@@ -37,7 +37,6 @@ def decode_id(id):
 
 @app.route('/')
 def index():
-    print(session)
     return render_template("index.html")
 
 @app.route('/help', methods=['GET'])
