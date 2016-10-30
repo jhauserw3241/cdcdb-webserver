@@ -68,6 +68,10 @@ class Test:
             {'url': '/people/'+self.encode_id(0), 'code': 403, 'u': 'admin', 'p': 'admin' },
             {'url': '/people/'+self.encode_id(0), 'code': 200, 'u': 'officer', 'p': 'officer' },
             {'url': '/people/'+self.encode_id(0), 'code': 403, 'u': 'student', 'p': 'student' },
+            {'url': '/people/AAAAAAAAAA', 'code': 404, 'u': 'root', 'p': 'root' },
+            {'url': '/people/AAAAAAAAAA', 'code': 404, 'u': 'admin', 'p': 'admin' },
+            {'url': '/people/AAAAAAAAAA', 'code': 404, 'u': 'officer', 'p': 'officer' },
+            {'url': '/people/AAAAAAAAAA', 'code': 404, 'u': 'student', 'p': 'student' },
         ]
         for tcuc in test_cred_url_codes:
             cred_return_code_tests.append({ 'url': tcuc['url'],
