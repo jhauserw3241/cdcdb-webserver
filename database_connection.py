@@ -17,6 +17,7 @@ class DatabaseConnection:
         if self.last_result:
             self.last_result.close()
             self.last_result = None
+        self.sess.commit()
         self.sess.close()
         self.sess = None
 

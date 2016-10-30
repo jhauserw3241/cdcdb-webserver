@@ -52,7 +52,6 @@ class Inventory:
                     location=data['location'], other_notes=data['other_notes']
                 )
             db.execute(q)
-            db.commit()
 
     def __can_index(self, session):
         return 'is_student' in session and session['is_student']
