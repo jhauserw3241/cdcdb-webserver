@@ -65,6 +65,21 @@ class Events:
             if len(rows) != 1: return None
             return rows[0]
 
+    def __db_insert_event(self, data):
+        with DatabaseConnection() as db:
+            evts, evts_md = db.get_table("event")
+            q = evts.insert().\
+                returning(evts.c.id).\
+                values(
+                    name=data['name'],
+                    description=data['description'],
+                    start_timestamp=data['start_date'],
+                    end_timestamp=data['end_date'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
+
     def __can_index(self, session):
         return True
 
@@ -144,7 +159,9 @@ class Events:
         if errs:
             return render_template('events/new.html', data=data,
                 errors=errs)
-        return "Done (generic) {}".format(v_data)
+        id = self.__db_insert_event(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('events_id', id=id))
 
 
     def __create_meeting(self, request, session, data):
