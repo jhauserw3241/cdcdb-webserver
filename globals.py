@@ -34,7 +34,15 @@ class globals:
         salt=config['b58']['salt'],
         min_length=int(config['b58']['min_length']))
     config = config
-    db_engine = create_engine('postgresql://webapp:imawebapp@localhost/ksucdc')
+    db_engine = create_engine(
+        "{}://{}:{}@{}/{}".format(
+            config['db']['type'],
+            config['db']['user'],
+            config['db']['pass'],
+            config['db']['host'],
+            config['db']['path']
+        )
+    )
 
     def encode_id(thing, column='id'):
         thing[column] = globals.base58_hashids.encode(thing[column])
