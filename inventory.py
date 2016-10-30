@@ -37,8 +37,7 @@ class Inventory:
                 filter(inv.c.id == id)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'inventory_id') for row in db.fetchall() ]
-            if len(rows) != 1:
-                return None
+            if len(rows) != 1: return None
             return rows[0]
 
     def __db_update_item(self, id, data):
