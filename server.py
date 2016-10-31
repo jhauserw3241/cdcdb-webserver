@@ -133,6 +133,16 @@ def events_id(id):
         return events.show(request, session, id)
     else: abort(405)
 
+@app.route('/events/<id>/edit', methods=['GET', 'POST'])
+def events_id_edit(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return events.edit(request, session, id)
+    if request.method == 'POST':
+        return events.update(request, session, id)
+    else: abort(405)
+
 @app.route('/robohash/<s>', methods=['GET'])
 def robohash_s(s):
     if request.method == 'GET':

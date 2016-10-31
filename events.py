@@ -9,7 +9,7 @@ import json
 from database_connection import DatabaseConnection
 from globals import globals
 
-# Handles the inventory routes.
+# Handles the events routes.
 
 class Events:
     def __init__(self):
@@ -107,7 +107,49 @@ class Events:
             db.execute(q)
 
     def __db_update_event(self, data):
-        pass
+        with DatabaseConnection() as db:
+            evts, evts_md = db.get_table("event")
+            q = evts.update().\
+                returning(evts.c.id).\
+                where(evts.c.id == data['id']).\
+                values(
+                    name=data['name'],
+                    description=data['description'],
+                    start_timestamp=data['start_date'],
+                    end_timestamp=data['end_date'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
+
+    def __db_update_meeting(self, data):
+        self.__db_delete_meeting(data['id'])
+        self.__db_insert_meeting(data)
+
+    def __db_update_competition(self, data):
+        self.__db_delete_competition(data['id'])
+        self.__db_insert_competition(data)
+
+    def __db_delete_event(self, id):
+        with DatabaseConnection() as db:
+            evts, evts_md = db.get_table("event")
+            q = evts.delete().\
+                where(evts.c.id == id)
+            db.execute(q)
+
+    def __db_delete_meeting(self, id):
+        with DatabaseConnection() as db:
+            mts, mts_md = db.get_table("meeting")
+            q = mts.delete().\
+                where(mts.c.id == id)
+            db.execute(q)
+
+    def __db_delete_competition(self, id):
+        with DatabaseConnection() as db:
+            comps, comps_md = db.get_table("competition")
+            q = comps.delete().\
+                where(comps.c.id == id)
+            db.execute(q)
 
     def __can_index(self, session):
         return True
@@ -116,6 +158,9 @@ class Events:
         return True
 
     def __can_edit(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_update(self, session):
         return 'is_officer' in session and session['is_officer']
 
     def __can_create(self, session):
@@ -187,17 +232,16 @@ class Events:
         v_data, errs = self.__validate_generic(data)
         if errs:
             return render_template('events/new.html', data=data,
-                errors=errs)
+                errors=errs, submit_button_text='Create')
         id = self.__db_insert_event(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
-
 
     def __create_meeting(self, request, session, data):
         v_data, errs = self.__validate_meeting(data)
         if errs:
             return render_template('events/new.html', data=data,
-                errors=errs)
+                errors=errs, submit_button_text='Create')
         id = self.__db_insert_event(v_data)
         if not id: abort(500)
         v_data['id'] = id
@@ -209,11 +253,50 @@ class Events:
         v_data, errs = self.__validate_competition(data)
         if errs:
             return render_template('events/new.html', data=data,
-                errors=errs)
+                errors=errs, submit_button_text='Create')
         id = self.__db_insert_event(v_data)
         if not id: abort(500)
         v_data['id'] = id
         self.__db_insert_competition(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('events_id', id=id))
+
+    def __update_generic(self, request, session, id, data):
+        v_data, errs = self.__validate_generic(data)
+        if errs:
+            return render_template('events/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        id = self.__db_update_event(v_data)
+        self.__db_delete_meeting(id)
+        self.__db_delete_competition(id)
+        id = self.b58.encode(id)
+        return redirect(url_for('events_id', id=id))
+
+    def __update_meeting(self, request, session, id, data):
+        v_data, errs = self.__validate_meeting(data)
+        if errs:
+            return render_template('events/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        print("ID: ",id, v_data['id'])
+        id = self.__db_update_event(v_data)
+        if not id: abort(500)
+        self.__db_update_meeting(v_data)
+        self.__db_delete_competition(id)
+        id = self.b58.encode(id)
+        return redirect(url_for('events_id', id=id))
+
+    def __update_competition(self, request, session, id, data):
+        v_data, errs = self.__validate_competition(data)
+        if errs:
+            return render_template('events/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        id = self.__db_update_event(v_data)
+        if not id: abort(500)
+        self.__db_update_competition(v_data)
+        self.__db_delete_meeting(id)
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
 
@@ -240,19 +323,68 @@ class Events:
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
-            return render_template('events/new.html', data={})
+            return render_template('events/new.html',
+                data={},
+                submit_button_text='Create')
         abort(405)
 
     def create(self, request, session):
         if request.method == 'POST':
             data = request.form
-            if not 'type' in data:
+            if not 'type' in data or data['type'] == 'general':
                 return self.__create_generic(request, session, data)
             elif data['type'] == 'meeting':
                 return self.__create_meeting(request, session, data)
             elif data['type'] == 'competition':
                 return self.__create_competition(request, session, data)
             else:
-                return render_template('events/new.html', data=data,
-                errors=['Didn\'t understand event type'])
+                return render_template('events/new.html',
+                    data=data,
+                    submit_button_text='Create',
+                    errors=['Didn\'t understand event type'])
+        abort(405)
+
+    def edit(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_edit(session): abort(403)
+            evt = self.__db_get_event(id)
+            data = {}
+            data['name'] = evt['event_name']
+            data['description'] = evt['event_description']
+            data['start_date'] = self.frmt_dt(evt['event_start_timestamp'], '%m/%d/%Y')
+            data['start_time'] = self.frmt_dt(evt['event_start_timestamp'], '%H:%M')
+            data['end_date'] = self.frmt_dt(evt['event_end_timestamp'], '%m/%d/%Y')
+            data['end_time'] = self.frmt_dt(evt['event_end_timestamp'], '%H:%M')
+            if evt['meeting_id'] and evt['competition_id']:
+                raise Exception('This is event is f\'ed up: both a meeting and competition')
+            if evt['meeting_id']: data['type'] = 'meeting'
+            elif evt['competition_id']: data['type'] = 'competition'
+            else: data['type'] = "general"
+            data['minutes'] = evt['meeting_minutes'] if evt['meeting_minutes'] else ''
+            data['required'] = evt['meeting_required']
+            data['documentation'] = evt['competition_documentation'] if\
+                evt['competition_documentation'] else ''
+            data['location'] = evt['competition_location'] if\
+                evt['competition_location'] else ''
+            submit_button_text='Update'
+            print(evt)
+            return render_template('events/new.html', data=data,
+                submit_button_text=submit_button_text)
+        abort(405)
+
+    def update(self, request, session, id):
+        if request.method == 'POST':
+            if not self.__can_update(session): abort(403)
+            data = request.form
+            if not 'type' in data or data['type'] == 'general':
+                return self.__update_generic(request, session, id, data)
+            elif data['type'] == 'meeting':
+                return self.__update_meeting(request, session, id, data)
+            elif data['type'] == 'competition':
+                return self.__update_competition(request, session, id, data)
+            else:
+                return render_template('events/new.html',
+                    data=data,
+                    submit_button_text='Update',
+                    errors=['Didn\'t understand event type'])
         abort(405)

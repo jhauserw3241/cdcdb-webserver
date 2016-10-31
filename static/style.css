@@ -148,7 +148,7 @@ table#inventory-table td {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-table#create-meeting td {
+table#create-event td {
 	min-width: 160px;
 }
 table#inventory-table td.serial ,
