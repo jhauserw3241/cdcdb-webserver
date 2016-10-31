@@ -55,11 +55,17 @@ class Events:
     def __db_get_event(self, id):
         with DatabaseConnection() as db:
             evts, evts_md = db.get_table("event")
+            mts, mts_md = db.get_table("meeting")
+            comps, comps_md = db.get_table("competition")
             q = db.query().\
                 add_columns(
                     evts.c.id, evts.c.name, evts.c.description,
-                    evts.c.start_timestamp, evts.c.end_timestamp).\
-                filter(evts.c.id == id)
+                    evts.c.start_timestamp, evts.c.end_timestamp,
+                    mts.c.id, mts.c.minutes, mts.c.required,
+                    comps.c.id, comps.c.documentation, comps.c.location).\
+                filter(evts.c.id == id).\
+                outerjoin(mts, mts.c.id == evts.c.id).\
+                outerjoin(comps, comps.c.id == evts.c.id)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'event_id') for row in db.fetchall() ]
             if len(rows) != 1: return None

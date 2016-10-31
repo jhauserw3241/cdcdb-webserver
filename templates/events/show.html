@@ -4,6 +4,23 @@
 <h1><a href='/events'>Events</a></h1>
 <h2>{{ event.event_name }}</h2>
 <p>{{ event.event_description }}</p>
+{% if event.meeting_id %}
+{% if event.meeting_minutes %}
+<h3>Minutes</h3>
+<p>{{ event.meeting_minutes }}</p>
+{% endif %}
+{% if event.meeting_required is not none() and event.meeting_required %}
+<p><strong>This is a required meeting</strong></p>
+{% endif %}
+{% endif %}
+{% if event.competition_id %}
+{% if event.competition_location %}
+<p>Location: {{ event.competition_location }}</p>
+{% endif %}
+{% if event.competition_documentation %}
+<p>{{ event.competition_documentation }}</p>
+{% endif %}
+{% endif %}
 {% if can_edit %}
 <p><a href='/events/{{ event.event_id }}/edit'>Edit</a></p>
 {% endif %}
