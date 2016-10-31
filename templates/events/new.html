@@ -49,7 +49,7 @@
 <tr class='meeting hide'>
 	<td></td>
 	<td>
-	<input type='checkbox' name='required' value='{{ data.required }}'>
+	<input type='checkbox' name='required' {% if data.required %}checked{% endif %}>
 	<label for='required'>required</label></input>
 	</td>
 	<td></td>
