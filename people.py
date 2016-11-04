@@ -86,6 +86,9 @@ class People:
     def __can_show(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __can_create(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def login(self, request, session):
         if request.method == 'GET':
             if 'person_id' not in session:
@@ -149,7 +152,8 @@ class People:
                 limit = None
             if not self.__can_index(session, limit): abort(403)
             ppl = self.__db_get_people(limit)
-            return render_template('people/index.html', people=ppl)
+            return render_template('people/index.html', people=ppl,
+            can_create=self.__can_create(session))
         abort(405)
 
     def show(self, request, session, id):
@@ -158,4 +162,11 @@ class People:
             person = self.__db_get_person(id)
             if person == None: abort(404)
             return render_template('people/show.html', person=person)
+        abort(405)
+
+    def new(self, request, session):
+        if request.method == 'GET':
+            if not self.__can_create(session): abort(403)
+            return render_template('people/new.html',
+                data={}, submit_button_text='Create')
         abort(405)

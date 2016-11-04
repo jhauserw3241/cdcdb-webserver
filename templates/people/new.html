@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Create Person{% endblock %}
+{% block body %}
+<h1><a href='/people/'>People</a></h1>
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+<form id='people_form' action='{{ form_action }}' method='POST'>
+<table id='create-person'>
+<tr>
+	<td>Name</td>
+	<td><input type='text' name='fname' value='{{ data.fname }}' placeholder='required'/></td>
+	<td><input type='text' name='lname' value='{{ data.lname }}'/></td>
+</tr>
+<tr>
+	<td>Email</td>
+	<td><input type='text' name='email' value='{{ data.email }}' placeholder='required'/></td>
+</tr>
+<tr>
+	<td>Company</td>
+	<td><input type='text' name='company' value='{{ data.company }}'/></td>
+</tr>
+<tr>
+	<td></td>
+	<td colspan='2'>
+	<input type='radio' id='is_student' name='type' value='student' {% if data.type == 'student' %}checked{% endif %}>
+	<label for='is_student'>student</label></input>
+	<input type='radio' id='is_general' name='type' value='general' {% if data.type == 'general' %}checked{% endif %}>
+	<label for='is_general'>other</label></input>
+	</td>
+</tr>
+<tr class='student hide'>
+	<td>EID</td>
+	<td><input type='text' name='eid' value='{{ data.eid }}' placeholder='required'/></td>
+	<td></td>
+</tr>
+<tr>
+	<td><input type='submit' name='create' value='{{ submit_button_text }}'/></td>
+	<td><a href=''>Start over</a></td>
+	<td></td>
+</table>
+</form>
+<script src='/static/people.js'></script>
+{% endblock %}
