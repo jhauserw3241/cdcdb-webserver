@@ -52,6 +52,13 @@
 	<td>Major</td>
 	<td><input type='text' name='major' value='{{ data.major }}' placeholder='required'/></td>
 </tr>
+<tr class='student hide'>
+	<td></td>
+	<td>
+	<input type='checkbox' name='voting_member' {% if data.voting_member %}checked{% endif %}/>
+	<label for='voting_member'>Voting member</label>
+	</td>
+</tr>
 <tr>
 	<td><input type='submit' name='create' value='{{ submit_button_text }}'/></td>
 	<td><a href=''>Start over</a></td>

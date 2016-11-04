@@ -60,6 +60,7 @@ class People:
                 add_columns(ppl.c.company, ppl.c.email).\
                 add_columns(studs.c.id, studs.c.eid).\
                 add_columns(studs.c.major, studs.c.year).\
+                add_columns(studs.c.voting_member).\
                 add_columns(pos.c.title).\
                 outerjoin(studs, studs.c.id == ppl.c.id).\
                 outerjoin(pos,
@@ -97,7 +98,8 @@ class People:
                     id=data['id'],
                     eid=data['eid'],
                     year=data['year'],
-                    major=data['major'])
+                    major=data['major'],
+                    voting_member=data['voting_member'])
             db.execute(q)
 
     def __db_update_person(self, data):
@@ -160,6 +162,7 @@ class People:
         if not data['major']:
             errs.append('major is required')
         d['major'] = data['major']
+        d['voting_member'] = 'voting_member' in data
         return d, errs
 
     def __create_generic(self, request, session, data):
@@ -346,6 +349,7 @@ class People:
             data['eid'] = prsn['students_eid']
             data['year'] = prsn['students_year']
             data['major'] = prsn['students_major']
+            data['voting_member'] = prsn['students_voting_member']
             return render_template('people/new.html', data=data,
                 submit_button_text='Update')
             pass
