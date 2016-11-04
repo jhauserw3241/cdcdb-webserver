@@ -47,7 +47,7 @@ class Robohash:
                 return send_file(f, mimetype='image/png', conditional=True)
             else:
                 r = requests.get('http://robohash.org/{}?size={}'.format(s, size),
-                    verify=False)
+                    verify=True)
                 if r.status_code == requests.codes.ok:
                     with open(f, 'wb') as fp:
                         fp.write(r.content)
