@@ -18,6 +18,16 @@
 	<td>{{ event.event_description }}</td>
 	<td title='{{ event.event_start_timestamp }}'>{{ event.relative_start }}</td>
 	<td title='{{ event.event_end_timestamp }}'>{{ event.duration }}</td>
+	{% if can_edit %}<td class='button'>
+		<a href='/events/{{ event.event_id }}/edit'>
+		<img width=15px src='/static/edit.png' alt='edit'/>
+		</a>
+	</td>{% endif %}
+	{% if can_delete %}<td class='button'>
+		<a href='/events/{{ event.event_id }}/delete'>
+		<img width=15px src='/static/delete.png' alt='delete'/>
+		</a>
+	</td>{% endif %}
 </tr>
 {% endfor %}
 </table>

@@ -22,6 +22,9 @@
 {% endif %}
 {% endif %}
 {% if can_edit %}
-<p><a href='/events/{{ event.event_id }}/edit'>Edit</a></p>
+<a href='/events/{{ event.event_id }}/edit'>Edit</a><br/>
+{% endif %}
+{% if can_delete %}
+<a href='/events/{{ event.event_id }}/delete'>Delete</a>
 {% endif %}
 {% endblock %}

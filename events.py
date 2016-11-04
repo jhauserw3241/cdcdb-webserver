@@ -166,6 +166,9 @@ class Events:
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __can_delete(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def __validate_generic(self, data):
         # parse and validate *data* into *d* while also
         # listing any errors in *errs*
@@ -309,7 +312,9 @@ class Events:
             if not self.__can_index(session): abort(403)
             events = self.__db_get_events()
             return render_template('events/index.html', events=events,
-                can_create=self.__can_create(session))
+                can_create=self.__can_create(session),
+                can_edit=self.__can_edit(session),
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def show(self, request, session, id):
@@ -317,7 +322,8 @@ class Events:
             if not self.__can_show(session): abort(403)
             evt = self.__db_get_event(id)
             return render_template('events/show.html', event=evt,
-                can_edit=self.__can_edit(session))
+                can_edit=self.__can_edit(session),
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def new(self, request, session):
@@ -388,3 +394,11 @@ class Events:
                     submit_button_text='Update',
                     errors=['Didn\'t understand event type'])
         abort(405)
+
+    def delete(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete_competition(id)
+            self.__db_delete_meeting(id)
+            self.__db_delete_event(id)
+            return redirect(url_for('events_'))
