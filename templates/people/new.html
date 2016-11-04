@@ -37,9 +37,9 @@
 	<td></td>
 </tr>
 <tr class='student hide'>
-	<td>Year (required)</td>
+	<td>Year</td>
 	<td><select name='year'>
-	<option value='' {% if data.year == '' %}selected{% endif %}>Select ...</option>
+	<option value='' {% if data.year == '' %}selected{% endif %}>Unknown</option>
 	<option value='FR' {% if data.year == 'FR' %}selected{% endif %}>Freshman</option>
 	<option value='SO' {% if data.year == 'SO' %}selected{% endif %}>Sophomore</option>
 	<option value='JR' {% if data.year == 'JR' %}selected{% endif %}>Junior</option>

@@ -156,9 +156,7 @@ class People:
         if not data['eid']:
             errs.append('EID is required')
         d['eid'] = data['eid']
-        if not data['year']:
-            errs.append('Year is required')
-        d['year'] = data['year']
+        d['year'] = data['year'] if data['year'] else 'Unknown'
         if not data['major']:
             errs.append('major is required')
         d['major'] = data['major']
