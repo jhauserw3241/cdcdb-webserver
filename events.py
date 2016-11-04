@@ -336,6 +336,7 @@ class Events:
 
     def create(self, request, session):
         if request.method == 'POST':
+            if not self.__can_create(session): abort(403)
             data = request.form
             if not 'type' in data or data['type'] == 'general':
                 return self.__create_generic(request, session, data)
