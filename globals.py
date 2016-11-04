@@ -150,4 +150,4 @@ class globals:
         if   major == 'IS': return 'IS (Information Systems)'
         elif major == 'CS': return 'CS (Computer Science)'
         elif not major: return ""
-        else: return major
+        else: return ""
