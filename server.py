@@ -87,7 +87,7 @@ def inventory_id(id):
         return inventory.show(request, session, id)
     else: abort(405)
 
-@app.route('/inventory/<id>/edit', methods=['GET','POST'])
+@app.route('/inventory/<id>/edit', methods=['GET', 'POST'])
 def inventory_id_edit(id):
     id = decode_id(id)
     if id == None: abort(404)
