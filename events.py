@@ -321,6 +321,7 @@ class Events:
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
             evt = self.__db_get_event(id)
+            if not evt: abort(404)
             return render_template('events/show.html', event=evt,
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))
