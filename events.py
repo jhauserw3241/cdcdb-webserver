@@ -331,8 +331,7 @@ class Events:
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
             return render_template('events/new.html',
-                data={},
-                submit_button_text='Create')
+                data={}, submit_button_text='Create')
         abort(405)
 
     def create(self, request, session):
