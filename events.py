@@ -372,10 +372,9 @@ class Events:
                 evt['competition_documentation'] else ''
             data['location'] = evt['competition_location'] if\
                 evt['competition_location'] else ''
-            submit_button_text='Update'
             print(evt)
             return render_template('events/new.html', data=data,
-                submit_button_text=submit_button_text)
+                submit_button_text='Update')
         abort(405)
 
     def update(self, request, session, id):
