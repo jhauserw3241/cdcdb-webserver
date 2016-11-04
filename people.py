@@ -47,8 +47,6 @@ class People:
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'people_id') for row in
                 db.fetchall() ]
-            rows = [ globals.decode_year(r, 'students_year') for r in rows ]
-            rows = [ globals.decode_major(r, 'students_major') for r in rows ]
             return rows
 
     def __db_get_person(self, id):
@@ -71,8 +69,6 @@ class People:
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'people_id') for row in
                 db.fetchall() ]
-            rows = [ globals.decode_year(r, 'students_year') for r in rows ]
-            rows = [ globals.decode_major(r, 'students_major') for r in rows ]
             if len(rows) != 1:
                 return None
             return rows[0]
@@ -227,6 +223,8 @@ class People:
                 limit = None
             if not self.__can_index(session, limit): abort(403)
             ppl = self.__db_get_people(limit)
+            ppl = [ globals.decode_year(r, 'students_year') for r in ppl ]
+            ppl = [ globals.decode_major(r, 'students_major') for r in ppl ]
             return render_template('people/index.html', people=ppl,
             can_create=self.__can_create(session))
         abort(405)
@@ -236,6 +234,8 @@ class People:
             if not self.__can_show(session): abort(403)
             person = self.__db_get_person(id)
             if person == None: abort(404)
+            person = globals.decode_year(person, 'students_year')
+            person = globals.decode_major(person, 'students_major')
             return render_template('people/show.html', person=person)
         abort(405)
 
