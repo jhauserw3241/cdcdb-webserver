@@ -107,7 +107,9 @@ def people_():
 def people_new():
     if request.method == 'GET':
         return people.new(request, session)
-    else: abort(501)
+    elif request.method == 'POST':
+        return people.create(request, session)
+    else: abort(405)
 
 @app.route('/people/<id>', methods=['GET'])
 def people_id(id):

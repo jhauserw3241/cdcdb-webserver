@@ -77,6 +77,81 @@ class People:
                 return None
             return rows[0]
 
+    def __db_insert_person(self, data):
+        with DatabaseConnection() as db:
+            ppl, ppl_md = db.get_table("people")
+            q = ppl.insert().\
+                returning(ppl.c.id).\
+                values(
+                    first_name=data['fname'],
+                    last_name=data['lname'],
+                    company=data['company'],
+                    email=data['email'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
+
+    def __db_insert_student(self, data):
+        with DatabaseConnection() as db:
+            std, std_md = db.get_table("students")
+            q = std.insert().\
+                values(
+                    id=data['id'],
+                    eid=data['eid'],
+                    year=data['year'],
+                    major=data['major'])
+            db.execute(q)
+
+    def __validate_generic(self, data):
+        # parse and validate *data* into *d* while also
+        # listing any errors in *errs*
+        errs = []
+        d = {}
+        if not data['fname']:
+            errs.append('First name is required')
+        d['fname'] = data['fname']
+        d['lname'] = data['lname']
+        d['company'] = data['company']
+        if not data['email']:
+            errs.append('Email is required')
+        d['email'] = data['email']
+        return d, errs
+
+    def __validate_student(self, data):
+        d, errs = self.__validate_generic(data)
+        if not data['eid']:
+            errs.append('EID is required')
+        d['eid'] = data['eid']
+        if not data['year']:
+            errs.append('Year is required')
+        d['year'] = data['year']
+        if not data['major']:
+            errs.append('major is required')
+        d['major'] = data['major']
+        return d, errs
+
+    def __create_generic(self, request, session, data):
+        v_data, errs = self.__validate_generic(data)
+        if errs:
+            return render_template('people/new.html', data=data,
+                errors=errs, submit_button_text='Create')
+        id = self.__db_insert_person(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('people_id', id=id))
+
+    def __create_student(self, request, session, data):
+        v_data, errs = self.__validate_student(data)
+        if errs:
+            return render_template('people/new.html', data=data,
+                errors=errs, submit_button_text='Create')
+        id = self.__db_insert_person(v_data)
+        if not id: abort(500)
+        v_data['id'] = id
+        self.__db_insert_student(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('people_id', id=id))
+
     def __can_index(self, session, limit):
         if limit == 'officers':
             return True
@@ -169,4 +244,19 @@ class People:
             if not self.__can_create(session): abort(403)
             return render_template('people/new.html',
                 data={}, submit_button_text='Create')
+        abort(405)
+
+    def create(self, request, session):
+        if request.method == 'POST':
+            if not self.__can_create(session): abort(403)
+            data = request.form
+            if not 'type' in data or data['type'] == 'general':
+                return self.__create_generic(request, session, data)
+            elif data['type'] == 'student':
+                return self.__create_student(request, session, data)
+            else:
+                return render_template('people/new.html',
+                    data=data,
+                    submit_button_text='Create',
+                    errors=['Didn\'t understand person type'])
         abort(405)
