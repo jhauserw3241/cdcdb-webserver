@@ -282,7 +282,6 @@ class Events:
             return render_template('events/new.html', data=data,
                 errors=errs, submit_button_text='Update')
         v_data['id'] = id
-        print("ID: ",id, v_data['id'])
         id = self.__db_update_event(v_data)
         if not id: abort(500)
         self.__db_update_meeting(v_data)
