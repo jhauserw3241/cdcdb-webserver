@@ -189,7 +189,7 @@ class People:
             return render_template('people/new.html', data=data,
                 errors=errs, submit_button_text='Update')
         v_data['id'] = id
-        id = seslf.__db_update_person(v_data)
+        id = self.__db_update_person(v_data)
         self.__db_delete_student(id)
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
