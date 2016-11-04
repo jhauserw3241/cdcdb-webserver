@@ -5,7 +5,7 @@
 {% if can_create %}
 <p><a href='/people/new'>Create new person</a></p>
 {% endif %}
-<table>
+<table id='people-table'>
 <tr>
 <th></th>
 <th></th>
@@ -25,6 +25,16 @@ person.people_last_name }}</a></td>
 <td>{% if person.people_company is not none() %}{{ person.people_company }}{% endif %}</td>
 <td>{% if person.students_year is not none() %}{{ person.students_year }}{% endif %}</td>
 <td>{% if person.students_major is not none() %}{{ person.students_major }}{% endif %}</td>
+{% if can_edit %}<td class='button'>
+	<a href='/people/{{ person.people_id }}/edit'>
+	<img width=15px src='/static/edit.png' alt='edit'/>
+	</a>
+</td>{% endif %}
+{% if can_delete %}<td class='button'>
+	<a href='/people/{{ person.people_id }}/delete'>
+	<img width=15px src='/static/delete.png' alt='delete'/>
+	</a>
+</td>{% endif %}
 </tr>
 {% endfor %}
 </table>

@@ -119,6 +119,24 @@ def people_id(id):
         return people.show(request, session, id)
     else: abort(405)
 
+@app.route('/people/<id>/edit', methods=['GET', 'POST'])
+def people_id_edit(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return people.edit(request, session, id)
+    elif request.method == 'POST':
+        return people.update(request, session, id)
+    else: abort(405)
+
+@app.route('/people/<id>/delete', methods=['GET'])
+def people_id_delete(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return people.delete(request, session, id)
+    else: abort(405)
+
 @app.route('/events/', methods=['GET'])
 def events_():
     if request.method == 'GET':

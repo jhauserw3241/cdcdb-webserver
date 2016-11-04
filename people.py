@@ -58,6 +58,7 @@ class People:
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
+                add_columns(studs.c.id, studs.c.eid).\
                 add_columns(studs.c.major, studs.c.year).\
                 add_columns(pos.c.title).\
                 outerjoin(studs, studs.c.id == ppl.c.id).\
@@ -97,6 +98,40 @@ class People:
                     eid=data['eid'],
                     year=data['year'],
                     major=data['major'])
+            db.execute(q)
+
+    def __db_update_person(self, data):
+        with DatabaseConnection() as db:
+            ppl, ppl_md = db.get_table("people")
+            q = ppl.update().\
+                returning(ppl.c.id).\
+                where(ppl.c.id == data['id']).\
+                values(
+                    first_name=data['fname'],
+                    last_name=data['lname'],
+                    company=data['company'],
+                    email=data['email'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
+
+    def __db_update_student(self, data):
+        self.__db_delete_student(data['id'])
+        self.__db_insert_student(data)
+
+    def __db_delete_person(self, id):
+        with DatabaseConnection() as db:
+            ppl, ppl_md = db.get_table("people")
+            q = ppl.delete().\
+                where(ppl.c.id == id)
+            db.execute(q)
+
+    def __db_delete_student(self, id):
+        with DatabaseConnection() as db:
+            stud, stud_md = db.get_table("students")
+            q = stud.delete().\
+                where(stud.c.id == id)
             db.execute(q)
 
     def __validate_generic(self, data):
@@ -148,6 +183,29 @@ class People:
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
 
+    def __update_generic(self, request, session, id, data):
+        v_data, errs = self.__validate_generic(data)
+        if errs:
+            return render_template('people/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        id = seslf.__db_update_person(v_data)
+        self.__db_delete_student(id)
+        id = self.b58.encode(id)
+        return redirect(url_for('people_id', id=id))
+
+    def __update_student(self, request, session, id, data):
+        v_data, errs = self.__validate_student(data)
+        if errs:
+            return render_template('people/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        id = self.__db_update_person(v_data)
+        if not id: abort(500)
+        self.__db_update_student(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('people_id', id=id))
+
     def __can_index(self, session, limit):
         if limit == 'officers':
             return True
@@ -158,6 +216,15 @@ class People:
         return 'is_officer' in session and session['is_officer']
 
     def __can_create(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_edit(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_delete(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_update(self, session):
         return 'is_officer' in session and session['is_officer']
 
     def login(self, request, session):
@@ -226,7 +293,9 @@ class People:
             ppl = [ globals.decode_year(r, 'students_year') for r in ppl ]
             ppl = [ globals.decode_major(r, 'students_major') for r in ppl ]
             return render_template('people/index.html', people=ppl,
-            can_create=self.__can_create(session))
+            can_create=self.__can_create(session),
+            can_edit=self.__can_edit(session),
+            can_delete=self.__can_delete(session))
         abort(405)
 
     def show(self, request, session, id):
@@ -236,7 +305,9 @@ class People:
             if person == None: abort(404)
             person = globals.decode_year(person, 'students_year')
             person = globals.decode_major(person, 'students_major')
-            return render_template('people/show.html', person=person)
+            return render_template('people/show.html', person=person,
+                can_edit=self.__can_edit(session),
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def new(self, request, session):
@@ -260,3 +331,43 @@ class People:
                     submit_button_text='Create',
                     errors=['Didn\'t understand person type'])
         abort(405)
+
+    def edit(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_edit(session): abort(403)
+            prsn = self.__db_get_person(id)
+            data = {}
+            data['fname'] = prsn['people_first_name']
+            data['lname'] = prsn['people_last_name']
+            data['company'] = prsn['people_company']
+            data['email'] = prsn['people_email']
+            if prsn['students_id']: data['type'] = 'student'
+            else: data['type'] = 'general'
+            data['eid'] = prsn['students_eid']
+            data['year'] = prsn['students_year']
+            data['major'] = prsn['students_major']
+            return render_template('people/new.html', data=data,
+                submit_button_text='Update')
+            pass
+        abort(405)
+
+    def update(self, request, session, id):
+        if request.method == 'POST':
+            if not self.__can_update(session): abort(403)
+            data = request.form
+            if not 'type' in data or data['type'] == 'general':
+                return self.__update_generic(request, session, id, data)
+            elif data['type'] == 'student':
+                return self.__update_student(request, session, id, data)
+            else:
+                return render_template('people/new.html',
+                    data=data,
+                    submit_button_text='Update',
+                    errors=['Didn\'t understand event type'])
+
+    def delete(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete_student(id)
+            self.__db_delete_person(id)
+            return redirect(url_for('people_'))

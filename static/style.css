@@ -155,7 +155,8 @@ table#inventory-table td.serial ,
 table#inventory-table td.notes {
 	max-width: 250px;
 }
-table#events-table td.button {
+table#events-table td.button,
+table#people-table td.button {
 	padding-right: 5px;
 }
 .hide {

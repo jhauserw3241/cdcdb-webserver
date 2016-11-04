@@ -13,4 +13,10 @@ Year: {{ person.students_year }}<br/>
 Major: {{ person.students_major }}<br/>
 </p>
 {% endif %}
+{% if can_edit %}
+<a href='/people/{{ person.people_id }}/edit'>Edit</a><br/>
+{% endif %}
+{% if can_delete %}
+<a href='/people/{{ person.people_id }}/delete'>Delete</a>
+{% endif %}
 {% endblock %}
