@@ -11,7 +11,7 @@
 <table id='create-event'>
 <tr>
 	<td>Name *</td>
-	<td colspan='2'><input type='text' name='name' value='{{ data.name }}'/></td>
+	<td colspan='2'><input type='text' name='name' value='{{ data.name }}' placeholder='required'/></td>
 </tr>
 <tr>
 	<td>Description</td>
@@ -19,11 +19,11 @@
 </tr>
 <tr>
 	<td>Start date *</td>
-	<td><input type='text' name='start_date' value='{{ data.start_date}}'/></td>
+	<td><input type='text' name='start_date' value='{{ data.start_date}}' placeholder='required'/></td>
 	<td><input type='text' name='start_time' value='{{ data.start_time }}'/></td>
 </tr>
 <tr>
-	<td>End date (optional)</td>
+	<td>End date</td>
 	<td><input type='text' name='end_date' value='{{ data.end_date}}'/></td>
 	<td><input type='text' name='end_time' value='{{ data.end_time }}'/></td>
 </tr>
@@ -44,8 +44,8 @@
 	</td>
 </tr>
 <tr class='meeting hide'>
-	<td>Link to minutes</td>
-	<td><input type='text' name='minutes' value='{{ data.minutes }}'/></td>
+	<td>minutes</td>
+	<td><input type='text' name='minutes' value='{{ data.minutes }}' placeholder='link'/></td>
 	<td></td>
 </tr>
 <tr class='meeting hide'>
@@ -57,8 +57,8 @@
 	<td></td>
 </tr>
 <tr class='competition hide'>
-	<td>Link to documentation</td>
-	<td><input type='text' name='documentation' value='{{ data.documentation }}'/></td>
+	<td>documentation</td>
+	<td><input type='text' name='documentation' value='{{ data.documentation }}' placeholder='link'/></td>
 	<td></td>
 </tr>
 <tr class='competition hide'>
