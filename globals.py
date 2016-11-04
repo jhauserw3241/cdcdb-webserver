@@ -144,7 +144,7 @@ class globals:
         elif year == 'SR': return 'Senior'
         elif year == 'GM': return 'Grad (Masters)'
         elif year == 'GP': return 'Grad (Doctorate)'
-        else: return 'Unknown'
+        else: return ''
 
     def translate_major(major):
         if   major == 'IS': return 'IS (Information Systems)'
