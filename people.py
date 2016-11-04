@@ -340,13 +340,13 @@ class People:
             data = {}
             data['fname'] = prsn['people_first_name']
             data['lname'] = prsn['people_last_name']
-            data['company'] = prsn['people_company']
+            data['company'] = prsn['people_company'] if prsn['people_company'] else ''
             data['email'] = prsn['people_email']
             if prsn['students_id']: data['type'] = 'student'
             else: data['type'] = 'general'
-            data['eid'] = prsn['students_eid']
+            data['eid'] = prsn['students_eid'] if prsn['students_eid'] else ''
             data['year'] = prsn['students_year']
-            data['major'] = prsn['students_major']
+            data['major'] = prsn['students_major'] if prsn['students_major'] else ''
             data['voting_member'] = prsn['students_voting_member']
             return render_template('people/new.html', data=data,
                 submit_button_text='Update')
