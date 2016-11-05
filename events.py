@@ -217,6 +217,8 @@ class Events:
         else:
             if 'start_date' in d:
                 d['end_date'] = d['start_date']
+        if 'end_date' in d and 'start_date' in d and d['end_date'] < d['start_date']:
+            errs.append("End date must be after start date")
         return d, errs
 
     def __validate_meeting(self, data):
