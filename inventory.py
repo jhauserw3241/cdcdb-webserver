@@ -144,8 +144,6 @@ class Inventory:
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
-            item = self.__db_get_item(id)
-            if item == None: abort(404)
             self.__db_update_item(id, request.form)
             return redirect(url_for('inventory_id', id=self.b58.encode(id)))
         abort(405)
