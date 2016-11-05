@@ -132,28 +132,13 @@ tr:hover {
 table td,
 table th {
 	margin:0;
-}
-table td:not(:last-of-type),
-table th:not(:last-of-type) {
-	padding-right: 20px;
+	padding-right: 10px;
 }
 input#done {
 	margin: 0 auto 50px 100px;
 }
-table#inventory-table {
-	margin:40px auto 40px auto;
-}
-table#inventory-table td {
-	max-width: 100px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
 table#create-event td {
 	min-width: 160px;
-}
-table#inventory-table td.serial ,
-table#inventory-table td.notes {
-	max-width: 250px;
 }
 table#events-table td.button,
 table#people-table td.button {
