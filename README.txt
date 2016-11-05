@@ -28,7 +28,7 @@ __update_* is a "sub function" of update and will call __db_*_* as needed
 __validate* takes form data and returns a validated copy of it and any errors in
 an array of errors. "validated" means the output data dictionary SHOULD have all
 possible fields, and unspecified/empty ones SHOULD be None. The array of errors
-has length of zero when there were no errors. The caller SHOULD NOT touch the DB
+has length of zero when there were no errors. The caller MUST NOT touch the DB
 if len(errs) is not zero. For resources that have sub types, the sub-type's
 validate MUST call the generic's validate. For example, a meeting is a type of
 event. __validate_meeting MUST call __validate_event and pass on all data/errors
