@@ -3,6 +3,12 @@
 {% block body %}
 <h1><a href='/events'>Events</a></h1>
 <h2>{{ event.event_name }}</h2>
+<p>
+When: <strong>{{ event.event_start_friendly }}</strong><br/>
+{% if event.event_start_friendly != event.event_end_friendly %}
+To: <strong>{{ event.event_end_friendly }}</strong>
+{% endif %}
+</p>
 <p>{{ event.event_description }}</p>
 {% if event.meeting_id %}
 {% if event.meeting_minutes %}

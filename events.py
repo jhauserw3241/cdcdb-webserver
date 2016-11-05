@@ -32,8 +32,12 @@ class Events:
             e['relative_start'] = self.sqlts_to_rel(str(start))
             e['relative_end'] = self.sqlts_to_rel(str(end))
             e['duration'] = duration
-            e['event_start_timestamp'] = self.frmt_dt(start, "%c")
-            e['event_end_timestamp'] = self.frmt_dt(end, "%c")
+            e['event_start_friendly'] = self.frmt_dt(start, "%d %b %Y")
+            if start.hour != 0 or start.minute != 0:
+                e['event_start_friendly'] += self.frmt_dt(start, " %H:%M")
+            e['event_end_friendly'] = self.frmt_dt(end, "%d %b %Y")
+            if end.hour != 0 or end.minute != 0:
+                e['event_end_friendly'] += self.frmt_dt(end, " %H:%M")
         return events
 
     def __db_get_events(self, future_only=False):
@@ -49,7 +53,6 @@ class Events:
             q = q.order_by(evts.c.start_timestamp)
             db.execute(q)
             events = [ self.encode_id(dict(row), 'event_id') for row in db.fetchall() ]
-            events = self.__events_date_magic(events)
             return events[::-1]
 
     def __db_get_event(self, id):
@@ -306,12 +309,15 @@ class Events:
 
     def future_events(self, request, session):
         if not self.__can_index(session): abort(403)
-        return self.__db_get_events(future_only=True)
+        events = self.__db_get_events(future_only=True)
+        events = self.__events_date_magic(events)
+        return events
 
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
             events = self.__db_get_events()
+            events = self.__events_date_magic(events)
             return render_template('events/index.html', events=events,
                 can_create=self.__can_create(session),
                 can_edit=self.__can_edit(session),
@@ -323,6 +329,7 @@ class Events:
             if not self.__can_show(session): abort(403)
             evt = self.__db_get_event(id)
             if not evt: abort(404)
+            evt = self.__events_date_magic([evt])[0]
             return render_template('events/show.html', event=evt,
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))
