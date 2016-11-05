@@ -3,9 +3,6 @@
 {% block body %}
 <h1><a href='/inventory/'>Inventory</a></h1>
 <h2>{{ item.inventory_description }}</h2>
-{% if can_edit %}
-<p><a href='/inventory/{{ item.inventory_id }}/edit'>Edit</a></p>
-{% endif %}
 <p>
 Serial Number: {{ item.inventory_serial_number }}<br/>
 Make: {{ item.inventory_make }}<br/>
@@ -16,4 +13,10 @@ Manufacturer: {{ item.inventory_manufacturer }}<br/>
 <p>{{ item.inventory_location }}<p>
 <h3>Notes</h3>
 <p>{% if item.inventory_other_notes is not none %}{{ item.inventory_other_notes }}{% endif %}</p>
+{% if can_edit %}
+<a href='/inventory/{{ item.inventory_id }}/edit'>Edit</a><br/>
+{% endif %}
+{% if can_delete %}
+<a href='/inventory/{{ item.inventory_id }}/delete'>Delete</a>
+{% endif %}
 {% endblock %}

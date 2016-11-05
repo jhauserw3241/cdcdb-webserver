@@ -109,12 +109,17 @@ class Inventory:
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __can_delete(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
             items = self.__db_get_inventory()
             return render_template('inventory/index.html', items=items,
-                can_create=self.__can_create(session))
+                can_create=self.__can_create(session),
+                can_edit=self.__can_edit(session),
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def show(self, request, session, id):
@@ -124,7 +129,8 @@ class Inventory:
             if item == None:
                 abort(404)
             return render_template('inventory/show.html', item=item,
-            can_edit=self.__can_edit(session))
+            can_edit=self.__can_edit(session),
+            can_delete=self.__can_delete(session))
         abort(405)
 
     def edit(self, request, session, id):
