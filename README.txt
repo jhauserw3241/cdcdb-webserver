@@ -34,3 +34,7 @@ validate MUST call the generic's validate. For example, a meeting is a type of
 event. __validate_meeting MUST call __validate_event and pass on all data/errors
 it gets from __validate_event. The generic type MAY be called 'generic' instead
 of, in this example, 'event'.
+
+Even if a validate function doesn't seem to do anything other than manually
+copying a dict key-by-key, it's at least converting from an immutable dict to a
+dict.

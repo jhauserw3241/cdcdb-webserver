@@ -79,6 +79,14 @@ def inventory_():
         return inventory.index(request, session)
     else: abort(405)
 
+@app.route('/inventory/new/', methods=['GET', 'POST'])
+def inventory_new():
+    if request.method == 'GET':
+        return inventory.new(request, session)
+    elif request.method == 'POST':
+        return inventory.create(request, session)
+    else: abort(405)
+
 @app.route('/inventory/<id>', methods=['GET'])
 def inventory_id(id):
     id = decode_id(id)
