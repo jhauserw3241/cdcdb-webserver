@@ -8,7 +8,6 @@
 <table id='inventory-table'>
 <tr>
 	<th>Item</th>
-	<th>Serial</th>
 	<th>Make</th>
 	<th>Model</th>
 	<th>Manufacturer</th>
@@ -17,13 +16,12 @@
 </tr>
 {% for item in items %}
 <tr>
-	<td><a href='/inventory/{{ item.inventory_id }}'>{{ item.inventory_description }}</a></td>
-	<td class='serial'>{{ item.inventory_serial_number }}</td>
-	<td>{{ item.inventory_make }}</td>
-	<td>{{ item.inventory_model }}</td>
-	<td>{{ item.inventory_manufacturer }}</td>
+	<td><a href='/inventory/{{ item.inventory_id }}'>{{ item.inventory_description if item.inventory_description is not none() else '' }}</a></td>
+	<td>{{ item.inventory_make if item.inventory_make is not none() else '' }}</td>
+	<td>{{ item.inventory_model if item.inventory_model is not none() else '' }}</td>
+	<td>{{ item.inventory_manufacturer if item.inventory_manufacturer is not none() else '' }}</td>
 	<td>{{ item.inventory_location }}</td>
-	<td class='notes'>{% if item.inventory_other_notes is not none %}{{ item.inventory_other_notes }}{% endif %}</td>
+	<td>{{ item.inventory_other_notes if item.inventory_other_notes is not none() else '' }}</td>
 </tr>
 {% endfor %}
 </table>
