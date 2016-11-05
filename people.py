@@ -29,6 +29,7 @@ class People:
             pos, pos_md = db.get_table("position")
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
+                add_columns(ppl.c.preferred_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
                 add_columns(studs.c.major, studs.c.year).\
                 add_columns(pos.c.title)
@@ -57,6 +58,7 @@ class People:
             pos, pos_md = db.get_table("position")
             q = db.query().\
                 add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
+                add_columns(ppl.c.preferred_name).\
                 add_columns(ppl.c.company, ppl.c.email).\
                 add_columns(studs.c.id, studs.c.eid).\
                 add_columns(studs.c.major, studs.c.year).\
@@ -83,6 +85,7 @@ class People:
                 values(
                     first_name=data['fname'],
                     last_name=data['lname'],
+                    preferred_name=data['prefname'],
                     company=data['company'],
                     email=data['email'])
             db.execute(q)
@@ -111,6 +114,7 @@ class People:
                 values(
                     first_name=data['fname'],
                     last_name=data['lname'],
+                    preferred_name=data['prefname'],
                     company=data['company'],
                     email=data['email'])
             db.execute(q)
@@ -145,6 +149,7 @@ class People:
             errs.append('First name is required')
         d['fname'] = data['fname']
         d['lname'] = data['lname']
+        d['prefname'] = data['prefname']
         d['company'] = data['company']
         if not data['email']:
             errs.append('Email is required')
@@ -340,6 +345,7 @@ class People:
             data = {}
             data['fname'] = prsn['people_first_name']
             data['lname'] = prsn['people_last_name']
+            data['prefname'] = prsn['people_preferred_name'] if prsn['people_preferred_name'] else ''
             data['company'] = prsn['people_company'] if prsn['people_company'] else ''
             data['email'] = prsn['people_email']
             if prsn['students_id']: data['type'] = 'student'
