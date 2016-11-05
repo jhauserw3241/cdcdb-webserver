@@ -149,5 +149,6 @@ class globals:
     def translate_major(major):
         if   major == 'IS': return 'IS (Information Systems)'
         elif major == 'CS': return 'CS (Computer Science)'
-        elif not major: return ""
-        else: return ""
+        elif not major: return ''
+        elif major.lower() == 'unknown': return ''
+        else: return major
