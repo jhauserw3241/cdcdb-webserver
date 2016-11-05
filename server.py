@@ -223,7 +223,7 @@ def vms_id_edit(id):
         return vms.update(request, session, id)
     else: abort(405)
 
-@app.route('/vms/<id>/edit', methods={'GET'})
+@app.route('/vms/<id>/delete', methods=['GET'])
 def vms_id_delete(id):
     id = decode(id)
     if id == None: abort(404)
