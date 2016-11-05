@@ -71,6 +71,13 @@ class Inventory:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+    def __db_delete_item(self, id):
+        with DatabaseConnection() as db:
+            inv, inv_md = db.get_table("inventory")
+            q = inv.delete().\
+                where(inv.c.id == id)
+            db.execute(q)
+
     def __validate_item(self, data):
         d = {}
         errs = []
@@ -161,3 +168,9 @@ class Inventory:
             data = request.form
             return self.__create_item(request, session, data)
         abort(405)
+
+    def delete(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete_item(id)
+            return redirect(url_for('inventory_'))

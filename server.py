@@ -107,6 +107,14 @@ def inventory_id_edit(id):
         return inventory.update(request, session, id)
     else: abort(405)
 
+@app.route('/inventory/<id>/delete', methods=['GET'])
+def inventory_id_delete(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return inventory.delete(request, session, id)
+    else: abort(405)
+
 @app.route('/people/', methods=['GET'])
 def people_():
     if request.method == 'GET':
