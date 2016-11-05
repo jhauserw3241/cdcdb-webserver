@@ -36,13 +36,13 @@ class People:
                 q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
                     join(pos,
                         (pos.c.id == ppl.c.id) &
-                        (pos.c.year == current_year)
+                        (pos.c.year.like('%{}%'.format(current_year)))
                     )
             else:
                 q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
                     outerjoin(pos,
                         (pos.c.id == ppl.c.id) &
-                        (pos.c.year == current_year)
+                        (pos.c.year.like('%{}%'.format(current_year)))
                     )
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'people_id') for row in
