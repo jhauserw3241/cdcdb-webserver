@@ -65,7 +65,7 @@ class People:
                 outerjoin(studs, studs.c.id == ppl.c.id).\
                 outerjoin(pos,
                     (pos.c.id == ppl.c.id) &
-                    (pos.c.year == current_year)
+                    (pos.c.year.like('%{}%'.format(current_year)))
                 ).\
                 filter(ppl.c.id == id)
             db.execute(q)
