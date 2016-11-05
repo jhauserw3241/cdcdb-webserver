@@ -197,7 +197,7 @@ def vms_():
         return vms.index(request, session)
     else: abort(405)
 
-@app.route('/vms/new', methods=['GET', 'POST'])
+@app.route('/vms/new/', methods=['GET', 'POST'])
 def vms_create():
     if request.method == 'GET':
         return vms.new(request, session)
