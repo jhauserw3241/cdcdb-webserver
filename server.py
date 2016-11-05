@@ -15,6 +15,7 @@ from inventory import Inventory
 from people import People
 from robohash import Robohash
 from test import Test
+from vms import VMs
 
 app = Flask(__name__)
 # The handler classes for each route type
@@ -25,6 +26,7 @@ inventory = Inventory()
 people = People()
 robohash = Robohash()
 test = Test()
+vms = VMs()
 
 config = globals.config
 
@@ -195,6 +197,46 @@ def robohash_s(s):
 def test_():
     if request.method == 'GET':
         return test.do(request, session)
+    else: abort(405)
+
+@app.route('/vms', methods=['GET'])
+def vms_():
+    if request.method == 'GET':
+        return vms.index(request, session)
+    else: abort(405)
+
+@app.route('/vms/new/', methods=['GET', 'POST'])
+def vms_create():
+    if request.method == 'GET':
+        return vms.new(request, session)
+    if request.method == 'POST':
+        return vms.create(request, session)
+    else: abort(405)
+
+@app.route('/vms/<id>', methods=['GET'])
+def vms_id(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return vms.show(request, session, id)
+    else: abort(405)
+
+@app.route('/vms/<id>/edit', methods=['GET', 'POST'])
+def vms_id_edit(id):
+    id = decode(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return vms.edit(request, session, id)
+    if request.method == 'POST':
+        return vms.update(request, session, id)
+    else: abort(405)
+
+@app.route('/vms/<id>/delete', methods=['GET'])
+def vms_id_delete(id):
+    id = decode(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return vms.delete(request, session, id)
     else: abort(405)
 
 if __name__=='__main__':
