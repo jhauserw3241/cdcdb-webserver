@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Our Crap{% endblock %}
+{% block title %}Our Inventory{% endblock %}
 {% block body %}
-<h1>Our Crap</h1>
+<h1>Inventory</h1>
+{% if can_create %}
+<p><a href='/inventory/new'>Create new item</a></p>
+{% endif %}
 <table id='inventory-table'>
 <tr>
 	<th>Item</th>

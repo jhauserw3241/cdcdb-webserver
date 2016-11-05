@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Create/Edit Item{% endblock %}
+{% block body %}
+<h1><a href='/inventory/'>Inventory</a></h1>
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+<form id='item_form' action='{{ form_action }}' method='POST'>
+<table id='create-item'>
+<tr>
+	<td>Description</td>
+	<td colspan='2'><input type='text' name='description' value='{{ data.description }}'/></td>
+</tr>
+<tr>
+	<td>Serial Number</td>
+	<td colspan='2'><input type='text' name='serial_number' value='{{ data.serial_number }}'/></td>
+</tr>
+<tr>
+	<td>Make</td>
+	<td colspan='2'><input type='text' name='make' value='{{ data.make }}'/></td>
+</tr>
+<tr>
+	<td>Model</td>
+	<td colspan='2'><input type='text' name='model' value='{{ data.model }}'/></td>
+</tr>
+<tr>
+	<td>Manufacturer</td>
+	<td colspan='2'><input type='text' name='manufacturer' value='{{ data.manufacturer }}'/></td>
+</tr>
+<tr>
+	<td>Location</td>
+	<td colspan='2'><input type='text' name='location' value='{{ data.location }}' placeholder='required'/></td>
+</tr>
+<tr>
+	<td>Notes</td>
+	<td><textarea name='other_notes'>{{ data.other_notes }}</textarea></td>
+</tr>
+<tr>
+	<td><input type='submit' name='create' value='{{ submit_button_text }}'/></td>
+	<td><a href=''>Start over</a></td>
+	<td></td>
+</tr>
+</table>
+</form>
+<!-- <script src='/static/events.js'></script> -->
+{% endblock %}

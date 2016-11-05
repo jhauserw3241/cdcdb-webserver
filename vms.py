@@ -15,10 +15,6 @@ class VMs:
     def __init__(self):
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
-        self.sqlts_to_rel = globals.sqltimestamp_to_relative
-        self.frmt_dt = globals.format_datetime
-        self.dt_diff = globals.datetime_difference
-        self.td_to_rel = globals.timedelta_to_relative
 
     def __can_index(self, session):
         return True

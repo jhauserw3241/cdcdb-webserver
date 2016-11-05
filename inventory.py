@@ -53,6 +53,47 @@ class Inventory:
                 )
             db.execute(q)
 
+    def __db_insert_item(self, data):
+        with DatabaseConnection() as db:
+            inv, inv_md = db.get_table("inventory")
+            q = inv.insert().\
+                returning(inv.c.id).\
+                values(
+                    description=data['description'],
+                    serial_number=data['serial_number'],
+                    make=data['make'],
+                    model=data['model'],
+                    manufacturer=data['manufacturer'],
+                    location=data['location'],
+                    other_notes=data['other_notes'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
+
+    def __validate_item(self, data):
+        d = {}
+        errs = []
+        d['description'] = data['description']
+        d['serial_number'] = data['serial_number']
+        d['make'] = data['make']
+        d['model'] = data['model']
+        d['manufacturer'] = data['manufacturer']
+        if not data['location']:
+            errs.append('Location is required')
+        d['location'] = data['location']
+        d['other_notes'] = data['other_notes']
+        return d, errs
+
+    def __create_item(self, request, session, data):
+        v_data, errs = self.__validate_item(data)
+        if errs:
+            return render_template('inventory/new.html', data=data,
+                errors=errs, submit_button_text='Create')
+        id = self.__db_insert_item(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('inventory_id', id=id))
+
     def __can_index(self, session):
         return 'is_student' in session and session['is_student']
 
@@ -65,11 +106,15 @@ class Inventory:
     def __can_update(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __can_create(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
             items = self.__db_get_inventory()
-            return render_template('inventory/index.html', items=items)
+            return render_template('inventory/index.html', items=items,
+                can_create=self.__can_create(session))
         abort(405)
 
     def show(self, request, session, id):
@@ -97,4 +142,18 @@ class Inventory:
             if item == None: abort(404)
             self.__db_update_item(id, request.form)
             return redirect(url_for('inventory_id', id=self.b58.encode(id)))
+        abort(405)
+
+    def new(self, request, session):
+        if request.method == 'GET':
+            if not self.__can_create(session): abort(403)
+            return render_template('inventory/new.html',
+                data={}, submit_button_text='Create')
+        abort(405)
+
+    def create(self, request, session):
+        if request.method == 'POST':
+            if not self.__can_create(session): abort(403)
+            data = request.form
+            return self.__create_item(request, session, data)
         abort(405)

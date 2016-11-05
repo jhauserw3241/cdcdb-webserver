@@ -81,6 +81,14 @@ def inventory_():
         return inventory.index(request, session)
     else: abort(405)
 
+@app.route('/inventory/new/', methods=['GET', 'POST'])
+def inventory_new():
+    if request.method == 'GET':
+        return inventory.new(request, session)
+    elif request.method == 'POST':
+        return inventory.create(request, session)
+    else: abort(405)
+
 @app.route('/inventory/<id>', methods=['GET'])
 def inventory_id(id):
     id = decode_id(id)
@@ -197,7 +205,7 @@ def vms_():
         return vms.index(request, session)
     else: abort(405)
 
-@app.route('/vms/new', methods=['GET', 'POST'])
+@app.route('/vms/new/', methods=['GET', 'POST'])
 def vms_create():
     if request.method == 'GET':
         return vms.new(request, session)
@@ -223,7 +231,7 @@ def vms_id_edit(id):
         return vms.update(request, session, id)
     else: abort(405)
 
-@app.route('/vms/<id>/edit', methods={'GET'})
+@app.route('/vms/<id>/delete', methods=['GET'])
 def vms_id_delete(id):
     id = decode(id)
     if id == None: abort(404)
