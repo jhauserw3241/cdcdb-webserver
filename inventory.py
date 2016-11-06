@@ -145,7 +145,16 @@ class Inventory:
             if not self.__can_edit(session): abort(403)
             item = self.__db_get_item(id)
             if not item: abort(404)
-            return render_template('inventory/edit.html', item=item)
+            data = {}
+            data['description'] = item['inventory_description']
+            data['serial_number'] = item['inventory_serial_number']
+            data['make'] = item['inventory_make']
+            data['model'] = item['inventory_model']
+            data['manufacturer'] = item['inventory_manufacturer']
+            data['location'] = item['inventory_location']
+            data['other_notes'] = item['inventory_other_notes']
+            return render_template('inventory/new.html', data=data,
+                submit_button_text='Update')
         abort(405)
 
     def update(self, request, session, id):
