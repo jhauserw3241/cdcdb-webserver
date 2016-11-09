@@ -5,7 +5,6 @@
 {% for event in events %}
 <li><a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a> <span
 title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</span></li>
-</li>
 {% endfor %}
 </ul>
 <p><a href='/events'>All events</a>
