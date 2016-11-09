@@ -21,7 +21,7 @@ class Index:
     def index(self, request, session, events):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
-            evts = events.future_events(request, session)
+            evts = events.future_events(request, session)[::-1]
             return render_template('index.html', events=evts)
         abort(405)
 
