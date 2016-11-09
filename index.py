@@ -18,10 +18,6 @@ class Index:
     def __can_index(self, session):
         return True
 
-    def future_events(self, request, session):
-        if not self.__can_index(session): abort(403)
-        return self.__db.get_events(future_only=True)
-
     def index(self, request, session, events):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
