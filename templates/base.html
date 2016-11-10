@@ -22,11 +22,10 @@
 	{% if session.is_student %}
 	<li><a href='/inventory'>Inventory</a></li>
 	{% endif %}
-	<li><a href='/people?limit=officers'>Officers</a></li>
+	<li><a href='/people'>People</a></li>
 	{% if session.is_officer %}
 	<li><p>Officer</p>
 		<ul>
-		<li><a href='/people'>People</a></li>
 		<li><a href='/'>Positions</a></li>
 		<li><a href='/'>VMs</a></li>
 		</ul>

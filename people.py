@@ -21,33 +21,39 @@ class People:
         self.hash_password = globals.hash_password
         self.encode_id = globals.encode_id
 
-    def __db_get_people(self, limit):
+    def __db_get_others(self):
         with DatabaseConnection() as db:
-            current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = db.get_table("people")
-            studs, studs_md = db.get_table("students")
-            pos, pos_md = db.get_table("position")
-            q = db.query().\
-                add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
-                add_columns(ppl.c.preferred_name).\
-                add_columns(ppl.c.company, ppl.c.email).\
-                add_columns(studs.c.major, studs.c.year).\
-                add_columns(pos.c.title)
-            if limit == 'officers':
-                q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
-                    join(pos,
-                        (pos.c.id == ppl.c.id) &
-                        (pos.c.year.like('%{}%'.format(current_year)))
-                    )
-            else:
-                q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
-                    outerjoin(pos,
-                        (pos.c.id == ppl.c.id) &
-                        (pos.c.year.like('%{}%'.format(current_year)))
-                    )
+            others, _ = db.get_table("not_students")
+            q = db.query().add_columns(others)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'people_id') for row in
+            rows = [ self.encode_id(dict(r), 'not_students_id') for r in
                 db.fetchall() ]
+            return rows
+
+    def __db_get_officers(self, current_only=False):
+        with DatabaseConnection() as db:
+            offs, _ = db.get_table("officers") if current_only else \
+                db.get_table("all_officers")
+            q = db.query().add_columns(offs)
+            db.execute(q)
+            rows = [ self.encode_id(dict(r), 'officers_id') for r in
+                db.fetchall() ]
+            return rows
+
+    def __db_get_students(self, are_voting=False):
+        with DatabaseConnection() as db:
+            not_offs, _ = db.get_table("not_officers")
+            studs, _ = db.get_table("students")
+            q = db.query().\
+                add_columns(not_offs).\
+                add_columns(studs).\
+                join(studs, studs.c.id == not_offs.c.id).\
+                filter(studs.c.voting_member == are_voting)
+            db.execute(q)
+            rows = [ self.encode_id(dict(r), 'students_id') for r in
+                db.fetchall() ]
+            rows = [ globals.decode_year(r, 'students_year') for r in rows ]
+            rows = [ globals.decode_major(r, 'students_major') for r in rows ]
             return rows
 
     def __db_get_person(self, id):
@@ -212,11 +218,18 @@ class People:
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
 
-    def __can_index(self, session, limit):
-        if limit == 'officers':
-            return True
-        else:
-            return 'is_officer' in session and session['is_officer']
+    def __can_index(self, session):
+        return True
+
+    def __can_index_students(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_index_officers(self, session, current_only=False):
+        if current_only: return True
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_index_others(self, session):
+        return 'is_officer' in session and session['is_officer']
 
     def __can_show(self, session):
         return 'is_officer' in session and session['is_officer']
@@ -290,18 +303,23 @@ class People:
 
     def index(self, request, session):
         if request.method == 'GET':
-            if request.args and request.args['limit']:
-                limit = request.args['limit']
-            else:
-                limit = None
-            if not self.__can_index(session, limit): abort(403)
-            ppl = self.__db_get_people(limit)
-            ppl = [ globals.decode_year(r, 'students_year') for r in ppl ]
-            ppl = [ globals.decode_major(r, 'students_major') for r in ppl ]
-            return render_template('people/index.html', people=ppl,
-            can_create=self.__can_create(session),
-            can_edit=self.__can_edit(session),
-            can_delete=self.__can_delete(session))
+            if not self.__can_index(session): abort(403)
+            v_studs = self.__db_get_students(are_voting=True) if \
+                self.__can_index_students(session) else []
+            nv_studs = self.__db_get_students(are_voting=False) if \
+                self.__can_index_students(session) else []
+            officers = self.__db_get_officers(current_only=True) if \
+                self.__can_index_officers(session, current_only=True) else []
+            others = self.__db_get_others() if \
+                self.__can_index_others(session) else []
+            return render_template('people/index.html',
+                voting_students=v_studs,
+                nonvoting_students=nv_studs,
+                officers=officers,
+                others=others,
+                can_create=self.__can_create(session),
+                can_edit=self.__can_edit(session),
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def show(self, request, session, id):
