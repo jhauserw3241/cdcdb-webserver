@@ -21,64 +21,57 @@ class People:
         self.hash_password = globals.hash_password
         self.encode_id = globals.encode_id
 
-    def __db_get_people(self):
+    def __db_get_people(self, limit):
         with DatabaseConnection() as db:
-            nstuds, nstuds_md = db.get_table("not_students")
-            q = db.query().add_columns(nstuds)
+            current_year = globals.current_datetime("%Y")
+            ppl, ppl_md = db.get_table("people")
+            studs, studs_md = db.get_table("students")
+            pos, pos_md = db.get_table("position")
+            q = db.query().\
+                add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
+                add_columns(ppl.c.preferred_name).\
+                add_columns(ppl.c.company, ppl.c.email).\
+                add_columns(studs.c.major, studs.c.year).\
+                add_columns(pos.c.title)
+            if limit == 'officers':
+                q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
+                    join(pos,
+                        (pos.c.id == ppl.c.id) &
+                        (pos.c.year.like('%{}%'.format(current_year)))
+                    )
+            else:
+                q = q.outerjoin(studs, studs.c.id == ppl.c.id).\
+                    outerjoin(pos,
+                        (pos.c.id == ppl.c.id) &
+                        (pos.c.year.like('%{}%'.format(current_year)))
+                    )
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'not_students_id') for row in
+            rows = [ self.encode_id(dict(row), 'people_id') for row in
                 db.fetchall() ]
             return rows
-
-    def __db_get_students(self):
-        with DatabaseConnection() as db:
-            noff, noff_md = db.get_table("not_officers")
-            studs, studs_md = db.get_table("students")
-            q = db.query().add_columns(noff).add_columns(studs).\
-                join(studs, studs.c.id == noff.c.id)
-            db.execute(q)
-            #for r in db.fetchall(): print(dict(r))
-            rows = [ self.encode_id(dict(row), 'not_officers_id') for row in
-                db.fetchall() ]
-            return rows
-
-    def __db_get_current_officers(self):
-        with DatabaseConnection() as db:
-            coff, coff_md = db.get_table("officers")
-            studs, studs_md = db.get_table("students")
-            # get student officers
-            q = db.query().add_columns(coff).add_columns(studs).\
-                join(studs, studs.c.id == coff.c.id)
-            db.execute(q)
-            officers = [ dict(r) for r in db.fetchall() ]
-            # get faculty officers
-            stud_offs = db.exists().where(studs.c.id==coff.c.id)
-            q = db.query().add_columns(coff).\
-                filter(~stud_offs)
-            db.execute(q)
-            faculty_officers = [ self.encode_id(dict(row), 'officers_id') for
-                row in db.fetchall() ]
-            officers = [ self.encode_id(o, 'officers_id') for o in officers ]
-            return officers, faculty_officers
-
-    def __db_get_all_officers(self):
-        with DatabaseConnection() as db:
-            off, off_md = db.get_table("all_officers")
-            q = db.query().add_columns(off)
-            db.execute(q)
-            officers = [ self.encode_id(dict(row), 'all_officers_id') for row in
-                db.fetchall() ]
-            return officers
 
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = db.get_table("people_read")
+            ppl, ppl_md = db.get_table("people")
+            studs, studs_md = db.get_table("students")
+            pos, pos_md = db.get_table("position")
             q = db.query().\
-                add_columns(ppl).\
+                add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
+                add_columns(ppl.c.preferred_name).\
+                add_columns(ppl.c.company, ppl.c.email).\
+                add_columns(studs.c.id, studs.c.eid).\
+                add_columns(studs.c.major, studs.c.year).\
+                add_columns(studs.c.voting_member).\
+                add_columns(pos.c.title).\
+                outerjoin(studs, studs.c.id == ppl.c.id).\
+                outerjoin(pos,
+                    (pos.c.id == ppl.c.id) &
+                    (pos.c.year.like('%{}%'.format(current_year)))
+                ).\
                 filter(ppl.c.id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'people_read_id') for row in
+            rows = [ self.encode_id(dict(row), 'people_id') for row in
                 db.fetchall() ]
             if len(rows) != 1:
                 return None
@@ -219,29 +212,26 @@ class People:
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
 
-    def __can_index(self, session):
-        return True
+    def __can_index(self, session, limit):
+        if limit == 'officers':
+            return True
+        else:
+            return 'is_officer' in session and session['is_officer']
 
-    def __can_index_everybody(self, session):
+    def __can_show(self, session):
         return 'is_officer' in session and session['is_officer']
-
-    def __can_show(self, session, id):
-        return 'is_officer' in session and session['is_officer'] or\
-            ('person_id' in session and session['person_id'] == id and id is not None)
 
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __can_edit(self, session, id=None):
-        return ('is_officer' in session and session['is_officer']) or\
-            ('person_id' in session and session['person_id'] == id and id is not None)
+    def __can_edit(self, session):
+        return 'is_officer' in session and session['is_officer']
 
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __can_update(self, session, id=None):
-        return ('is_officer' in session and session['is_officer']) or\
-            ('person_id' in session and session['person_id'] == id and id is not None)
+    def __can_update(self, session):
+        return 'is_officer' in session and session['is_officer']
 
     def login(self, request, session):
         if request.method == 'GET':
@@ -300,41 +290,27 @@ class People:
 
     def index(self, request, session):
         if request.method == 'GET':
-            if not self.__can_index(session): abort(403)
-            if self.__can_index_everybody(session):
-                # non-students
-                ppl = self.__db_get_people()
-                # students, but never officers
-                studs = self.__db_get_students()
-                studs = [ globals.decode_year(s, 'students_year') for s in studs ]
-                studs = [ globals.decode_major(s, 'students_major') for s in studs ]
-                studs = sorted(studs, key=lambda k: k['not_officers_last_name'])
-                # all officers
-                offs_all = self.__db_get_all_officers()
-                offs_all = sorted(offs_all, key=lambda k:
-                    k['all_officers_start_date'], reverse=True)
+            if request.args and request.args['limit']:
+                limit = request.args['limit']
             else:
-                ppl, studs, offs_all = None, None, None
-            # current officers, student and non-student
-            coffs_stud, coffs_falc = self.__db_get_current_officers()
+                limit = None
+            if not self.__can_index(session, limit): abort(403)
+            ppl = self.__db_get_people(limit)
+            ppl = [ globals.decode_year(r, 'students_year') for r in ppl ]
+            ppl = [ globals.decode_major(r, 'students_major') for r in ppl ]
             return render_template('people/index.html', people=ppl,
-                students=studs,
-                current_officers=coffs_stud,
-                current_faculty_officers=coffs_falc,
-                all_officers=offs_all,
-                can_index_everybody=self.__can_index_everybody(session),
-                can_create=self.__can_create(session),
-                can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))
+            can_create=self.__can_create(session),
+            can_edit=self.__can_edit(session),
+            can_delete=self.__can_delete(session))
         abort(405)
 
     def show(self, request, session, id):
         if request.method == 'GET':
-            if not self.__can_show(session, id): abort(403)
+            if not self.__can_show(session): abort(403)
             person = self.__db_get_person(id)
             if person == None: abort(404)
-            #person = globals.decode_year(person, 'students_year')
-            #person = globals.decode_major(person, 'students_major')
+            person = globals.decode_year(person, 'students_year')
+            person = globals.decode_major(person, 'students_major')
             return render_template('people/show.html', person=person,
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))
