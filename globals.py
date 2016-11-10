@@ -82,7 +82,10 @@ class globals:
             hours = v//sec_in_hr
             v -= sec_in_hr * hours
             minutes = v//sec_in_min
-            ret = "{}h{}m".format(hours, minutes)
+            if minutes == 0:
+                return "{} hour{}".format(hours,"s" if hours!=1 else "")
+            else:
+                ret = "{}h{}m".format(hours, minutes)
         else:
             days = v//sec_in_day
             ret = str(days) + " day" + ("s" if days!=1 else "")
