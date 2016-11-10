@@ -1,4 +1,5 @@
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import exists
 from sqlalchemy import MetaData, Table
 from globals import globals
 # manages a connection to a database
@@ -29,6 +30,9 @@ class DatabaseConnection:
 
     def query(self, *entities, **kwargs):
         return self.sess.query(*entities, **kwargs)
+
+    def exists(self):
+        return exists()
 
     def commit(self):
         self.sess.commit()
