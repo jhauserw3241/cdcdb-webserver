@@ -144,7 +144,7 @@ class People:
             errs.append('First name is required')
         d['fname'] = data['fname']
         d['lname'] = data['lname']
-        d['prefname'] = data['prefname']
+        d['prefname'] = data['prefname'] if data['prefname'] else None
         d['company'] = data['company']
         if not data['email']:
             errs.append('Email is required')
