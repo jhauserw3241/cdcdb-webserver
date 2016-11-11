@@ -59,25 +59,14 @@ class People:
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
             current_year = globals.current_datetime("%Y")
-            ppl, ppl_md = db.get_table("people")
+            ppl, ppl_md = db.get_table("people_read")
             studs, studs_md = db.get_table("students")
-            pos, pos_md = db.get_table("position")
             q = db.query().\
-                add_columns(ppl.c.id, ppl.c.first_name, ppl.c.last_name).\
-                add_columns(ppl.c.preferred_name).\
-                add_columns(ppl.c.company, ppl.c.email).\
-                add_columns(studs.c.id, studs.c.eid).\
-                add_columns(studs.c.major, studs.c.year).\
-                add_columns(studs.c.voting_member).\
-                add_columns(pos.c.title).\
+                add_columns(ppl).add_columns(studs).\
                 outerjoin(studs, studs.c.id == ppl.c.id).\
-                outerjoin(pos,
-                    (pos.c.id == ppl.c.id) &
-                    (pos.c.year.like('%{}%'.format(current_year)))
-                ).\
                 filter(ppl.c.id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'people_id') for row in
+            rows = [ self.encode_id(dict(row), 'people_read_id') for row in
                 db.fetchall() ]
             if len(rows) != 1:
                 return None
@@ -361,11 +350,11 @@ class People:
             if not self.__can_edit(session): abort(403)
             prsn = self.__db_get_person(id)
             data = {}
-            data['fname'] = prsn['people_first_name']
-            data['lname'] = prsn['people_last_name']
-            data['prefname'] = prsn['people_preferred_name'] if prsn['people_preferred_name'] else ''
-            data['company'] = prsn['people_company'] if prsn['people_company'] else ''
-            data['email'] = prsn['people_email']
+            data['fname'] = prsn['people_read_first_name']
+            data['lname'] = prsn['people_read_last_name']
+            data['prefname'] = prsn['people_read_preferred_name'] if prsn['people_read_preferred_name'] else ''
+            data['company'] = prsn['people_read_company'] if prsn['people_read_company'] else ''
+            data['email'] = prsn['people_read_email']
             if prsn['students_id']: data['type'] = 'student'
             else: data['type'] = 'general'
             data['eid'] = prsn['students_eid'] if prsn['students_eid'] else ''
