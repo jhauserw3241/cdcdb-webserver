@@ -252,4 +252,6 @@ if __name__=='__main__':
     app.secret_key = globals.config['common']['secret']
     app.jinja_env.globals['app_name'] = config['common']['name']
     app.jinja_env.globals['app_tagline'] = config['common']['tagline']
-    app.run(host='0.0.0.0', threaded=True)
+    app.run(host=config['common']['listen_ip'],
+        port=int(config['common']['listen_port']),
+        threaded=True)
