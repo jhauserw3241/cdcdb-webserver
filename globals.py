@@ -6,6 +6,7 @@ import requests
 import configparser
 import binascii
 import hashlib
+import os
 
 # Contains methods useful all over the app
 
@@ -60,16 +61,21 @@ class globals:
         thing[column] = globals.translate_major(thing[column])
         return thing
 
+    def gen_salt(length=32):
+        data = os.urandom(length)
+        data = binascii.hexlify(data)
+        return data
+
     def hash_password(plain_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
-        salt = bytes(salt, 'utf-8')
+        #salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
         hash = binascii.hexlify(hash)
         return hash
 
     def check_password(plain_text, cipher_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
-        salt = bytes(salt, 'utf-8')
+        #salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
         hash = binascii.hexlify(hash)
         return hash == cipher_text

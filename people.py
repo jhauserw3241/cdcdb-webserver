@@ -75,6 +75,31 @@ class People:
                 return None
             return rows[0]
 
+    def __db_get_unregistered_people(self, search_email=None):
+        with DatabaseConnection() as db:
+            ppl, _ = db.get_table("people_read")
+            q = db.query().add_columns(ppl.c.id, ppl.c.email).\
+                filter(ppl.c.password == None)
+            if search_email:
+                q = q.filter(ppl.c.email == search_email)
+            db.execute(q)
+            rows = [ r for r in db.fetchall() ]
+            return rows
+
+    def __db_register_person(self, data):
+        with DatabaseConnection() as db:
+            ppl, _ = db.get_table("people")
+            q = ppl.update().\
+                returning(ppl.c.id).\
+                where(ppl.c.email == data['email']).\
+                values(
+                    password=data['password'],
+                    salt=data['salt'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
+
     def __db_insert_person(self, data):
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people")
@@ -166,6 +191,26 @@ class People:
         d['voting_member'] = 'voting_member' in data
         return d, errs
 
+    def __validate_registration(self, data):
+        # makes sure the given email is an exact match for an
+        # existing record, hashes password, generates a salt
+        errs = []
+        d = {}
+        if not data['email']:
+            errs.append('Must provide an email')
+        if len(data['password']) < 8:
+            errs.append('Must provide a password of at least 8 characters')
+        if errs: return d, errs
+        people = self.__db_get_unregistered_people(search_email=data['email'])
+        if len(people) != 1:
+            errs.append('Email doesn\'t belong to an unregistered person')
+        d['email'] = data['email']
+        d['salt'] = globals.gen_salt()
+        d['password'] = globals.hash_password(data['password'], d['salt'])
+        if not globals.check_password(data['password'], d['password'], d['salt']):
+            errs.append('An error occured during securing the given password. Contact an administrator.')
+        return d, errs
+
     def __create_generic(self, request, session, data):
         v_data, errs = self.__validate_generic(data)
         if errs:
@@ -245,40 +290,28 @@ class People:
             else:
                 return redirect(url_for('index_'))
         elif request.method == 'POST':
-            u = request.form['username']
+            e = request.form['email']
             p = request.form['password']
-            if u == "root" and p == "root":
-                session['username'] = u
-                session['person_id'] = 1
-                session['hashed_person_id'] = self.b58.encode(session['person_id'])
-                session['is_admin'] = True if True else False
-                session['is_officer'] = True if True else False
-                session['is_student'] = True if True else False
-                return redirect(url_for('index_'))
-            elif u == "admin" and p == "admin":
-                session['username'] = u
-                session['person_id'] = 2
-                session['hashed_person_id'] = self.b58.encode(session['person_id'])
-                session['is_admin'] = True if True else False
-                session['is_officer'] = False if True else False
-                session['is_student'] = True if True else False
-                return redirect(url_for('index_'))
-            elif u == "officer" and p == "officer":
-                session['username'] = u
-                session['person_id'] = 3
-                session['hashed_person_id'] = self.b58.encode(session['person_id'])
-                session['is_admin'] = False if True else False
-                session['is_officer'] = True if True else False
-                session['is_student'] = True if True else False
-                return redirect(url_for('index_'))
-            elif u == "student" and p == "student":
-                session['username'] = u
-                session['person_id'] = 4
-                session['hashed_person_id'] = self.b58.encode(session['person_id'])
-                session['is_admin'] = False if True else False
-                session['is_officer'] = False if True else False
-                session['is_student'] = True if True else False
-                return redirect(url_for('index_'))
+            person = self.__db_get_person(email=e)
+            if not person:
+                return render_template('people/login.html',
+                    errors=['Email or password incorrect'])
+            password_good = globals.check_password(p,
+                person['people_read_password'],
+                person['people_read_salt'])
+            if not password_good:
+                return render_template('people/login.html',
+                    errors=['Email or password incorrect'])
+            session['username'] = person['people_read_preferred_name'] if \
+                person['people_read_preferred_name'] else \
+                person['people_read_first_name']
+            session['person_id'] = self.b58.decode(person['people_read_id'])[0]
+            session['hashed_person_id'] = self.b58.encode(session['person_id'])
+            session['is_admin'] = True
+            session['is_officer'] = True
+            session['is_student'] = True
+            print(session)
+            return redirect(url_for('index_'))
         abort(405)
 
     def logout(self, request, session):
@@ -393,3 +426,23 @@ class People:
             self.__db_delete_student(id)
             self.__db_delete_person(id)
             return redirect(url_for('people_'))
+
+    def register(self, request, session):
+        if request.method == 'GET':
+            unreg_ppl = self.__db_get_unregistered_people()
+            return render_template('people/register.html',
+                unregistered_people=unreg_ppl)
+        elif request.method == 'POST':
+            data = request.form
+            v_data, errs = self.__validate_registration(data)
+            if errs:
+                unreg_ppl = self.__db_get_unregistered_people()
+                return render_template('people/register.html',
+                    unregistered_people=unreg_ppl,
+                    errors=errs)
+            else:
+                id = self.__db_register_person(v_data)
+                if not id: abort(500)
+                id = self.b58.encode(id)
+                return redirect(url_for('people_id', id=id))
+        abort(405)
