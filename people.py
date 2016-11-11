@@ -61,9 +61,11 @@ class People:
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people_read")
             studs, _ = db.get_table("students")
+            offs, _ = db.get_table("officers")
             q = db.query().\
-                add_columns(ppl).add_columns(studs).\
-                outerjoin(studs, studs.c.id == ppl.c.id)
+                add_columns(ppl).add_columns(studs).add_columns(offs).\
+                outerjoin(studs, studs.c.id == ppl.c.id).\
+                outerjoin(offs, offs.c.id == ppl.c.id)
             if id:
                 q = q.filter(ppl.c.id == id)
             elif email:
@@ -307,10 +309,11 @@ class People:
                 person['people_read_first_name']
             session['person_id'] = self.b58.decode(person['people_read_id'])[0]
             session['hashed_person_id'] = self.b58.encode(session['person_id'])
-            session['is_admin'] = True
-            session['is_officer'] = True
-            session['is_student'] = True
-            print(session)
+            session['is_officer'] = 'officers_person_id' in person and \
+                person['officers_person_id'] != None
+            session['is_admin'] = session['is_officer']
+            session['is_student'] = 'students_id' in person and \
+                person['students_id'] != None
             return redirect(url_for('index_'))
         abort(405)
 
