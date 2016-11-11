@@ -56,14 +56,18 @@ class People:
             rows = [ globals.decode_major(r, 'students_major') for r in rows ]
             return rows
 
-    def __db_get_person(self, id):
+    def __db_get_person(self, id=None, email=None):
+        if not id and not email: return None
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people_read")
-            studs, studs_md = db.get_table("students")
+            studs, _ = db.get_table("students")
             q = db.query().\
                 add_columns(ppl).add_columns(studs).\
-                outerjoin(studs, studs.c.id == ppl.c.id).\
-                filter(ppl.c.id == id)
+                outerjoin(studs, studs.c.id == ppl.c.id)
+            if id:
+                q = q.filter(ppl.c.id == id)
+            elif email:
+                q = q.filter(ppl.c.email == email)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'people_read_id') for row in
                 db.fetchall() ]
