@@ -49,7 +49,7 @@ def index_():
         return index.index(request, session, events)
     else: abort(405)
 
-@app.route('/help', methods=['GET'])
+@app.route('/help/', methods=['GET'])
 def help_():
     if request.method == 'GET':
         return help.index(request, session)
@@ -62,7 +62,7 @@ def people_login():
     else:
         return people.login(request, session)
 
-@app.route('/logout', methods=['GET'])
+@app.route('/logout/', methods=['GET'])
 def people_logout():
     if request.method == 'GET':
         return people.logout(request, session)
