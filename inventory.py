@@ -146,13 +146,20 @@ class Inventory:
             item = self.__db_get_item(id)
             if not item: abort(404)
             data = {}
-            data['description'] = item['inventory_description']
-            data['serial_number'] = item['inventory_serial_number']
-            data['make'] = item['inventory_make']
-            data['model'] = item['inventory_model']
-            data['manufacturer'] = item['inventory_manufacturer']
-            data['location'] = item['inventory_location']
-            data['other_notes'] = item['inventory_other_notes']
+            data['description'] = item['inventory_description'] if \
+                item['inventory_description'] else ''
+            data['serial_number'] = item['inventory_serial_number'] if \
+                item['inventory_serial_number'] else ''
+            data['make'] = item['inventory_make'] if \
+                item['inventory_make'] else ''
+            data['model'] = item['inventory_model'] if \
+                item['inventory_model'] else ''
+            data['manufacturer'] = item['inventory_manufacturer'] if \
+                item['inventory_manufacturer'] else ''
+            data['location'] = item['inventory_location'] if \
+                item['inventory_location'] else ''
+            data['other_notes'] = item['inventory_other_notes'] if \
+                item['inventory_other_notes'] else ''
             return render_template('inventory/new.html', data=data,
                 submit_button_text='Update')
         abort(405)
