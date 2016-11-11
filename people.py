@@ -58,7 +58,6 @@ class People:
 
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
-            current_year = globals.current_datetime("%Y")
             ppl, ppl_md = db.get_table("people_read")
             studs, studs_md = db.get_table("students")
             q = db.query().\
