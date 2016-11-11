@@ -58,7 +58,7 @@ class People:
 
     def __db_get_person(self, id):
         with DatabaseConnection() as db:
-            ppl, ppl_md = db.get_table("people_read")
+            ppl, _ = db.get_table("people_read")
             studs, studs_md = db.get_table("students")
             q = db.query().\
                 add_columns(ppl).add_columns(studs).\
@@ -73,7 +73,7 @@ class People:
 
     def __db_insert_person(self, data):
         with DatabaseConnection() as db:
-            ppl, ppl_md = db.get_table("people")
+            ppl, _ = db.get_table("people")
             q = ppl.insert().\
                 returning(ppl.c.id).\
                 values(
@@ -89,7 +89,7 @@ class People:
 
     def __db_insert_student(self, data):
         with DatabaseConnection() as db:
-            std, std_md = db.get_table("students")
+            std, _ = db.get_table("students")
             q = std.insert().\
                 values(
                     id=data['id'],
@@ -101,7 +101,7 @@ class People:
 
     def __db_update_person(self, data):
         with DatabaseConnection() as db:
-            ppl, ppl_md = db.get_table("people")
+            ppl, _ = db.get_table("people")
             q = ppl.update().\
                 returning(ppl.c.id).\
                 where(ppl.c.id == data['id']).\
@@ -122,14 +122,14 @@ class People:
 
     def __db_delete_person(self, id):
         with DatabaseConnection() as db:
-            ppl, ppl_md = db.get_table("people")
+            ppl, _ = db.get_table("people")
             q = ppl.delete().\
                 where(ppl.c.id == id)
             db.execute(q)
 
     def __db_delete_student(self, id):
         with DatabaseConnection() as db:
-            stud, stud_md = db.get_table("students")
+            stud, _ = db.get_table("students")
             q = stud.delete().\
                 where(stud.c.id == id)
             db.execute(q)
