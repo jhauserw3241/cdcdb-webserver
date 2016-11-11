@@ -36,8 +36,9 @@
 		{% if session.username is not defined %}
 			<a href='/login'>Login</a>
 		{% else %}
-			Hey, {{ session.username }}
+			<a href='/people/{{ session.hashed_person_id }}'>{{ session.username }}
 			<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
+			</a>
 			<a href='/logout'>Logout</a>
 		{% endif %}
 	</div>
