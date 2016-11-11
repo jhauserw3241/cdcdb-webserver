@@ -300,6 +300,10 @@ class People:
                 self.__can_index_officers(session, current_only=True) else []
             others = self.__db_get_others() if \
                 self.__can_index_others(session) else []
+            v_studs = sorted(v_studs, key=lambda k: k['not_officers_last_name'])
+            nv_studs = sorted(nv_studs, key=lambda k: k['not_officers_last_name'])
+            officers = sorted(officers, key=lambda k: k['officers_last_name'])
+            others = sorted(others, key=lambda k: k['not_students_last_name'])
             return render_template('people/index.html',
                 voting_students=v_studs,
                 nonvoting_students=nv_studs,
