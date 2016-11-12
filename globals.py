@@ -74,6 +74,7 @@ class globals:
         return hash
 
     def check_password(plain_text, cipher_text, salt):
+        if not plain_text or not cipher_text or not salt: return False
         plain_text = bytes(plain_text, 'utf-8')
         #salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
