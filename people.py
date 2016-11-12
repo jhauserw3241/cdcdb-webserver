@@ -278,13 +278,17 @@ class People:
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __can_edit(self, session):
+    def __can_edit(self, session, id=None):
+        if id != None and 'person_id' in session and session['person_id'] == id:
+            return True
         return 'is_officer' in session and session['is_officer']
 
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __can_update(self, session):
+    def __can_update(self, session, id=None):
+        if id != None and 'person_id' in session and session['person_id'] == id:
+            return True
         return 'is_officer' in session and session['is_officer']
 
     def login(self, request, session):
@@ -364,7 +368,7 @@ class People:
             person = globals.decode_year(person, 'students_year')
             person = globals.decode_major(person, 'students_major')
             return render_template('people/show.html', person=person,
-                can_edit=self.__can_edit(session),
+                can_edit=self.__can_edit(session, id),
                 can_delete=self.__can_delete(session))
         abort(405)
 
@@ -392,7 +396,7 @@ class People:
 
     def edit(self, request, session, id):
         if request.method == 'GET':
-            if not self.__can_edit(session): abort(403)
+            if not self.__can_edit(session, id): abort(403)
             prsn = self.__db_get_person(id)
             data = {}
             data['fname'] = prsn['people_read_first_name']
@@ -413,7 +417,7 @@ class People:
 
     def update(self, request, session, id):
         if request.method == 'POST':
-            if not self.__can_update(session): abort(403)
+            if not self.__can_update(session, id): abort(403)
             data = request.form
             if not 'type' in data or data['type'] == 'general':
                 return self.__update_generic(request, session, id, data)
