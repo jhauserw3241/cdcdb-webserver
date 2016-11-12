@@ -165,6 +165,9 @@ class People:
                 where(stud.c.id == id)
             db.execute(q)
 
+    def __valid_password(self, password):
+        return password != None and len(password) >= 8
+
     def __validate_generic(self, data):
         # parse and validate *data* into *d* while also
         # listing any errors in *errs*
@@ -172,9 +175,12 @@ class People:
         d = {}
         if not data['fname']:
             errs.append('First name is required')
+        if data['password'] and not self.__valid_password(data['password']):
+            errs.append('Invalid password: must be at least 8 characters')
         d['fname'] = data['fname']
         d['lname'] = data['lname']
         d['prefname'] = data['prefname'] if data['prefname'] else None
+        d['password'] = data['password'] if data['password'] else None
         d['company'] = data['company']
         if not data['email']:
             errs.append('Email is required')
@@ -200,14 +206,15 @@ class People:
         d = {}
         if not data['email']:
             errs.append('Must provide an email')
-        if len(data['password']) < 8:
-            errs.append('Must provide a password of at least 8 characters')
+        if not self.__valid_password(data['password']):
+            errs.append('Invalid password: must be at least 8 characters')
         if errs: return d, errs
         people = self.__db_get_unregistered_people(search_email=data['email'])
         if len(people) != 1:
             errs.append('Email doesn\'t belong to an unregistered person')
         d['email'] = data['email']
-        d['salt'] = globals.gen_salt()
+        d['salt'] = data['salt'] if 'salt' in data and data['salt'] \
+            else globals.gen_salt()
         d['password'] = globals.hash_password(data['password'], d['salt'])
         if not globals.check_password(data['password'], d['password'], d['salt']):
             errs.append('An error occured during securing the given password. Contact an administrator.')
@@ -240,7 +247,13 @@ class People:
             return render_template('people/new.html', data=data,
                 errors=errs, submit_button_text='Update')
         v_data['id'] = id
+        current_person = self.__db_get_person(id)
         id = self.__db_update_person(v_data)
+        if v_data['password']:
+            reg_data = { 'email': v_data['email'], 'salt': globals.gen_salt() }
+            reg_data['password'] = globals.hash_password(v_data['password'],
+                reg_data['salt'])
+            self.__db_register_person(reg_data)
         self.__db_delete_student(id)
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
