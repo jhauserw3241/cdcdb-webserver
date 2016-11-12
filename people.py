@@ -270,7 +270,9 @@ class People:
     def __can_index_others(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __can_show(self, session):
+    def __can_show(self, session, id=None):
+        if id != None and 'person_id' in session and session['person_id'] == id:
+            return True
         return 'is_officer' in session and session['is_officer']
 
     def __can_create(self, session):
@@ -356,7 +358,7 @@ class People:
 
     def show(self, request, session, id):
         if request.method == 'GET':
-            if not self.__can_show(session): abort(403)
+            if not self.__can_show(session, id): abort(403)
             person = self.__db_get_person(id)
             if person == None: abort(404)
             person = globals.decode_year(person, 'students_year')
