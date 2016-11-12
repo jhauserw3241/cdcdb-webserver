@@ -291,6 +291,9 @@ class People:
             return True
         return 'is_officer' in session and session['is_officer']
 
+    def __can_register(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def login(self, request, session):
         if request.method == 'GET':
             if 'person_id' not in session:
@@ -438,10 +441,12 @@ class People:
 
     def register(self, request, session):
         if request.method == 'GET':
+            if not self.__can_register(session): abort(403)
             unreg_ppl = self.__db_get_unregistered_people()
             return render_template('people/register.html',
                 unregistered_people=unreg_ppl)
         elif request.method == 'POST':
+            if not self.__can_register(session): abort(403)
             data = request.form
             v_data, errs = self.__validate_registration(data)
             if errs:
