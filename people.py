@@ -21,6 +21,8 @@ class People:
         self.hash_password = globals.hash_password
         self.encode_id = globals.encode_id
 
+    # Suitable for getting all non-student, non-officer people from the DB for
+    # the index page
     def __db_get_others(self):
         with DatabaseConnection() as db:
             others, _ = db.get_table("not_students")
@@ -30,6 +32,8 @@ class People:
                 db.fetchall() ]
             return rows
 
+    # Suitable for getting either every officer ever, or just the current ones
+    # from the DB for the index page
     def __db_get_officers(self, current_only=False):
         with DatabaseConnection() as db:
             offs, _ = db.get_table("officers") if current_only else \
@@ -40,6 +44,8 @@ class People:
                 db.fetchall() ]
             return rows
 
+    # Suitable for getting all non-current-officer students from the DB for the
+    # index page. Can either specify voting or non-voting
     def __db_get_students(self, are_voting=False):
         with DatabaseConnection() as db:
             not_offs, _ = db.get_table("not_officers")
@@ -56,6 +62,8 @@ class People:
             rows = [ globals.decode_major(r, 'students_major') for r in rows ]
             return rows
 
+    # Get a single person from the DB with all their student info (if any) and
+    # officer info (if current)
     def __db_get_person(self, id=None, email=None):
         if not id and not email: return None
         with DatabaseConnection() as db:
@@ -77,6 +85,8 @@ class People:
                 return None
             return rows[0]
 
+    # Get all the people who don't have a password set. If search_email, then
+    # return only those that have the given email address in the DB
     def __db_get_unregistered_people(self, search_email=None):
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people_read")
