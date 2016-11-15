@@ -17,7 +17,7 @@ class Inventory:
 
     def __db_get_inventory(self):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = db.query().\
                 add_columns(
                     inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
@@ -28,7 +28,7 @@ class Inventory:
 
     def __db_get_item(self, id):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = db.query().\
                 add_columns(
                     inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
@@ -42,7 +42,7 @@ class Inventory:
 
     def __db_update_item(self, id, data):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = inv.update().\
                 where(inv.c.id == id).\
                 values(
@@ -55,7 +55,7 @@ class Inventory:
 
     def __db_insert_item(self, data):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = inv.insert().\
                 returning(inv.c.id).\
                 values(
@@ -73,7 +73,7 @@ class Inventory:
 
     def __db_delete_item(self, id):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = inv.delete().\
                 where(inv.c.id == id)
             db.execute(q)

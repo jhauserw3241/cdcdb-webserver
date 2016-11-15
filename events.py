@@ -42,7 +42,7 @@ class Events:
 
     def __db_get_events(self, future_only=False):
         with DatabaseConnection() as db:
-            evts, evts_md = db.get_table("event")
+            evts, _ = db.get_table("event")
             q = db.query().\
                 add_columns(
                     evts.c.id, evts.c.name, evts.c.description,
@@ -57,9 +57,9 @@ class Events:
 
     def __db_get_event(self, id):
         with DatabaseConnection() as db:
-            evts, evts_md = db.get_table("event")
-            mts, mts_md = db.get_table("meeting")
-            comps, comps_md = db.get_table("competition")
+            evts, _ = db.get_table("event")
+            mts, _ = db.get_table("meeting")
+            comps, _ = db.get_table("competition")
             q = db.query().\
                 add_columns(
                     evts.c.id, evts.c.name, evts.c.description,
@@ -76,7 +76,7 @@ class Events:
 
     def __db_insert_event(self, data):
         with DatabaseConnection() as db:
-            evts, evts_md = db.get_table("event")
+            evts, _ = db.get_table("event")
             q = evts.insert().\
                 returning(evts.c.id).\
                 values(
@@ -91,7 +91,7 @@ class Events:
 
     def __db_insert_meeting(self, data):
         with DatabaseConnection() as db:
-            mts, mts_md = db.get_table("meeting")
+            mts, _ = db.get_table("meeting")
             q = mts.insert().\
                 values(
                     id=data['id'],
@@ -101,7 +101,7 @@ class Events:
 
     def __db_insert_competition(self, data):
         with DatabaseConnection() as db:
-            comps, comps_md = db.get_table("competition")
+            comps, _ = db.get_table("competition")
             q = comps.insert().\
                 values(
                     id=data['id'],
@@ -111,7 +111,7 @@ class Events:
 
     def __db_update_event(self, data):
         with DatabaseConnection() as db:
-            evts, evts_md = db.get_table("event")
+            evts, _ = db.get_table("event")
             q = evts.update().\
                 returning(evts.c.id).\
                 where(evts.c.id == data['id']).\
@@ -135,21 +135,21 @@ class Events:
 
     def __db_delete_event(self, id):
         with DatabaseConnection() as db:
-            evts, evts_md = db.get_table("event")
+            evts, _ = db.get_table("event")
             q = evts.delete().\
                 where(evts.c.id == id)
             db.execute(q)
 
     def __db_delete_meeting(self, id):
         with DatabaseConnection() as db:
-            mts, mts_md = db.get_table("meeting")
+            mts, _ = db.get_table("meeting")
             q = mts.delete().\
                 where(mts.c.id == id)
             db.execute(q)
 
     def __db_delete_competition(self, id):
         with DatabaseConnection() as db:
-            comps, comps_md = db.get_table("competition")
+            comps, _ = db.get_table("competition")
             q = comps.delete().\
                 where(comps.c.id == id)
             db.execute(q)
