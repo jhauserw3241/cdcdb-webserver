@@ -100,7 +100,7 @@ class globals:
 
 
     def sqltimestamp_to_relative(timestamp):
-        now = datetime.utcnow()
+        now = globals.current_datetime(utc=False)
         timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
         diff = globals.datetime_difference(timestamp, now)
         is_negative = False
@@ -138,11 +138,12 @@ class globals:
     def format_datetime(dt, frmt="%x %X"):
         return dt.strftime(frmt)
 
-    def current_datetime(frmt="%x %X", utc=False):
-        if utc:
-            return globals.format_datetime(datetime.utcnow(), frmt)
-        else:
-            return globals.format_datetime(datetime.now(), frmt)
+    # get current datetime, default to UTC because this little utility function
+    # shouldn't be blamed for shitty TZ problems when local times end up in
+    # places they shouldn't. Like the Database. Cough. It isn't my fault
+    # start_timestamp's time is 'timestamp without timezone' ... <3 Matt
+    def current_datetime(utc=True):
+        return datetime.utcnow() if utc else datetime.now()
 
     def datetime_difference(dt_start, dt_end):
         return dt_end - dt_start

@@ -48,7 +48,7 @@ class Events:
                     evts.c.id, evts.c.name, evts.c.description,
                     evts.c.start_timestamp, evts.c.end_timestamp)
             if future_only:
-                now = datetime.utcnow()
+                now = globals.current_datetime(utc=False)
                 q = q.filter(evts.c.start_timestamp > now)
             q = q.order_by(evts.c.start_timestamp)
             db.execute(q)
