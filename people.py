@@ -257,7 +257,6 @@ class People:
             return render_template('people/new.html', data=data,
                 errors=errs, submit_button_text='Update')
         v_data['id'] = id
-        current_person = self.__db_get_person(id)
         id = self.__db_update_person(v_data)
         if v_data['password']:
             reg_data = { 'email': v_data['email'], 'salt': globals.gen_salt() }
