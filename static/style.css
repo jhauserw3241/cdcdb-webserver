@@ -19,6 +19,7 @@ div.regwidth {
 div#headerwrapper, div#footerwrapper {
 	background-color: var(--color-header-background);
 	color: var(--color-header-text);
+	padding: 1em;
 }
 div#header {
 	display: block;
