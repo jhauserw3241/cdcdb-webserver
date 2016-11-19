@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Create Request{% endblock %}
+{% block body %}
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+<p>
+Warning: This will currently allow you to request something multiple times,
+something that's currently checked out, and all other crazy things. Any student
+can request anything at any time.
+</p>
+<form id='request_form' action='{{ form_action }}' method='POST'>
+<table id='create-request'>
+<tr>
+	<td>Requester</td>
+    <td>{{ data.person_name }}</td>
+</tr>
+<tr>
+    <td>Item</td>
+    <td>{{ data.details.inventory_description }}</td>
+</tr>
+<tr>
+    <td></td>
+    <td>{{ data.details.inventory_manufacturer }}
+    {{ data.details.inventory_make }}
+    {{ data.details.inventory_model }}</td>
+</tr>
+<tr>
+    <td>Serial</td>
+    <td>{{ data.details.inventory_serial_number }}</td>
+</tr>
+<tr>
+	<td>Start date</td>
+	<td><input type='text' name='start_date' value='{{ data.start_date}}' placeholder='required'/></td>
+</tr>
+<tr>
+	<td>Return date</td>
+	<td><input type='text' name='end_date' value='{{ data.end_date}}'/></td>
+</tr>
+<tr>
+	<td></td>
+	<td>mm/dd/yyyy</td>
+</tr>
+<tr>
+	<td><input type='submit' name='create' value='{{ submit_button_text if submit_button_text else 'Request' }}'/></td>
+	<td><a href=''>Start over</a></td>
+	<td></td>
+</tr>
+</table>
+<input type='hidden' name='item_id' value='{{ data.item_id }}'/>
+<input type='hidden' name='person_id' value='{{ data.person_id }}'/>
+</form>
+{% endblock %}
