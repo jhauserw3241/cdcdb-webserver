@@ -1,7 +1,7 @@
 body {
 	margin: auto;
-	color: var(--color-normal-text);
-	background-color: var(--color-page-background);
+	color: var(--color-text-1);
+	background-color: var(--color-background-1);
 	font-family: 'Lato', sans-serif;
 }
 a {
@@ -17,15 +17,14 @@ div.regwidth {
 	margin: 0 auto;
 }
 div#headerwrapper {
-	background-color: var(--color-header-background);
-	color: var(--color-header-text);
+	background-color: var(--color-background-2);
 }
 div#header {
 	display: block;
 	height: 90px;
 }
 div#headerwrapper a {
-	color: var(--color-header-text);
+	color: var(--color-text-1);
 }
 div#title {
 	display: inline-block;
@@ -54,10 +53,10 @@ ul#nav li {
 	float: left;
 	text-transform: lowercase;
 	transition: .1s;
-	color: var(--color-nav-hover);
+	color: var(--color-nav-1);
 }
 ul#nav li:hover {
-	background-color: var(--color-nav-hover);
+	background-color: var(--color-nav-1);
 }
 ul#nav li > a ,
 ul#nav li > p {
@@ -65,7 +64,7 @@ ul#nav li > p {
 	display: block;
 	padding: 10px 20px;
 	margin: 0;
-	color: var(--color-header-text);
+	color: var(--color-text-1);
 }
 ul#nav li ul {
 	clear: both;
@@ -77,7 +76,7 @@ ul#nav li ul {
 }
 ul#nav li:hover ul {
 	display: block;
-	background-color: var(--color-nav-hover);
+	background-color: var(--color-nav-1);
 }
 ul#nav li ul li {
 	clear: both;
@@ -116,7 +115,7 @@ div#content {
 div#footerwrapper {
 }
 div#footer {
-	border-top: 1px solid var(--color-normal-text);
+	border-top: 1px solid var(--color-text-1);
 	text-align: center;
 	padding-top: 20px;
 	font-size: 60%;
@@ -128,7 +127,7 @@ tr {
 	transition: .1s;
 }
 tr:hover {
-	background: var(--color-header-background);
+	background: var(--color-background-2);
 }
 table td,
 table th {
@@ -154,12 +153,11 @@ ul#errors li {
 }
 
 :root {
---color-page-background: #D9D6DB;
---color-header-background: #512888;
+--color-background-1: #D3F1C8;
+--color-background-2: #8BB37C;
 --color-link-1: #21ADB4;
 --color-link-2: #094649;
---color-nav-hover: #40056D;
+--color-nav-1: #F1405F;
 --color-nav-2: #AA223A;
---color-normal-text: #260D11;
---color-header-text: #BBBABC;
+--color-text-1: #260D11;
 }
