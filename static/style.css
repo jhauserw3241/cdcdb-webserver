@@ -16,7 +16,7 @@ div.regwidth {
 	max-width: 1000px;
 	margin: 0 auto;
 }
-div#headerwrapper {
+div#headerwrapper, div#footerwrapper {
 	background-color: var(--color-header-background);
 	color: var(--color-header-text);
 }
