@@ -154,12 +154,12 @@ ul#errors li {
 }
 
 :root {
---color-page-background: #D9D6DB;
---color-header-background: #512888;
---color-link-1: #21ADB4;
---color-link-2: #094649;
---color-nav-hover: #40056D;
---color-nav-2: #AA223A;
---color-normal-text: #260D11;
---color-header-text: #BBBABC;
+	--color-page-background: #D9D6DB;
+	--color-header-background: #512888;
+	--color-link-1: #21ADB4;
+	--color-link-2: #094649;
+	--color-nav-hover: #40056D;
+	--color-nav-2: #AA223A;
+	--color-normal-text: #260D11;
+	--color-header-text: #BBBABC;
 }
