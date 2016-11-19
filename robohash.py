@@ -40,7 +40,7 @@ class Robohash:
             if 'size' in request.args and request.args['size']:
                 size = request.args['size']
             else:
-                size = '50x50'
+                size = '300x300'
             if not self.size_ok(size): abort(404)
             f = os.path.join(self.cache_dir, s+'.'+size+'.png')
             if os.path.isfile(f):
