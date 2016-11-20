@@ -74,6 +74,9 @@ class Requests_:
             hashed_id = request.args.get('id')
             if not hashed_id: abort(501)
             id = self.decode_id(hashed_id)
+            if not inventory.is_item_available(request, session, id):
+                return render_template('error.html',
+                    errors=['This item is not available.'])
             data = {
                 'item_id': hashed_id,
                 'details': inventory.get_item_by_id(request, session, id),
