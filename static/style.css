@@ -4,27 +4,33 @@ body {
 	background-color: var(--color-page-background);
 	font-family: 'Lato', sans-serif;
 }
+
 a {
 	color: var(--color-link-1);
 	text-decoration: none;
 }
+
 a:hover {
 	color: var(--color-link-2);
 	text-decoration: underline;
 }
+
 div.regwidth {
 	max-width: 1000px;
 	margin: 0 auto;
 }
+
 div#headerwrapper, div#footerwrapper {
 	background-color: var(--header-dark-purple);
 	color: var(--color-header-text);
 	padding: 1em;
 }
+
 div#header {
 	display: block;
 	height: 90px;
 }
+
 div#headerwrapper a {
 	color: var(--color-header-text);
 }
@@ -35,13 +41,16 @@ div#title {
 	float: left;
 	margin-right: 10px;
 }
+
 div#title h1 {
 	margin: 0;
 }
+
 div#title h2 {
 	margin: 0;
 	font-size: medium;
 }
+
 ul#nav {
 	display: inline-block;
 	padding: 0;
@@ -50,6 +59,7 @@ ul#nav {
 	position: relative;
 	top: 50px;
 }
+
 ul#nav li {
 	list-style-type: none;
 	float: left;
@@ -57,17 +67,19 @@ ul#nav li {
 	transition: .1s;
 	color: var(--color-nav-hover);
 }
+
 ul#nav li:hover {
 	background-color: var(--color-nav-hover);
 }
-ul#nav li > a ,
-ul#nav li > p {
+
+ul#nav li > a, ul#nav li > p {
 	text-decoration: none;
 	display: block;
 	padding: 10px 20px;
 	margin: 0;
 	color: var(--color-header-text);
 }
+
 ul#nav li ul {
 	clear: both;
 	display: none;
@@ -76,6 +88,7 @@ ul#nav li ul {
 	width: 85px;
 	position: absolute;
 }
+
 ul#nav li:hover ul {
 	display: block;
 	background-color: var(--color-nav-hover);
@@ -87,30 +100,34 @@ ul#nav li ul li {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
+
 ul#nav li ul li:hover {
 	background-color: var(--color-nav-2);
 }
+
 ul#nav li ul li a {
 	display: block;
 	padding: 2px 5px;
 	text-align: center;
 }
+
 div#user-box {
 	display: inline-block;
 	height: 100%;
 	text-align: right;
 	float:right;
 }
+
 div#user-box img#header-user-img {
 	display: inline;
 	height: 50px;
 }
+
 div#user-box a {
 	display: block;
 	margin-top: auto;
 }
-div#contentwrapper {
-}
+
 div#content {
 	display:block;
 }
@@ -119,23 +136,28 @@ div#footer {
 	text-align: center;
 	font-size: 60%;
 }
+
 table {
 	border-collapse: collapse;
 }
+
 tr {
 	transition: .1s;
 }
+
 tr:hover {
 	background: var(--header-dark-purple);
 }
-table td,
-table th {
+
+table td, table th {
 	margin:0;
 	padding-right: 10px;
 }
+
 input#done {
 	margin: 0 auto 50px 100px;
 }
+
 table#create-event td {
 	min-width: 160px;
 }
@@ -143,9 +165,11 @@ table#events-table td.button,
 table#people-table td.button {
 	padding-right: 5px;
 }
+
 .hide {
 	display: none;
 }
+
 ul#errors li {
 	list-style-type: none;
 	color: red;
