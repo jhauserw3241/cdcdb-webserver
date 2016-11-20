@@ -9,11 +9,15 @@
 		<h2>Officers</h2>
 		<table id='officers-table'>
 		{% for o in officers %}
-			<tr>
-				<td><img src='/robohash/{{ o.officers_id }}?size=20x20'/></td>
-				<td><a href='/people/{{ o.officers_id }}'>{{ o.officers_full_name }}</a></td>
-				<td>{{ o.officers_title }}</td>
-			</tr>
+			<a href ='/people/{{ o.officers_id }}'>
+				<div class="officer-card">
+					<img src='/robohash/{{ o.officers_id }}?size=100x100'/>
+					<div class="container">
+						<h4><b>{{ o.officers_full_name }}</b></h4>
+						<p>{{ o.officers_title }}</p>
+					</div>
+				</div>
+			</a>
 		{% endfor %}
 		</table>
 	{% endif %}
