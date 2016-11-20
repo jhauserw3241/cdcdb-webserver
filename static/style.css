@@ -109,6 +109,9 @@ ul#nav li ul li a {
 
 div#contentwrapper {
 	padding: 1em;
+	margin: 8px;
+	background-color: var(--content-background);
+	border-radius: 10%;
 }
 
 div#contentwrapper h1 {
@@ -176,4 +179,5 @@ ul#errors li {
 	--color-nav-2: #AA223A;
 	--color-normal-text: #260D11;
 	--color-header-text: #BBBABC;
+	--content-background: white;
 }
