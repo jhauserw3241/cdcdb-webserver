@@ -34,17 +34,19 @@
 						</ul>
 					</li>
 				{% endif %}
-			</ul>
-			<div id='user-box'>
 				{% if session.username is not defined %}
-					<a href='/login'>Login</a>
+					<li><a href='/login'>Login</a></li>
 				{% else %}
-					<a href='/people/{{ session.hashed_person_id }}'>{{ session.username }}
-						<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
-					</a>
-					<a href='/logout'>Logout</a>
+					<li>
+						<a href='/people/{{ session.hashed_person_id }}'>{{ session.username }}
+							<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
+						</a>
+						<ul>
+							<li>Logout</li>
+						</ul>
+					</li>
 				{% endif %}
-			</div>
+			</ul>
 		</div>
 	</div>
     {% endblock %}

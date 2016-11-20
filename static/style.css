@@ -31,10 +31,6 @@ div#header {
 	height: 90px;
 }
 
-div#headerwrapper a {
-	color: var(--color-header-text);
-}
-
 div#title {
 	display: inline-block;
 	width: 380px;
