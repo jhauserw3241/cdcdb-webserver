@@ -129,6 +129,11 @@ class Inventory:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    # used externally for getting all the info for the given item id
+    def get_item_by_id(self, request, session, id):
+        if not self.__can_show(session): abort(403)
+        return self.__db_get_item(id)
+
     def show(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)

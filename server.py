@@ -13,6 +13,7 @@ from events import Events
 from index import Index
 from inventory import Inventory
 from people import People
+from requests_ import Requests_
 from robohash import Robohash
 from test import Test
 from vms import VMs
@@ -24,11 +25,17 @@ events = Events()
 index = Index()
 inventory = Inventory()
 people = People()
+requests_ = Requests_()
 robohash = Robohash()
 test = Test()
 vms = VMs()
 
 config = globals.config
+
+def encode_id(id):
+    id = globals.base58_hashids.encode(id)
+    if id == None: return None
+    return id
 
 def decode_id(id):
     id = globals.base58_hashids.decode(id)
@@ -113,6 +120,22 @@ def inventory_id_delete(id):
     if id == None: abort(404)
     if request.method == 'GET':
         return inventory.delete(request, session, id)
+    else: abort(405)
+
+@app.route('/inventory/<id>/request', methods=['GET'])
+def inventory_id_request(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    id = encode_id(id)
+    if request.method == 'GET':
+        return redirect(url_for('requests_new', id=id))
+
+@app.route('/requests/new/', methods=['GET', 'POST'])
+def requests_new():
+    if request.method == 'GET':
+        return requests_.new(request, session, inventory)
+    elif request.method == 'POST':
+        return requests_.create(request, session)
     else: abort(405)
 
 @app.route('/people/', methods=['GET'])
