@@ -172,14 +172,17 @@ ul#errors li {
 }
 
 .officer-card {
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
 	transition: 0.3s;
 	display: inline-flex;
 	height: 100px;
+	background-color: var(--people-card-background);
+	border-radius: 3px;
 }
 
 .officer-card:hover {
-	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+	background-color: var(--people-card-back-highlight);
 }
 
 .container {
@@ -196,4 +199,6 @@ ul#errors li {
 	--color-normal-text: #260D11;
 	--color-header-text: #BBBABC;
 	--content-background: white;
+	--people-card-background: #FADCF8;
+	--people-card-back-highlight: #FAC0F6;
 }
