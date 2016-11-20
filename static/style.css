@@ -34,6 +34,7 @@ div#header {
 div#headerwrapper a {
 	color: var(--color-header-text);
 }
+
 div#title {
 	display: inline-block;
 	width: 380px;
@@ -128,6 +129,11 @@ div#user-box a {
 	margin-top: auto;
 }
 
+div#contentwrapper h1 {
+	text-align: center;
+	margin: 0px;
+}
+
 div#content {
 	display:block;
 }
@@ -161,8 +167,8 @@ input#done {
 table#create-event td {
 	min-width: 160px;
 }
-table#events-table td.button,
-table#people-table td.button {
+
+table#events-table td.button, table#people-table td.button {
 	padding-right: 5px;
 }
 
