@@ -108,23 +108,6 @@ ul#nav li ul li a {
 	text-align: center;
 }
 
-div#user-box {
-	display: inline-block;
-	height: 100%;
-	text-align: right;
-	float:right;
-}
-
-div#user-box img#header-user-img {
-	display: inline;
-	height: 50px;
-}
-
-div#user-box a {
-	display: block;
-	margin-top: auto;
-}
-
 div#contentwrapper h1 {
 	text-align: center;
 	margin: 0px;
