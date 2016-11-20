@@ -13,7 +13,9 @@ Manufacturer: {{ item.inventory_manufacturer if item.inventory_manufacturer else
 <p>{{ item.inventory_location }}<p>
 <h3>Notes</h3>
 <p>{{ item.inventory_other_notes if item.inventory_other_notes else '' }}</p>
+{% if is_available %}
 <a href='/inventory/{{ item.inventory_id }}/request'>Request</a><br/>
+{% endif %}
 {% if can_edit %}
 <a href='/inventory/{{ item.inventory_id }}/edit'>Edit</a><br/>
 {% endif %}
