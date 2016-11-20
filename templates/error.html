@@ -2,7 +2,7 @@
 {% block body %}
 <h1>Error</h1>
 <p>
-There seems to have been a problem.
+{{ title if title else 'There seems to have been a problem.' }}
 </p>
 <ul id='errors'>
 {% for err in errors %}
