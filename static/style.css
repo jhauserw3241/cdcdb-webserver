@@ -114,12 +114,9 @@ div#contentwrapper {
 div#content {
 	display:block;
 }
-div#footerwrapper {
-}
+
 div#footer {
-	border-top: 1px solid var(--color-normal-text);
 	text-align: center;
-	padding-top: 20px;
 	font-size: 60%;
 }
 table {
