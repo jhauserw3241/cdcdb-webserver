@@ -17,7 +17,7 @@ div.regwidth {
 	margin: 0 auto;
 }
 div#headerwrapper, div#footerwrapper {
-	background-color: var(--color-header-background);
+	background-color: var(--header-dark-purple);
 	color: var(--color-header-text);
 	padding: 1em;
 }
@@ -129,7 +129,7 @@ tr {
 	transition: .1s;
 }
 tr:hover {
-	background: var(--color-header-background);
+	background: var(--header-dark-purple);
 }
 table td,
 table th {
@@ -156,7 +156,7 @@ ul#errors li {
 
 :root {
 	--color-page-background: #D9D6DB;
-	--color-header-background: #512888;
+	--header-dark-purple: #512888;
 	--color-link-1: #21ADB4;
 	--color-link-2: #094649;
 	--color-nav-hover: #40056D;
