@@ -88,6 +88,7 @@ ul#nav li:hover ul {
 	display: block;
 	background-color: var(--color-nav-hover);
 }
+
 ul#nav li ul li {
 	clear: both;
 	width: 100%;
@@ -112,6 +113,10 @@ div#contentwrapper {
 
 div#contentwrapper h1 {
 	text-align: center;
+	margin: 0px;
+}
+
+div#contentwrapper h2 {
 	margin: 0px;
 }
 
