@@ -109,6 +109,7 @@ ul#nav li ul li a {
 div#contentwrapper h1 {
 	text-align: center;
 	margin: 0px;
+	padding: 1em;
 }
 
 div#content {
