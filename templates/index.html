@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
 	<h1>Upcoming Events</h1>
-	<ul>
-		{% for event in events %}
-			<li>
-				<a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a>
+	<div class='upcoming-event-titles'>
+		<p>Event Name</p>
+		<p>When</p>
+	</div>
+	{% for event in events %}
+		<a href='/events/{{ event.event_id }}'>
+			<div class='upcoming-event-card'>
+				<p>{{ event.event_name }}</p>
 				<span title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</span>
-			</li>
-		{% endfor %}
-	</ul>
+			</div>
+		</a>
+	{% endfor %}
 	<p><a href='/events'>All events</a>
 {% endblock %}
