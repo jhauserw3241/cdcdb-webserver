@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% block body %}
-<h1>Upcoming Events</h1>
-<ul>
-{% for event in events %}
-<li><a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a> <span
-title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</span></li>
-{% endfor %}
-</ul>
-<p><a href='/events'>All events</a>
+	<h1>Upcoming Events</h1>
+	<ul>
+		{% for event in events %}
+			<li>
+				<a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a>
+				<span title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</span>
+			</li>
+		{% endfor %}
+	</ul>
+	<p><a href='/events'>All events</a>
 {% endblock %}
