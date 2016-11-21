@@ -174,10 +174,13 @@ ul#errors li {
 .officer-card {
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
 	transition: 0.3s;
-	display: inline-flex;
+	display: inline-table;
 	height: 100px;
 	background-color: var(--people-card-background);
 	border-radius: 3px;
+	width: 40%;
+	margin: 10px;
+	text-align: center;
 }
 
 .officer-card:hover {
@@ -187,6 +190,14 @@ ul#errors li {
 
 .container {
 	padding: 2px 16px;
+}
+
+.container h1 {
+	margin: 0px;
+}
+
+.container h2 {
+	margin: 0px;
 }
 
 :root {
