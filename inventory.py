@@ -15,6 +15,15 @@ class Inventory:
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
+    def __db_is_item_available(self, id):
+        with DatabaseConnection() as db:
+            inv, _ = db.get_table("available_items")
+            q = db.query().\
+                add_columns(inv).\
+                filter(inv.c.id == id)
+            db.execute(q)
+            return len([ r for r in db.fetchall()]) > 0
+
     def __db_get_inventory(self):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
@@ -129,6 +138,11 @@ class Inventory:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    # used externally
+    def is_item_available(self, request, session, id):
+      if not self.__can_show(session): abort(403)
+      return self.__db_is_item_available(id)
+
     # used externally for getting all the info for the given item id
     def get_item_by_id(self, request, session, id):
         if not self.__can_show(session): abort(403)
@@ -142,7 +156,8 @@ class Inventory:
                 abort(404)
             return render_template('inventory/show.html', item=item,
             can_edit=self.__can_edit(session),
-            can_delete=self.__can_delete(session))
+            can_delete=self.__can_delete(session),
+            is_available=self.__db_is_item_available(id))
         abort(405)
 
     def edit(self, request, session, id):

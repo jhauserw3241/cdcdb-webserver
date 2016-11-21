@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Requests{% endblock %}
+{% block body %}
+<h1>Requests</h1>
+<p>Requests pending approval</p>
+<table id='requests-table'>
+<tr>
+    <th>Item</th>
+    <th>Requester</th>
+    <th>Start</th>
+    <th>Expected End</th>
+</tr>
+{% for r in requests %}
+<tr>
+    <td><a href='/inventory/{{ r.checked_out_item_id }}'>{{ r.inventory_description }}</a></td>
+    <td><a href='/people/{{ r.checked_out_requested_by }}'>{{ r.people_read_full_name }}</a></td>
+    <td>{{ r.start_friendly }}</td>
+    <td>{{ r.expected_end_friendly }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

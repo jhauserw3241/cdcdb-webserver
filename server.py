@@ -130,6 +130,12 @@ def inventory_id_request(id):
     if request.method == 'GET':
         return redirect(url_for('requests_new', id=id))
 
+@app.route('/requests/', methods=['GET'])
+def requests__():
+    if request.method == 'GET':
+        return requests_.index(request, session)
+    else: abort(405)
+
 @app.route('/requests/new/', methods=['GET', 'POST'])
 def requests_new():
     if request.method == 'GET':
