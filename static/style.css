@@ -24,6 +24,7 @@ div#headerwrapper, div#footerwrapper {
 	background-color: var(--header-dark-purple);
 	color: var(--color-header-text);
 	padding: 1em;
+	margin: 8px;
 }
 
 div#header {
@@ -111,7 +112,7 @@ div#contentwrapper {
 	padding: 1em;
 	margin: 8px;
 	background-color: var(--content-background);
-	border-radius: 10%;
+	border-radius: 20px;
 }
 
 div#contentwrapper h1 {
@@ -176,7 +177,7 @@ ul#errors li {
 	transition: 0.3s;
 	display: inline-table;
 	height: 100px;
-	background-color: var(--people-card-background);
+	background-color: var(--card-background);
 	border-radius: 3px;
 	width: 45%;
 	margin: 10px;
@@ -185,7 +186,7 @@ ul#errors li {
 
 .officer-card:hover {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
-	background-color: var(--people-card-back-highlight);
+	background-color: var(--card-back-highlight);
 }
 
 .container {
@@ -202,7 +203,7 @@ ul#errors li {
 
 .event-card {
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
-	background-color: var(--people-card-background);
+	background-color: var(--card-background);
 	display: table;
 	width: 100%;
 	table-layout: fixed;
@@ -212,7 +213,7 @@ ul#errors li {
 
 .event-card:hover {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
-	background-color: var(--people-card-back-highlight);
+	background-color: var(--card-back-highlight);
 }
 
 .event-card p {
@@ -241,6 +242,6 @@ ul#errors li {
 	--color-normal-text: #260D11;
 	--color-header-text: #BBBABC;
 	--content-background: white;
-	--people-card-background: #FADCF8;
-	--people-card-back-highlight: #FAC0F6;
+	--card-background: #FADCF8;
+	--card-back-highlight: #FAC0F6;
 }
