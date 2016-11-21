@@ -1,3 +1,6 @@
+// ----------------------------------------------------------------------------
+// events/new.html
+
 var r_is_meeting = document.getElementById("is_meeting");
 var r_is_competition = document.getElementById("is_competition");
 var r_is_general = document.getElementById("is_general");
@@ -51,4 +54,25 @@ function enable_general() {
 		var row = competition_items[i];
 		try { row.classList.add('hide'); } catch(err) {}
 	}
+}
+
+// ----------------------------------------------------------------------------
+// events/index.html
+
+var cb_show_past_events = document.getElementById("show_past_events");
+var past_events = document.getElementsByClassName("past_event");
+
+cb_show_past_events.onchange = toggle_past_events;
+
+function toggle_past_events() {
+    for (i in past_events) {
+        var e = past_events[i];
+        console.log(e);
+        try {
+            if (cb_show_past_events.checked)
+                e.classList.remove('hide');
+            else
+                e.classList.add('hide');
+        } catch(err) {}
+    }
 }
