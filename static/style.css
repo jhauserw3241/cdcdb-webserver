@@ -1,7 +1,7 @@
 body {
 	margin: auto;
 	color: var(--color-normal-text);
-	background-color: var(--color-page-background);
+	background-color: var(--page-background);
 	font-family: 'Lato', sans-serif;
 }
 
@@ -22,7 +22,7 @@ div.regwidth {
 
 div#headerwrapper, div#footerwrapper {
 	background-color: var(--header-dark-purple);
-	color: var(--color-header-text);
+	color: var(--header-text);
 	padding: 1em;
 	margin: 8px;
 }
@@ -73,7 +73,7 @@ ul#nav li > a, ul#nav li > p {
 	display: block;
 	padding: 10px 20px;
 	margin: 0;
-	color: var(--color-header-text);
+	color: var(--header-text);
 }
 
 ul#nav li ul {
@@ -270,7 +270,7 @@ ul#errors li {
 
 button {
 	background-color: var(--header-dark-purple);
-	color: white;
+	color: var(--header-text);
 	border: 0px;
 	border-radius: 3px;
 	margin: 5px;
@@ -278,14 +278,15 @@ button {
 }
 
 :root {
-	--color-page-background: #D9D6DB;
 	--header-dark-purple: #512888;
+	--header-text: white;
 	--color-link-1: #21ADB4;
 	--color-link-2: #094649;
 	--color-nav-hover: #40056D;
 	--color-nav-2: #AA223A;
 	--color-normal-text: #260D11;
 	--color-header-text: #BBBABC;
+	--page-background: #E0E0E0;
 	--content-background: white;
 	--card-background: #FADCF8;
 	--card-back-highlight: #FAC0F6;
