@@ -321,7 +321,8 @@ class Events:
             return render_template('events/index.html', events=events,
                 can_create=self.__can_create(session),
                 can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))
+                can_delete=self.__can_delete(session),
+                now=globals.current_datetime(utc=False))
         abort(405)
 
     def show(self, request, session, id):
