@@ -29,8 +29,8 @@ class Robohash:
             second = int(second)
         except ValueError:
             return False
-        if first < 1 or first > 200: return False
-        if second < 1 or second > 200: return False
+        if first < 1 or first > 300: return False
+        if second < 1 or second > 300: return False
         return True
 
     def get(self, request, session, s):
