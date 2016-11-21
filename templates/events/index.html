@@ -1,37 +1,41 @@
 {% extends 'base.html' %}
 {% block title %}Events{% endblock %}
 {% block body %}
-<h1>Events</h1>
-{% if can_create %}
-<p><a href='/events/new'>Create new event</a></p>
-{% endif %}
-<input type='checkbox' id='show_past_events' name='show_past_events'/>
-<label for='show_past_events'>Show past events</label>
-<table id='events-table'>
-<tr>
-	<th></th>
-	<th>Description</th>
-	<th>Date</th>
-	<th>Duration</th>
-</tr>
-{% for event in events %}
-<tr class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
-	<td><a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a></td>
-	<td>{{ event.event_description }}</td>
-	<td title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</td>
-	<td title='{{ event.event_end_friendly }}'>{{ event.duration }}</td>
-	{% if can_edit %}<td class='button'>
-		<a href='/events/{{ event.event_id }}/edit'>
-		<img width=15px src='/static/edit.png' alt='edit'/>
-		</a>
-	</td>{% endif %}
-	{% if can_delete %}<td class='button'>
-		<a href='/events/{{ event.event_id }}/delete'>
-		<img width=15px src='/static/delete.png' alt='delete'/>
-		</a>
-	</td>{% endif %}
-</tr>
-{% endfor %}
-</table>
-<script src='/static/events.js'></script>
+	<h1>Events</h1>
+	{% if can_create %}
+		<p><a href='/events/new'>Create new event</a></p>
+	{% endif %}
+	<input type='checkbox' id='show_past_events' name='show_past_events'/>
+	<label for='show_past_events'>Show past events</label>
+	<table id='events-table'>
+	<tr>
+		<th></th>
+		<th>Description</th>
+		<th>Date</th>
+		<th>Duration</th>
+	</tr>
+	{% for event in events %}
+		<tr class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
+			<td>
+				<a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a>
+			</td>
+			<td>{{ event.event_description }}</td>
+			<td title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</td>
+			<td title='{{ event.event_end_friendly }}'>{{ event.duration }}</td>
+				{% if can_edit %}<td class='button'>
+					<a href='/events/{{ event.event_id }}/edit'>
+						<img width=15px src='/static/edit.png' alt='edit'/>
+					</a>
+				{% endif %}
+			</td>
+				{% if can_delete %}<td class='button'>
+					<a href='/events/{{ event.event_id }}/delete'>
+						<img width=15px src='/static/delete.png' alt='delete'/>
+					</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+	<script src='/static/events.js'></script>
 {% endblock %}

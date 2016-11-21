@@ -31,10 +31,6 @@ div#header {
 	height: 90px;
 }
 
-div#headerwrapper a {
-	color: var(--color-header-text);
-}
-
 div#title {
 	display: inline-block;
 	width: 380px;
@@ -56,9 +52,7 @@ ul#nav {
 	display: inline-block;
 	padding: 0;
 	margin: 0;
-	float: left;
-	position: relative;
-	top: 50px;
+	float: right;
 }
 
 ul#nav li {
@@ -94,6 +88,7 @@ ul#nav li:hover ul {
 	display: block;
 	background-color: var(--color-nav-hover);
 }
+
 ul#nav li ul li {
 	clear: both;
 	width: 100%;
@@ -112,25 +107,19 @@ ul#nav li ul li a {
 	text-align: center;
 }
 
-div#user-box {
-	display: inline-block;
-	height: 100%;
-	text-align: right;
-	float:right;
-}
-
-div#user-box img#header-user-img {
-	display: inline;
-	height: 50px;
-}
-
-div#user-box a {
-	display: block;
-	margin-top: auto;
+div#contentwrapper {
+	padding: 1em;
+	margin: 8px;
+	background-color: var(--content-background);
+	border-radius: 10%;
 }
 
 div#contentwrapper h1 {
 	text-align: center;
+	margin: 0px;
+}
+
+div#contentwrapper h2 {
 	margin: 0px;
 }
 
@@ -145,6 +134,7 @@ div#footer {
 
 table {
 	border-collapse: collapse;
+	width: 100%;
 }
 
 tr {
@@ -181,6 +171,35 @@ ul#errors li {
 	color: red;
 }
 
+.officer-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+	transition: 0.3s;
+	display: inline-table;
+	height: 100px;
+	background-color: var(--people-card-background);
+	border-radius: 3px;
+	width: 40%;
+	margin: 10px;
+	text-align: center;
+}
+
+.officer-card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+	background-color: var(--people-card-back-highlight);
+}
+
+.container {
+	padding: 2px 16px;
+}
+
+.container h1 {
+	margin: 0px;
+}
+
+.container h2 {
+	margin: 0px;
+}
+
 :root {
 	--color-page-background: #D9D6DB;
 	--header-dark-purple: #512888;
@@ -190,4 +209,7 @@ ul#errors li {
 	--color-nav-2: #AA223A;
 	--color-normal-text: #260D11;
 	--color-header-text: #BBBABC;
+	--content-background: white;
+	--people-card-background: #FADCF8;
+	--people-card-back-highlight: #FAC0F6;
 }

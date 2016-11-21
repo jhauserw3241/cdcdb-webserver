@@ -1,58 +1,62 @@
 {% extends 'base.html' %}
 {% block title %}People{% endblock %}
 {% block body %}
-<h1>People</h1>
-{% if can_create %}
-<p><a href='/people/new'>Create new person</a></p>
-{% endif %}
-{% if officers|length() > 0 %}
-<h2>Officers</h2>
-<table id='officers-table'>
-{% for o in officers %}
-<tr>
-<td><img src='/robohash/{{ o.officers_id }}?size=20x20'/></td>
-<td><a href='/people/{{ o.officers_id }}'>{{ o.officers_full_name }}</a></td>
-<td>{{ o.officers_title }}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
-{% if voting_students|length() > 0 %}
-<h2>Voting Members</h2>
-<table id='v-stud-table'>
-{% for s in voting_students %}
-<tr>
-<td><img src='/robohash/{{ s.students_id }}?size=20x20'/></td>
-<td><a href='/people/{{ s.students_id }}'>{{ s.not_officers_full_name }}</a></td>
-<td>{{ s.students_year }}</td>
-<td>{{ s.students_major }}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
-{% if nonvoting_students|length() > 0 %}
-<h2>Associate Members</h2>
-<table id='nv-stud-table'>
-{% for s in nonvoting_students %}
-<tr>
-<td><img src='/robohash/{{ s.students_id }}?size=20x20'/></td>
-<td><a href='/people/{{ s.students_id }}'>{{ s.not_officers_full_name }}</a></td>
-<td>{{ s.students_year }}</td>
-<td>{{ s.students_major }}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
-{% if others|length() > 0 %}
-<h2>Others</h2>
-<table id='others-table'>
-{% for o in others %}
-<tr>
-<td><img src='/robohash/{{ o.not_students_id }}?size=20x20'/></td>
-<td><a href='/people/{{ o.not_students_id }}'>{{ o.not_students_full_name }}</a></td>
-<td>{{ o.not_students_company if o.not_students_company else '' }}</td>
-</tr>
-{% endfor %}
-</table>
-{% endif %}
+	<h1>People</h1>
+	{% if can_create %}
+		<p><a href='/people/new'>Create new person</a></p>
+	{% endif %}
+	{% if officers|length() > 0 %}
+		<h2>Officers</h2>
+		<table id='officers-table'>
+		{% for o in officers %}
+			<a href ='/people/{{ o.officers_id }}'>
+				<div class="officer-card">
+					<img src='/robohash/{{ o.officers_id }}?size=100x100'/>
+					<div class="container">
+						<h4><b>{{ o.officers_full_name }}</b></h4>
+						<p>{{ o.officers_title }}</p>
+					</div>
+				</div>
+			</a>
+		{% endfor %}
+		</table>
+	{% endif %}
+	{% if voting_students|length() > 0 %}
+		<h2>Voting Members</h2>
+		<table id='v-stud-table'>
+		{% for s in voting_students %}
+			<tr>
+				<td><img src='/robohash/{{ s.students_id }}?size=20x20'/></td>
+				<td><a href='/people/{{ s.students_id }}'>{{ s.not_officers_full_name }}</a></td>
+				<td>{{ s.students_year }}</td>
+				<td>{{ s.students_major }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+	{% if nonvoting_students|length() > 0 %}
+		<h2>Associate Members</h2>
+		<table id='nv-stud-table'>
+		{% for s in nonvoting_students %}
+			<tr>
+				<td><img src='/robohash/{{ s.students_id }}?size=20x20'/></td>
+				<td><a href='/people/{{ s.students_id }}'>{{ s.not_officers_full_name }}</a></td>
+				<td>{{ s.students_year }}</td>
+				<td>{{ s.students_major }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+	{% if others|length() > 0 %}
+		<h2>Others</h2>
+		<table id='others-table'>
+		{% for o in others %}
+			<tr>
+				<td><img src='/robohash/{{ o.not_students_id }}?size=20x20'/></td>
+				<td><a href='/people/{{ o.not_students_id }}'>{{ o.not_students_full_name }}</a></td>
+				<td>{{ o.not_students_company if o.not_students_company else '' }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+		{% endif %}
 {% endblock %}
