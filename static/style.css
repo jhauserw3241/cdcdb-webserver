@@ -200,6 +200,37 @@ ul#errors li {
 	margin: 0px;
 }
 
+.event-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+	background-color: var(--people-card-background);
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+	margin: 5px;
+	border-radius: 3px;
+}
+
+.event-card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+	background-color: var(--people-card-back-highlight);
+}
+
+.event-card p {
+	display: table-cell;
+	text-align: center;
+}
+
+.event-titles {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+}
+
+.event-titles p {
+	display: table-cell;
+	text-align: center;
+}
+
 :root {
 	--color-page-background: #D9D6DB;
 	--header-dark-purple: #512888;

@@ -5,34 +5,30 @@
 	{% if can_create %}
 		<p><a href='/events/new'>Create new event</a></p>
 	{% endif %}
-	<table id='events-table'>
-	<tr>
-		<th></th>
-		<th>Description</th>
-		<th>Date</th>
-		<th>Duration</th>
-	</tr>
+	<div class='event-titles'>
+		<p>Name</p>
+		<p>Description</p>
+		<p>Date</p>
+		<p>Duration</p>
+	</div>
 	{% for event in events %}
-		<tr>
-			<td>
-				<a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a>
-			</td>
-			<td>{{ event.event_description }}</td>
-			<td title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</td>
-			<td title='{{ event.event_end_friendly }}'>{{ event.duration }}</td>
-				{% if can_edit %}<td class='button'>
+		<a href='/events/{{ event.event_id }}'>
+			<div class='event-card'>
+				<p>{{ event.event_name }}</p>
+				<p>{{ event.event_description }}</p>
+				<p>{{ event.event_start_friendly }}</p>
+				<p>{{ event.event_end_friendly }}</p>
+				{% if can_edit %}
 					<a href='/events/{{ event.event_id }}/edit'>
 						<img width=15px src='/static/edit.png' alt='edit'/>
 					</a>
 				{% endif %}
-			</td>
-				{% if can_delete %}<td class='button'>
+				{% if can_delete %}
 					<a href='/events/{{ event.event_id }}/delete'>
 						<img width=15px src='/static/delete.png' alt='delete'/>
 					</a>
 				{% endif %}
-			</td>
-		</tr>
+			</div>
+		</a>
 	{% endfor %}
-	</table>
 {% endblock %}
