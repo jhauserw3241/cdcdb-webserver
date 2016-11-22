@@ -63,22 +63,18 @@ class globals:
 
     def gen_salt(length=32):
         data = os.urandom(length)
-        data = binascii.hexlify(data)
+        #data = binascii.hexlify(data)
         return data
 
     def hash_password(plain_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
-        #salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
-        hash = binascii.hexlify(hash)
         return hash
 
     def check_password(plain_text, cipher_text, salt):
         if not plain_text or not cipher_text or not salt: return False
         plain_text = bytes(plain_text, 'utf-8')
-        #salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
-        hash = binascii.hexlify(hash)
         return hash == cipher_text
 
     def timedelta_to_relative(td):
