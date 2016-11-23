@@ -1,3 +1,18 @@
+form {
+	padding-left: 33%;
+	padding-right: 33%;
+	text-align: center;
+}
+
+div.login_info {
+	display: flex;
+	text-align: left;
+}
+
+div.labels {
+	margin-right: 5px;
+}
+
 input#done {
 	margin: 0 auto 50px 100px;
 }

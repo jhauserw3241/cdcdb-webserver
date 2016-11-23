@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 {% block add_css %}	
-	<link rel="stylesheet" href="/static/login.css" />
+	<link rel="stylesheet" href="/static/css/login.css" />
 {% endblock %}
 {% block body %}
-<h1>{{ app_name }}</h1>
-<ul id='errors'>
-{% for err in errors %}
-<li>{{ err }}</li>
-{% endfor %}
-</ul>
-<form action='/login/' method='POST'>
-<label for='email'>Email:</label>
-<input name='email' type='text' />
-<br/>
-<label for='password'>Password:</label>
-<input name='password' type='password' />
-<br/>
-<input type='submit' value='Login' />
-<a href='/register'>Or register</a>
-</form>
+	<h1>{{ app_name }}</h1>
+	<ul id='errors'>
+		{% for err in errors %}
+			<li>{{ err }}</li>
+		{% endfor %}
+	</ul>
+	<form action='/login/' method='POST'>
+		<div class="login_info">
+			<div class="labels">
+				<label for='email'>Email:</label><br>
+				<label for='password'>Password:</label>
+			</div>
+			<div class="textboxes">
+				<input name='email' type='text' /><br>
+				<input name='password' type='password' />
+			</div>
+		</div>
+		<input type='submit' value='Login' />
+		<button href='/register'>Register</button>
+	</form>
 {% endblock %}

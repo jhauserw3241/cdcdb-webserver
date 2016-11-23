@@ -144,7 +144,7 @@ div#footer {
 	margin: 0px;
 }
 
-button {
+button, input[type=submit] {
 	background-color: var(--header-dark-purple);
 	color: var(--header-text);
 	border: 0px;
