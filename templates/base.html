@@ -8,7 +8,7 @@
 		{% endblock %}
 		<link rel="icon" href="/static/favicon.ico" />
 		<title>
-			{{ app_name }} - {% block title %}{{ app_tagline }}{% endblock %}
+			{% block title %}{{ app_name }}{% endblock %}
 		</title>
 	{% endblock %}
 </head>
@@ -17,8 +17,7 @@
 	<div id='headerwrapper'>
 		<div id='header' class='regwidth'>
 			<div id='title'>
-				<h1>{{ app_name }}</h1>
-				<h2>Cyber Defense Club</h2>
+				<img src={{ app_logo }} alt="Logo">
 			</div>
 			<ul id='nav'>
 				<li><a href='/'>Home</a></li>

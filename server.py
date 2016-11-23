@@ -288,7 +288,7 @@ if __name__=='__main__':
     app.debug = True
     app.secret_key = globals.config['common']['secret']
     app.jinja_env.globals['app_name'] = config['common']['name']
-    app.jinja_env.globals['app_tagline'] = config['common']['tagline']
+    app.jinja_env.globals['app_logo'] = config['common']['logo']
     app.run(host=config['common']['listen_ip'],
         port=int(config['common']['listen_port']),
         threaded=True)

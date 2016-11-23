@@ -32,6 +32,11 @@ div#header {
 	height: 90px;
 }
 
+div#header img {
+	width: 150px;
+	height: 90px;
+}
+
 div#title {
 	display: inline-block;
 	width: 380px;
