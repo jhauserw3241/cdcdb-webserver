@@ -6,6 +6,7 @@ import requests
 import configparser
 import binascii
 import hashlib
+import os
 
 # Contains methods useful all over the app
 
@@ -60,18 +61,20 @@ class globals:
         thing[column] = globals.translate_major(thing[column])
         return thing
 
+    def gen_salt(length=32):
+        data = os.urandom(length)
+        #data = binascii.hexlify(data)
+        return data
+
     def hash_password(plain_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
-        salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
-        hash = binascii.hexlify(hash)
         return hash
 
     def check_password(plain_text, cipher_text, salt):
+        if not plain_text or not cipher_text or not salt: return False
         plain_text = bytes(plain_text, 'utf-8')
-        salt = bytes(salt, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
-        hash = binascii.hexlify(hash)
         return hash == cipher_text
 
     def timedelta_to_relative(td):
@@ -82,7 +85,10 @@ class globals:
             hours = v//sec_in_hr
             v -= sec_in_hr * hours
             minutes = v//sec_in_min
-            ret = "{}h{}m".format(hours, minutes)
+            if minutes == 0:
+                return "{} hour{}".format(hours,"s" if hours!=1 else "")
+            else:
+                ret = "{}h{}m".format(hours, minutes)
         else:
             days = v//sec_in_day
             ret = str(days) + " day" + ("s" if days!=1 else "")
@@ -90,7 +96,7 @@ class globals:
 
 
     def sqltimestamp_to_relative(timestamp):
-        now = datetime.utcnow()
+        now = globals.current_datetime(utc=False)
         timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
         diff = globals.datetime_difference(timestamp, now)
         is_negative = False
@@ -128,11 +134,12 @@ class globals:
     def format_datetime(dt, frmt="%x %X"):
         return dt.strftime(frmt)
 
-    def current_datetime(frmt="%x %X", utc=False):
-        if utc:
-            return globals.format_datetime(datetime.utcnow(), frmt)
-        else:
-            return globals.format_datetime(datetime.now(), frmt)
+    # get current datetime, default to UTC because this little utility function
+    # shouldn't be blamed for shitty TZ problems when local times end up in
+    # places they shouldn't. Like the Database. Cough. It isn't my fault
+    # start_timestamp's time is 'timestamp without timezone' ... <3 Matt
+    def current_datetime(utc=True):
+        return datetime.utcnow() if utc else datetime.now()
 
     def datetime_difference(dt_start, dt_end):
         return dt_end - dt_start

@@ -3,17 +3,23 @@
 {% block body %}
 <h1><a href='/inventory/'>Inventory</a></h1>
 <h2>{{ item.inventory_description }}</h2>
-{% if can_edit %}
-<p><a href='/inventory/{{ item.inventory_id }}/edit'>Edit</a></p>
-{% endif %}
 <p>
-Serial Number: {{ item.inventory_serial_number }}<br/>
-Make: {{ item.inventory_make }}<br/>
-Model: {{ item.inventory_model }}<br/>
-Manufacturer: {{ item.inventory_manufacturer }}<br/>
+Serial Number: {{ item.inventory_serial_number if item.inventory_serial_number else '' }}<br/>
+Make: {{ item.inventory_make if item.inventory_make else ''}}<br/>
+Model: {{ item.inventory_model if item.inventory_model else '' }}<br/>
+Manufacturer: {{ item.inventory_manufacturer if item.inventory_manufacturer else '' }}<br/>
 </p>
 <h3>Location</h3>
 <p>{{ item.inventory_location }}<p>
 <h3>Notes</h3>
-<p>{% if item.inventory_other_notes is not none %}{{ item.inventory_other_notes }}{% endif %}</p>
+<p>{{ item.inventory_other_notes if item.inventory_other_notes else '' }}</p>
+{% if is_available %}
+<a href='/inventory/{{ item.inventory_id }}/request'>Request</a><br/>
+{% endif %}
+{% if can_edit %}
+<a href='/inventory/{{ item.inventory_id }}/edit'>Edit</a><br/>
+{% endif %}
+{% if can_delete %}
+<a href='/inventory/{{ item.inventory_id }}/delete'>Delete</a>
+{% endif %}
 {% endblock %}

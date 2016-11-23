@@ -29,8 +29,8 @@ class Robohash:
             second = int(second)
         except ValueError:
             return False
-        if first < 1 or first > 200: return False
-        if second < 1 or second > 200: return False
+        if first < 1 or first > 300: return False
+        if second < 1 or second > 300: return False
         return True
 
     def get(self, request, session, s):
@@ -40,7 +40,7 @@ class Robohash:
             if 'size' in request.args and request.args['size']:
                 size = request.args['size']
             else:
-                size = '50x50'
+                size = '300x300'
             if not self.size_ok(size): abort(404)
             f = os.path.join(self.cache_dir, s+'.'+size+'.png')
             if os.path.isfile(f):

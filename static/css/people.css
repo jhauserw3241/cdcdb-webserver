@@ -1,0 +1,24 @@
+table#people-table td.button {
+	padding-right: 5px;
+}
+
+.officer-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+	transition: 0.3s;
+	display: inline-table;
+	height: 100px;
+	background-color: var(--card-background);
+	border-radius: 3px;
+	width: 45%;
+	margin: 10px;
+	text-align: center;
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.officer-card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+	background-color: var(--card-back-highlight);
+	color: var(--card-font);
+	text-decoration: none;
+}

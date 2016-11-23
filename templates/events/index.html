@@ -1,34 +1,42 @@
 {% extends 'base.html' %}
+{% block add_css %}
+	<link rel="stylesheet" href="/static/css/events.css" />
+{% endblock %}
 {% block title %}Events{% endblock %}
 {% block body %}
-<h1>Events</h1>
-{% if can_create %}
-<p><a href='/events/new'>Create new event</a></p>
-{% endif %}
-<table id='events-table'>
-<tr>
-	<th></th>
-	<th>Description</th>
-	<th>Date</th>
-	<th>Duration</th>
-</tr>
-{% for event in events %}
-<tr>
-	<td><a href='/events/{{ event.event_id }}'>{{ event.event_name }}</a></td>
-	<td>{{ event.event_description }}</td>
-	<td title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</td>
-	<td title='{{ event.event_end_friendly }}'>{{ event.duration }}</td>
-	{% if can_edit %}<td class='button'>
-		<a href='/events/{{ event.event_id }}/edit'>
-		<img width=15px src='/static/edit.png' alt='edit'/>
-		</a>
-	</td>{% endif %}
-	{% if can_delete %}<td class='button'>
-		<a href='/events/{{ event.event_id }}/delete'>
-		<img width=15px src='/static/delete.png' alt='delete'/>
-		</a>
-	</td>{% endif %}
-</tr>
-{% endfor %}
-</table>
+	<h1>Events</h1>
+	{% if can_create %}
+		<p><a href='/events/new'>Create new event</a></p>
+	{% endif %}
+	<input type='checkbox' id='show_past_events' name='show_past_events'/>
+	<label for='show_past_events'>Show past events</label>
+	<div class='event-titles'>
+		<p>Name</p>
+		<p>Description</p>
+		<p>Date</p>
+		<p>Duration</p>
+	</div>
+	{% for event in events %}
+		{% if event.event_start_timestamp < now %}
+			<a href='/events/{{ event.event_id }}'>
+				<div class='event-card'>
+					<p>{{ event.event_name }}</p>
+					<p>{{ event.event_description }}</p>
+					<p>{{ event.event_start_friendly }}</p>
+					<p>{{ event.event_end_friendly }}</p>
+					{% if can_edit %}
+						<a href='/events/{{ event.event_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</a>
+					{% endif %}
+					{% if can_delete %}
+						<a href='/events/{{ event.event_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</a>
+					{% endif %}
+				</div>
+			</a>
+		{% endif %}
+	{% endfor %}
+	<script src='/static/events.js'></script>
 {% endblock %}

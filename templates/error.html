@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Error</h1>
+<p>
+{{ title if title else 'There seems to have been a problem.' }}
+</p>
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

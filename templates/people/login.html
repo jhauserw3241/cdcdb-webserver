@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
+{% block add_css %}	
+	<link rel="stylesheet" href="/static/login.css" />
+{% endblock %}
 {% block body %}
 <h1>{{ app_name }}</h1>
-{% if error is defined %}
-<h2 class='error'>{{ error }}</h2>
-{% endif %}
-<p>Valid users: root, admin, officer, student</p>
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
 <form action='/login/' method='POST'>
-<label for='username'>Username:</label>
-<input name='username' type='text' />
+<label for='email'>Email:</label>
+<input name='email' type='text' />
 <br/>
 <label for='password'>Password:</label>
 <input name='password' type='password' />

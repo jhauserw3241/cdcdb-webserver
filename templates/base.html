@@ -1,62 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-{% block head %}
-<link href='https://fonts.googleapis.com/css?family=Lato:400,700|Lora' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="/static/style.css" />
-<link rel="icon" href="/static/favicon.ico" />
-<title>{{ app_name }} - {% block title %}{{ app_tagline }}{% endblock %}</title>
-{% endblock %}
+	{% block head %}
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,700|Lora' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="/static/css/base.css" />
+		{% block add_css %}
+		{% endblock %}
+		<link rel="icon" href="/static/favicon.ico" />
+		<title>
+			{% block title %}{{ app_name }}{% endblock %}
+		</title>
+	{% endblock %}
 </head>
 <body>
-{% block header %}
-<div id='headerwrapper'>
-<div id='header' class='regwidth'>
-	<div id='title'>
-		<h1>{{ app_name }}</h1>
-		<h2>{{ app_tagline }}</h2>
+	{% block header %}
+	<div id='headerwrapper'>
+		<div id='header' class='regwidth'>
+			<div id='title'>
+				<img src={{ app_logo }} alt="Logo">
+			</div>
+			<ul id='nav'>
+				<li><a href='/'>Home</a></li>
+				<li><a href='/events'>Events</a></li>
+				{% if session.is_student %}
+					<li><a href='/inventory'>Inventory</a></li>
+				{% endif %}
+				<li><a href='/people'>People</a></li>
+				{% if session.is_officer %}
+					<li><p>Officer</p>
+						<ul>
+							<li><a href='/register'>Sign Up</a></li>
+							<li><a href='/requests'>Requests</a></li>
+							<li><a href='/'>Positions</a></li>
+							<li><a href='/'>VMs</a></li>
+						</ul>
+					</li>
+				{% endif %}
+				{% if session.username is not defined %}
+					<li><a href='/login'>Login</a></li>
+				{% else %}
+					<li>
+						<a href='/people/{{ session.hashed_person_id }}'>{{ session.username }}
+							<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
+						</a>
+						<ul>
+							<li>Logout</li>
+						</ul>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
 	</div>
-	<ul id='nav'>
-	<li><a href='/'>Home</a></li>
-	<li><a href='/events'>Events</a></li>
-	{% if session.is_student %}
-	<li><a href='/inventory'>Inventory</a></li>
-	{% endif %}
-	<li><a href='/people?limit=officers'>Officers</a></li>
-	{% if session.is_officer %}
-	<li><p>Officer</p>
-		<ul>
-		<li><a href='/people'>People</a></li>
-		<li><a href='/'>Positions</a></li>
-		<li><a href='/'>VMs</a></li>
-		</ul>
-	</li>
-	{% endif %}
-	</ul>
-	<div id='user-box'>
-		{% if session.username is not defined %}
-			<a href='/login'>Login</a>
-		{% else %}
-			Hey, {{ session.username }}
-			<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
-			<a href='/logout'>Logout</a>
-		{% endif %}
+    {% endblock %}
+    <div id='contentwrapper'>
+        <div id='content' class='regwidth'>
+        {% block body %}
+        {% endblock %}
+        </div>
+    </div>
+    {% block footer %}
+	<div id='footerwrapper'>
+		<div id='footer' class='regwidth'>
+			GNU 560/2<br>
+			<a href=/about>About</a><br>
+			<a href=/help>Help</a><br>
+			<a href=/test>Test</a>
+		</div>
 	</div>
-</div>
-</div>
-<div id='contentwrapper'>
-<div id='content' class='regwidth'>
-{% endblock %}
-{% block body %}
-{% endblock %}
-{% block footer %}
-</div>
-</div>
-<div id='footerwrapper'>
-<div id='footer' class='regwidth'>
-	GNU 560/2<br />
-	<a href=/test>Test</a> | <a href=/help>Help and About</a>
-</div>
-</div>
-{% endblock %}
+	{% endblock %}
 </body>

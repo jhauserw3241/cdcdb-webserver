@@ -15,9 +15,18 @@ class Inventory:
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
+    def __db_is_item_available(self, id):
+        with DatabaseConnection() as db:
+            inv, _ = db.get_table("available_items")
+            q = db.query().\
+                add_columns(inv).\
+                filter(inv.c.id == id)
+            db.execute(q)
+            return len([ r for r in db.fetchall()]) > 0
+
     def __db_get_inventory(self):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = db.query().\
                 add_columns(
                     inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
@@ -28,7 +37,7 @@ class Inventory:
 
     def __db_get_item(self, id):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = db.query().\
                 add_columns(
                     inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
@@ -42,7 +51,7 @@ class Inventory:
 
     def __db_update_item(self, id, data):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = inv.update().\
                 where(inv.c.id == id).\
                 values(
@@ -55,7 +64,7 @@ class Inventory:
 
     def __db_insert_item(self, data):
         with DatabaseConnection() as db:
-            inv, inv_md = db.get_table("inventory")
+            inv, _ = db.get_table("inventory")
             q = inv.insert().\
                 returning(inv.c.id).\
                 values(
@@ -70,6 +79,13 @@ class Inventory:
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
+
+    def __db_delete_item(self, id):
+        with DatabaseConnection() as db:
+            inv, _ = db.get_table("inventory")
+            q = inv.delete().\
+                where(inv.c.id == id)
+            db.execute(q)
 
     def __validate_item(self, data):
         d = {}
@@ -109,13 +125,28 @@ class Inventory:
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    def __can_delete(self, session):
+        return 'is_officer' in session and session['is_officer']
+
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
             items = self.__db_get_inventory()
             return render_template('inventory/index.html', items=items,
-                can_create=self.__can_create(session))
+                can_create=self.__can_create(session),
+                can_edit=self.__can_edit(session),
+                can_delete=self.__can_delete(session))
         abort(405)
+
+    # used externally
+    def is_item_available(self, request, session, id):
+      if not self.__can_show(session): abort(403)
+      return self.__db_is_item_available(id)
+
+    # used externally for getting all the info for the given item id
+    def get_item_by_id(self, request, session, id):
+        if not self.__can_show(session): abort(403)
+        return self.__db_get_item(id)
 
     def show(self, request, session, id):
         if request.method == 'GET':
@@ -124,7 +155,9 @@ class Inventory:
             if item == None:
                 abort(404)
             return render_template('inventory/show.html', item=item,
-            can_edit=self.__can_edit(session))
+            can_edit=self.__can_edit(session),
+            can_delete=self.__can_delete(session),
+            is_available=self.__db_is_item_available(id))
         abort(405)
 
     def edit(self, request, session, id):
@@ -132,14 +165,28 @@ class Inventory:
             if not self.__can_edit(session): abort(403)
             item = self.__db_get_item(id)
             if not item: abort(404)
-            return render_template('inventory/edit.html', item=item)
+            data = {}
+            data['description'] = item['inventory_description'] if \
+                item['inventory_description'] else ''
+            data['serial_number'] = item['inventory_serial_number'] if \
+                item['inventory_serial_number'] else ''
+            data['make'] = item['inventory_make'] if \
+                item['inventory_make'] else ''
+            data['model'] = item['inventory_model'] if \
+                item['inventory_model'] else ''
+            data['manufacturer'] = item['inventory_manufacturer'] if \
+                item['inventory_manufacturer'] else ''
+            data['location'] = item['inventory_location'] if \
+                item['inventory_location'] else ''
+            data['other_notes'] = item['inventory_other_notes'] if \
+                item['inventory_other_notes'] else ''
+            return render_template('inventory/new.html', data=data,
+                submit_button_text='Update')
         abort(405)
 
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
-            item = self.__db_get_item(id)
-            if item == None: abort(404)
             self.__db_update_item(id, request.form)
             return redirect(url_for('inventory_id', id=self.b58.encode(id)))
         abort(405)
@@ -157,3 +204,9 @@ class Inventory:
             data = request.form
             return self.__create_item(request, session, data)
         abort(405)
+
+    def delete(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete_item(id)
+            return redirect(url_for('inventory_'))

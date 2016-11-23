@@ -1,16 +1,22 @@
 {% extends 'base.html' %}
 {% block body %}
 <h1>{{ app_name }}</h1>
-{% if error is defined %}
-<h2 class='error'>{{ error }}</h2>
-{% endif %}
+<ul id='errors'>
+{% for err in errors %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
 <form action='/register/' method='POST'>
-<label for='username'>Username:</label>
-<input name='username' type='text' />
+Email: <input name='email' list='emails' />
 <br/>
-<label for='password'>Password:</label>
-<input name='password' type='password' />
+Password: <input name='password' type='password' />
 <br/>
 <input type='submit' value='Register' />
+
+<datalist id='emails'>
+{% for p in unregistered_people %}
+<option>{{ p.people_read_email }}</option>
+{% endfor %}
+</datalist>
 </form>
 {% endblock %}
