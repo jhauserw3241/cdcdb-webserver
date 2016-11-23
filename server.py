@@ -8,6 +8,7 @@ from flask import session
 from flask import url_for
 
 from globals import globals
+from about import About
 from help import Help
 from events import Events
 from index import Index
@@ -20,6 +21,7 @@ from vms import VMs
 
 app = Flask(__name__)
 # The handler classes for each route type
+about = About()
 help = Help()
 events = Events()
 index = Index()
@@ -54,6 +56,12 @@ def decode_id(id):
 def index_():
     if request.method == 'GET':
         return index.index(request, session, events)
+    else: abort(405)
+
+@app.route('/about/', methods=['GET'])
+def about_():
+    if request.method == 'GET':
+        return about.index(request, session)
     else: abort(405)
 
 @app.route('/help/', methods=['GET'])
