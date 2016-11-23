@@ -40,8 +40,3 @@ table#events-table td.button {
 	display: table-cell;
 	text-align: center;
 }
-
-:root {
-	--card-background: #FADCF8;
-	--card-back-highlight: #FAC0F6;
-}

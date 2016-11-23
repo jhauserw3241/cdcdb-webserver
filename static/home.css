@@ -42,10 +42,3 @@ button {
 	margin: 5px;
 	padding: 0.5em;
 }
-
-:root {
-	--header-dark-purple: #512888;
-	--header-text: white;
-	--card-background: #FADCF8;
-	--card-back-highlight: #FAC0F6;
-}

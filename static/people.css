@@ -18,8 +18,3 @@ table#people-table td.button {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
 	background-color: var(--card-back-highlight);
 }
-
-:root {
-	--card-background: #FADCF8;
-	--card-back-highlight: #FAC0F6;
-}
