@@ -125,7 +125,9 @@ div#content {
 }
 
 div#footer {
-	text-align: center;
+	padding-left: 45%;
+	padding-right: 45%;
+	text-align: left;
 	font-size: 80%;
 }
 
