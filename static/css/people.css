@@ -12,7 +12,7 @@ table#people-table td.button {
 	width: 45%;
 	margin: 10px;
 	text-align: center;
-	color: var(--color-font);
+	color: var(--card-font);
 	text-decoration: none;
 }
 
