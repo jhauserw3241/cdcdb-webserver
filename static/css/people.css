@@ -12,9 +12,13 @@ table#people-table td.button {
 	width: 45%;
 	margin: 10px;
 	text-align: center;
+	color: var(--color-font);
+	text-decoration: none;
 }
 
 .officer-card:hover {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
 	background-color: var(--card-back-highlight);
+	color: var(--card-font);
+	text-decoration: none;
 }

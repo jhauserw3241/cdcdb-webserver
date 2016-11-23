@@ -22,23 +22,18 @@
 	table-layout: fixed;
 	margin: 5px;
 	border-radius: 3px;
+	color: var(--card-font);
+	text-decoration: none;
 }
 
 .upcoming-event-card:hover {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
 	background-color: var(--card-back-highlight);
+	color: var(--card-font);
+	text-decoration: none;
 }
 
 .upcoming-event-card p {
 	display: table-cell;
 	text-align: center;
-}
-
-button {
-	background-color: var(--header-dark-purple);
-	color: var(--header-text);
-	border: 0px;
-	border-radius: 3px;
-	margin: 5px;
-	padding: 0.5em;
 }
