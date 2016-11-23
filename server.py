@@ -152,6 +152,12 @@ def requests_new():
         return requests_.create(request, session)
     else: abort(405)
 
+@app.route('/requests/<id>', methods=['GET'])
+def requests_show(id):
+    if request.method == 'GET':
+        abort(501)
+    else: abort(405)
+
 @app.route('/people/', methods=['GET'])
 def people_():
     if request.method == 'GET':
