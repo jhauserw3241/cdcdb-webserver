@@ -6,12 +6,12 @@ body {
 }
 
 a {
-	color: var(--color-link-1);
+	color: var(--link-normal);
 	text-decoration: none;
 }
 
 a:hover {
-	color: var(--color-link-2);
+	color: var(--link-hover);
 	text-decoration: underline;
 }
 
@@ -151,8 +151,8 @@ button {
 :root {
 	--header-dark-purple: #512888;
 	--header-text: white;
-	--color-link-1: #21ADB4;
-	--color-link-2: #094649;
+	--link-normal: #D6D6D6;
+	--link-hover: #BABABA;
 	--color-nav-hover: #40056D;
 	--color-nav-2: #AA223A;
 	--color-normal-text: #260D11;
