@@ -65,6 +65,7 @@ class Requests_:
             db.execute(q)
             rows = [ dict(r) for r in db.fetchall() ]
             for r in rows:
+                self.encode_id(r, 'checked_out_id')
                 self.encode_id(r, 'checked_out_item_id')
                 if r['checked_out_approved_by'] != None:
                     self.encode_id(r, 'checked_out_approved_by')

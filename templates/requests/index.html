@@ -16,7 +16,15 @@
     <td><a href='/people/{{ r.checked_out_requested_by }}'>{{ r.people_read_full_name }}</a></td>
     <td>{{ r.start_friendly }}</td>
     <td>{{ r.expected_end_friendly }}</td>
-    <td><a href='/requests/approve'>Approve</a></td>
+	<td class='button'>
+		<a href='/requests/{{ r.checked_out_id }}'><img width=15px src='/static/details.png' alt='details'/></a>
+	</td>
+    <td class='button'>
+		<a href='/requests/{{ r.checked_out_id }}/approve'><img width=15px src='/static/approve.png' alt='approve'/></a>
+	</td>
+    <td class='button'>
+		<a href='/requests/{{ r.checked_out_id }}/delete'><img width=15px src='/static/delete.png' alt='delete'/></a>
+	</td>
 </tr>
 {% endfor %}
 </table>
