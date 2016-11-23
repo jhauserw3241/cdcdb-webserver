@@ -1,0 +1,8 @@
+input#done {
+	margin: 0 auto 50px 100px;
+}
+
+ul#errors li {
+	list-style-type: none;
+	color: red;
+}

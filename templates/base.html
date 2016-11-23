@@ -3,7 +3,9 @@
 <head>
 	{% block head %}
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,700|Lora' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="/static/style.css" />
+		<link rel="stylesheet" href="/static/base.css" />
+		{% block add_css %}
+		{% endblock %}
 		<link rel="icon" href="/static/favicon.ico" />
 		<title>
 			{{ app_name }} - {% block title %}{{ app_tagline }}{% endblock %}
