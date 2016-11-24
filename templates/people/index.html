@@ -6,7 +6,7 @@
 {% block body %}
 	<h1>People</h1>
 	{% if can_create %}
-		<p><a href='/people/new'>Create new person</a></p>
+		<button onclick="location.href='new'">Create new person</button>
 	{% endif %}
 	{% if officers|length() > 0 %}
 		<h2>Officers</h2>
