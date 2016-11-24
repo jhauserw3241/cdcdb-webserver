@@ -2,7 +2,10 @@ table#people-table td.button {
 	padding-right: 5px;
 }
 
-.officer-card {
+.officer-card,
+.voting-member-card,
+.nonvoting-member-card,
+.nonstudent-card {
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
 	transition: 0.3s;
 	display: inline-table;
@@ -14,6 +17,19 @@ table#people-table td.button {
 	text-align: center;
 	color: var(--card-font);
 	text-decoration: none;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.officer-card h4,
+.voting-member-card h4,
+.nonvoting-member-card h4,
+.nonstudent-card h4 {
+	margin: 0;
+}
+
+.officer-card p {
+	margin: 0;
 }
 
 .officer-card:hover {
