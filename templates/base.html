@@ -40,8 +40,11 @@
 					<li><a href='/login'>Login</a></li>
 				{% else %}
 					<li>
-						<a href='/people/{{ session.hashed_person_id }}'>{{ session.username }}
-							<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
+						<a href='/people/{{ session.hashed_person_id }}'>
+							<div class="nav_profile">
+								<img id='header-user-img' src='/robohash/{{ session.hashed_person_id }}?size=50x50'></img>
+								<h4>{{ session.username }}</h4>
+							</div>
 						</a>
 						<ul>
 							<li>Logout</li>

@@ -32,14 +32,14 @@ div#header {
 	height: 90px;
 }
 
-div#header img {
+div#title img {
 	width: 150px;
 	height: 90px;
 }
 
 div#title {
 	display: inline-block;
-	width: 380px;
+	width: 150px;
 	height: 100%;
 	float: left;
 	margin-right: 10px;
@@ -55,10 +55,11 @@ div#title h2 {
 }
 
 ul#nav {
-	display: inline-block;
 	padding: 0;
 	margin: 0;
 	float: right;
+	vertical-align: middle;
+	line-height: 70px;
 }
 
 ul#nav li {
@@ -95,16 +96,18 @@ ul#nav li:hover ul {
 	background-color: var(--color-nav-hover);
 }
 
-ul#nav li ul li {
-	clear: both;
+ul#nav li ul li, ul#nav li ul li ul li {
 	width: 100%;
-	display: block;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	display: table;
+	line-height: 30px;
+	text-align: left;
+	background-color: var(--sublist-normal);
+	padding: 0;
+	margin: 0;
 }
 
-ul#nav li ul li:hover {
-	background-color: var(--color-nav-2);
+ul#nav li ul li:hover, ul#nav li ul li ul li:hover {
+	background-color: var(--sublist-hover);
 }
 
 ul#nav li ul li a {
@@ -153,11 +156,27 @@ button, input[type=submit] {
 	padding: 0.5em;
 }
 
+div.nav_profile  {
+	margin: 0;
+	padding: 0;
+	line-height: 10px;
+}
+
+div.nav_profile h4 {
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 10px;
+	text-align: center;
+}
+
 :root {
 	--header-dark-purple: #512888;
 	--header-text: white;
 	--link-normal: #D6D6D6;
 	--link-hover: #BABABA;
+	--sublist-normal: #F599FF;
+	--sublist-hover: #EC6EFA;
 	--color-nav-hover: #40056D;
 	--color-nav-2: #AA223A;
 	--color-normal-text: #260D11;
