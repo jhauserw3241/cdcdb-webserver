@@ -15,6 +15,8 @@
 		<p>Description</p>
 		<p>Date</p>
 		<p>Duration</p>
+		<p>Edit</p>
+		<p>Delete</p>
 	</div>
 	{% for event in events %}
 		<a href='/events/{{ event.event_id }}' class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
@@ -22,16 +24,16 @@
 				<p>{{ event.event_name }}</p>
 				<p>{{ event.event_description }}</p>
 				<p title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</p>
-				<p title='{{ event.event_end_friendly }}'>{{ event.relative_end }}</p>
+				<p title='{{ event.relative_start }}'>{{ event.relative_end }}</p>
 				{% if can_edit %}
-					<a href='/events/{{ event.event_id }}/edit'>
+					<button id='editButton' href='/events/{{ event.event_id }}/edit'>
 						<img width=15px src='/static/edit.png' alt='edit'/>
-					</a>
+					</button>
 				{% endif %}
 				{% if can_delete %}
-					<a href='/events/{{ event.event_id }}/delete'>
+					<button id='deleteButton' href='/events/{{ event.event_id }}/delete'>
 						<img width=15px src='/static/delete.png' alt='delete'/>
-					</a>
+					</button>
 				{% endif %}
 			</div>
 		</a>
