@@ -129,7 +129,10 @@ div#contentwrapper h1 {
 }
 
 div#contentwrapper h2 {
-	margin: 0px;
+	margin-top: 10px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
 }
 
 div#content {
