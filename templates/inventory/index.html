@@ -3,41 +3,27 @@
 {% block body %}
 	<h1>Inventory</h1>
 	{% if can_create %}
-		<p><a href='/inventory/new'>Create new item</a></p>
+		<button href='/inventory/new'>Create new item</button>
 	{% endif %}
-	<table id='inventory-table'>
-	<tr>
-		<th>Item</th>
-		<th>Make</th>
-		<th>Model</th>
-		<th>Manufacturer</th>
-		<th>Location</th>
-	</tr>
 	{% for item in items %}
-	<tr>
-		<td>
-			<a href='/inventory/{{ item.inventory_id }}'>{{ item.inventory_description if item.inventory_description is not none() else '' }}
-			</a>
-		</td>
-		<td>{{ item.inventory_make if item.inventory_make is not none() else '' }}</td>
-		<td>{{ item.inventory_model if item.inventory_model is not none() else '' }}</td>
-		<td>{{ item.inventory_manufacturer if item.inventory_manufacturer is not none() else '' }}</td>
-		<td>{{ item.inventory_location }}</td>
-		{% if can_edit %}
-			<td class='button'>
-				<a href='/inventory/{{ item.inventory_id }}/edit'>
-					<img width=15px src='/static/edit.png' alt='edit'/>
-				</a>
-			</td>
-		{% endif %}
-		{% if can_delete %}
-			<td class='button'>
-				<a href='/inventory/{{ item.inventory_id }}/delete'>
-					<img width=15px src='/static/delete.png' alt='delete'/>
-				</a>
-			</td>
-		{% endif %}
-	</tr>
+		<a href='/inventory/{{ item.inventory_id }}'>
+			<div class='inventory-card'>
+				<h4>{{ item.inventory_description if item.inventory_description is not none() else '' }}</h4>
+				<p>{{ item.inventory_manufacturer if item.inventory_manufacturer is not none() else '' }}</p>
+				<p>{{ item.inventory_make if item.inventory_make is not none() else '' }}</p>
+				<div class'modify-buttons'>
+					{% if can_edit %}
+						<button href='/inventory/{{ item.inventory_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</button>
+					{% endif %}
+					{% if can_delete %}
+						<button href='/inventory/{{ item.inventory_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</button>
+					{% endif %}
+				</div>
+			</div>
+		</a>
 	{% endfor %}
-	</table>
-	{% endblock %}
+{% endblock %}
