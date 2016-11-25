@@ -6,35 +6,27 @@
 {% block body %}
 	<h1>Events</h1>
 	{% if can_create %}
-		<button href='new'>Create new event</button><br>
+		<button href='/events/new'>Create new event</button><br>
 	{% endif %}
 	<input type='checkbox' id='show_past_events' name='show_past_events'/>
-	<label for='show_past_events'>Show past events</label>
-	<div class='event-titles'>
-		<p>Name</p>
-		<p>Description</p>
-		<p>Date</p>
-		<p>Duration</p>
-		<p>Edit</p>
-		<p>Delete</p>
-	</div>
+	<label for='show_past_events'>Show past events</label><br>
 	{% for event in events %}
 		<a href='/events/{{ event.event_id }}' class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
 			<div class='event-card'>
-				<p>{{ event.event_name }}</p>
-				<p>{{ event.event_description }}</p>
+				<h3>{{ event.event_name }}</h3>
 				<p title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</p>
-				<p title='{{ event.relative_start }}'>{{ event.relative_end }}</p>
-				{% if can_edit %}
-					<button id='editButton' href='/events/{{ event.event_id }}/edit'>
-						<img width=15px src='/static/edit.png' alt='edit'/>
-					</button>
-				{% endif %}
-				{% if can_delete %}
-					<button id='deleteButton' href='/events/{{ event.event_id }}/delete'>
-						<img width=15px src='/static/delete.png' alt='delete'/>
-					</button>
-				{% endif %}
+				<div class='modify-buttons'>
+					{% if can_edit %}
+						<button id='editButton' href='/events/{{ event.event_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</button>
+					{% endif %}
+					{% if can_delete %}
+						<button id='deleteButton' href='/events/{{ event.event_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</button>
+					{% endif %}
+				</div>
 			</div>
 		</a>
 	{% endfor %}
