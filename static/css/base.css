@@ -163,6 +163,10 @@ button, input[type=submit] {
 	padding: 0.5em;
 }
 
+button:hover {
+	background-color: #A600DE;
+}
+
 div.nav_profile  {
 	margin: 0;
 	padding: 0;
