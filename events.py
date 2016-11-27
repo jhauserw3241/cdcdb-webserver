@@ -336,6 +336,11 @@ class Events:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    def test(self, request, session):
+        if request.method == 'GET':
+            return render_template('events/test.html')
+        abort(405)
+
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
