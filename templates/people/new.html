@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block add_css %}
+	<link rel="stylesheet" href="/static/css/people.css">
+{% endblock %}
 {% block title %}Create/Edit Person{% endblock %}
 {% block body %}
 	<h1>Create Person</h1>
@@ -8,46 +11,56 @@
 	{% endfor %}
 	</ul>
 	<form id='people_form' action='{{ form_action }}' method='POST'>
-		<table id='create-person'>
-		<tr>
-			<td>Name</td>
-			<td><input type='text' name='fname' value='{{ data.fname }}' placeholder='required'/></td>
-			<td><input type='text' name='lname' value='{{ data.lname }}'/></td>
-		</tr>
-		<tr>
-			<td>Preferred Name</td>
-			<td colspan='2'><input type='text' name='prefname' value='{{ data.prefname }}'/>
-		</tr>
-		<tr>
-			<td>Email</td>
-			<td><input type='text' name='email' value='{{ data.email }}' placeholder='required'/></td>
-		</tr>
-		<tr>
-			<td>Password</td>
-			<td><input type='password' name='password'/></td>
-		</tr>
-		<tr>
-			<td>Company</td>
-			<td><input type='text' name='company' value='{{ data.company }}'/></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td colspan='2'>
+		<h3>Name</h3>
+		<div class="form-name">	
+			<div class="form-name-titles">
+				<p><strong>First Name</strong></p>
+				<p><strong>Last Name</strong></p>
+				<p><strong>Preffered Name</strong></p>
+			</div>
+			<div class="form-name-textboxes">
+				<input type='text' name='fname' value='{{ data.fname }}' placeholder='required'/><br>
+				<input type='text' name='lname' value='{{ data.lname }}'/><br>
+				<input type='text' name='prefname' value='{{ data.prefname }}'/>
+			</div>
+		</div>
+		<h3>Credentials</h3>
+		<div class="form-creds">
+			<div class="form-creds-titles">
+				<p><strong>Email</strong></p>
+				<p><strong>Password</strong></p>
+			</div>
+			<div class="form-creds-textboxes">
+				<input type='text' name='email' value='{{ data.email }}' placeholder='required'/><br>
+				<input type='password' name='password'/>
+			</div>
+		</div>
+		<h3>Other</h3>
+		<div class="form-other">
+			<div class="form-other-titles">
+				<p><strong>Company</strong></p>
+				<p></p>
+			</div>
+			<div class="form-other-textboxes">
+				<input type='text' name='company' value='{{ data.company }}'/><br>
 				<input type='radio' id='is_student' name='type' value='student' {% if data.type == 'student' %}checked{% endif %}>
-				<label for='is_student'>student</label></input>
+					<label for='is_student'>student</label>
+				</input>
 				<input type='radio' id='is_general' name='type' value='general' {% if data.type == 'general' %}checked{% endif %}>
 					<label for='is_general'>other</label>
 				</input>
-			</td>
-		</tr>
-		<tr class='student hide'>
-			<td>EID</td>
-			<td><input type='text' name='eid' value='{{ data.eid }}' placeholder='required'/></td>
-			<td></td>
-		</tr>
-		<tr class='student hide'>
-			<td>Year</td>
-			<td>
+			</div>
+		</div>
+		<h3>Student Information</h3>
+		<div class="form-student-info">
+			<div class="form-student-info-titles">
+				<p><strong>EID</strong></p>
+				<p><strong>Year</strong></p>
+				<p><strong>Major</strong></p>
+				<p></p>
+			</div>
+			<div class="form-student-info-textboxes">
+				<input type='text' name='eid' value='{{ data.eid }}' placeholder='required'/><br>
 				<select name='year'>
 					<option value='' {% if data.year == '' %}selected{% endif %}>Unknown</option>
 					<option value='FR' {% if data.year == 'FR' %}selected{% endif %}>Freshman</option>
@@ -56,26 +69,17 @@
 					<option value='SR' {% if data.year == 'SR' %}selected{% endif %}>Senior</option>
 					<option value='GM' {% if data.year == 'GM' %}selected{% endif %}>Grad (Masters)</option>
 					<option value='GP' {% if data.year == 'GP' %}selected{% endif %}>Grad (Doctorate)</option>
-				</select>
-			</td>
-		</tr>
-		<tr class='student hide'>
-			<td>Major</td>
-			<td><input type='text' name='major' value='{{ data.major }}' placeholder='required'/></td>
-		</tr>
-		<tr class='student hide'>
-			<td></td>
-			<td>
-				<input type='checkbox' name='voting_member' {% if data.voting_member %}checked{% endif %}/>
-				<label for='voting_member'>Voting member</label>
-			</td>
-		</tr>
-		<tr>
-			<td><input type='submit' name='create' value='{{ submit_button_text }}'/></td>
-			<td><a href=''>Start over</a></td>
-			<td></td>
-		</tr>
-		</table>
+				</select><br>
+				<input type='text' name='major' value='{{ data.major }}' placeholder='required'/><br>
+				<input type='checkbox' name='voting_member' {% if data.voting_member %}checked{% endif %}>
+					<label for='voting_member'>Voting member</label>
+				</input>
+			</div>
+		</div>
+		<div class="form-buttons">
+			<input type='submit' name='create' value='{{ submit_button_text }}'/>
+			<button href="">Start over</button>
+		</div>
 	</form>
 	<script src='/static/people.js'></script>
 {% endblock %}

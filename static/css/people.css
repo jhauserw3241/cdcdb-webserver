@@ -38,3 +38,24 @@ table#people-table td.button {
 	color: var(--card-font);
 	text-decoration: none;
 }
+
+form {
+	text-align: center;
+}
+
+form p,
+form input,
+form select {
+	margin-top: 0;
+	margin-right: 5px;
+	margin-bottom: 0.5em;
+	text-align: left;
+}
+
+form .form-name,
+form .form-creds,
+form .form-other,
+form .form-student-info {
+	display: inline-flex;
+	text-align: left;
+}
