@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
+{% block add_css %}
+	<link rel="stylesheet" href="/static/css/inventory.css">
+{% endblock %}
 {% block title %}Inventory{% endblock %}
 {% block body %}
 	<h1>Inventory</h1>
 	{% if can_create %}
-		<button href='/inventory/new'>Create new item</button>
+		<button href='/inventory/new'>Create new item</button><br>
 	{% endif %}
 	{% for item in items %}
 		<a href='/inventory/{{ item.inventory_id }}'>
 			<div class='inventory-card'>
-				<h4>{{ item.inventory_description if item.inventory_description is not none() else '' }}</h4>
+				<h3>{{ item.inventory_description if item.inventory_description is not none() else '' }}</h3>
 				<p>{{ item.inventory_manufacturer if item.inventory_manufacturer is not none() else '' }}</p>
 				<p>{{ item.inventory_make if item.inventory_make is not none() else '' }}</p>
-				<div class'modify-buttons'>
+				<div class='modify-buttons'>
 					{% if can_edit %}
 						<button href='/inventory/{{ item.inventory_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>

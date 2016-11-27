@@ -32,11 +32,7 @@
 	text-decoration: none;
 }
 
-.inventory-card p {
-	text-align: center;
-	margin: 0;
-}
-
+.inventory-card p,
 .inventory-card h3 {
 	text-align: center;
 	margin: 0;
