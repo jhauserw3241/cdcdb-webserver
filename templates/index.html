@@ -7,17 +7,13 @@
 	<p>The Cyber Defense Club is a club that teaches students about cyber security and provides opportunities for its members to participate in cyber security competitions.</p>
 
 	<h1>Upcoming Events</h1>
-	<div class='upcoming-event-titles'>
-		<p>Event Name</p>
-		<p>When</p>
-	</div>
 	{% for event in events %}
 		<a href='/events/{{ event.event_id }}'>
 			<div class='upcoming-event-card'>
-				<p>{{ event.event_name }}</p>
+				<h3>{{ event.event_name }}</h3>
 				<span title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</span>
 			</div>
 		</a>
-	{% endfor %}
+	{% endfor %}<br>
 	<button type="button">Show all events</button>
 {% endblock %}
