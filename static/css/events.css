@@ -56,3 +56,23 @@
 .modify-buttons {
 	text-align: center;
 }
+
+form {
+	text-align: center;
+}
+
+form p,
+form input,
+form select {
+	margin-top: 0;
+	margin-right: 5px;
+	margin-bottom: 0.5em;
+	text-align: left;
+}
+
+form .form-basic,
+form .form-date,
+form .form-meet,
+form .form-comp {
+	display: inline-flex;
+}
