@@ -164,7 +164,7 @@ button, input[type=submit] {
 }
 
 button:hover {
-	background-color: #A600DE;
+	background-color: var(--button-hover);
 }
 
 div.nav_profile  {
@@ -197,4 +197,5 @@ div.nav_profile h4 {
 	--card-background: #D4AFE0;
 	--card-back-highlight: #B169C6;
 	--card-font: black;
+	--button-hover: #450A70;
 }
