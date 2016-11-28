@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block add_css %}
 	<link rel="stylesheet" href="/static/css/events.css">
-	<link rel="stylesheet" href="/static/css/test.css">
+	<link rel="stylesheet" href="/static/css/overlay.css">
 {% endblock %}
 {% block add_head %}
 	<script>
-		function showDetails() {
-			document.getElementById("myNav").style.width = "100%";
+		function showDetails(id) {
+			document.getElementById(id + "-overlay").style.width = "100%";
 		}
 
-		function hideDetails() {
-			document.getElementById("myNav").style.width = "0%";
+		function hideDetails(id) {
+			document.getElementById(id).style.width = "0%";
 		}
 	</script>
 {% endblock %}
@@ -23,9 +23,7 @@
 	<input type='checkbox' id='show_past_events' name='show_past_events'/>
 	<label for='show_past_events'>Show past events</label><br>
 	{% for event in events %}
-		<!-- <a href='/events/{{ event.event_id }}' class='{{ 'past_event hide' if event.event_start_timestamp < now }}'> -->
-		<!-- <a href='/events/test'> -->
-		<a onclick="showDetails()" class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
+		<a onclick="showDetails(this.id)" id='{{ event.event_id }}' class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
 			<div class='event-card'>
 				<h3>{{ event.event_name }}</h3>
 				<p title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</p>
@@ -43,50 +41,48 @@
 				</div>
 			</div>
 		</a>
-		<a onclick="hideDetails()">
-			<div id='myNav' class='overlay'>
-				<div class='overlay-content'>
-					<a href='javascript:void(0)' class='closebtn' onclick='hideDetails()'>&times;</a>
-					<h1>{{ event.event_name }}</h1>
-					<p><strong>When:</strong> {{ event.event_end_friendly }}<br>
-						{% if event.event_start_friendly !=  event.event_end_friendly %}
-							<strong>To:</strong> {{ event.event_end_friendly }}
-						{% endif %}
-					</p>
-					<p><strong>Description:</strong><br>{{ event.event_description }}</p>
+		<div id='{{ event.event_id }}-overlay' class='overlay'>
+			<div class='overlay-content'>
+				<a href='javascript:void(0)' id='{{ event.event_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>&times;</a>
+				<h1>{{ event.event_name }}</h1>
+				<p><strong>When:</strong> {{ event.event_end_friendly }}<br>
+					{% if event.event_start_friendly !=  event.event_end_friendly %}
+						<strong>To:</strong> {{ event.event_end_friendly }}
+					{% endif %}
+				</p>
+				<p><strong>Description:</strong><br>{{ event.event_description }}</p>
 					
-					{% if event.meeting_id %}
-						{% if event.meeting_minutes %}
-							<p>
-								<strong>Minutes:</strong>
-								<a href='{{event.meeting_minutes }}'>{{ event.meeting_minutes }}</a><br>
+				{% if event.meeting_id %}
+					{% if event.meeting_minutes %}
+						<p>
+							<strong>Minutes:</strong>
+							<a href='{{event.meeting_minutes }}'>{{ event.meeting_minutes }}</a><br>
 							</p>
-						{% endif %}
-						{% if event.meeting_required is not none() and event.meeting_required %}
-							<p><strong>This is a required meeting</strong></p><br>
-						{% endif %}
 					{% endif %}
+					{% if event.meeting_required is not none() and event.meeting_required %}
+						<p><strong>This is a required meeting</strong></p><br>
+					{% endif %}
+				{% endif %}
 
-					{% if event.competition_id %}
-						{% if event.competition_location %}
-							<p><strong>Location:</strong> {{ event.competition_location }}</p><br>
-						{% endif %}
-						{% if event.competition_documentation %}
-							<p><strong>Documentation:</strong>
-								<a href='{{ event.competition_documentation }}'>{{ event.competition_documentation }}</a>
-							</p><br>
-						{% endif %}
+				{% if event.competition_id %}
+					{% if event.competition_location %}
+						<p><strong>Location:</strong> {{ event.competition_location }}</p><br>
 					{% endif %}
+					{% if event.competition_documentation %}
+						<p><strong>Documentation:</strong>
+							<a href='{{ event.competition_documentation }}'>{{ event.competition_documentation }}</a>
+						</p><br>
+					{% endif %}
+				{% endif %}
 
-					{% if can_edit %}
-						<a href='/events/{{ event.event_id }}/edit'>Edit</a>
-					{% endif %}
-					{% if can_delete %}
-						<a href='/events/{{ event.event_id }}/delete'>Delete</a>
-					{% endif %}
-				</div>
+				{% if can_edit %}
+					<a href='/events/{{ event.event_id }}/edit'>Edit</a>
+				{% endif %}
+				{% if can_delete %}
+					<a href='/events/{{ event.event_id }}/delete'>Delete</a>
+				{% endif %}
 			</div>
-		</a>
+		</div>
 	{% endfor %}
 	<script src='/static/events.js'></script>
 {% endblock %}

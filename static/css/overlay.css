@@ -19,6 +19,7 @@
 	text-align: left;
 	margin-left: 25%;
 	background-color: var(--card-background);
+	border-radius: 10px;
 }
 
 .overlay-content h1 {
