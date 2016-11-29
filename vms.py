@@ -54,7 +54,7 @@ class VMs:
 					vms.c.network, vms.c.role).\
 				filter(vms.c.id == id)
 			db.execute(q)
-			rows = [ self.encode_id(dict(row), 'event_id') for row in db.fetchall() ]
+			rows = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
 			if len(rows) != 1: return None
 			return rows[0]
 
@@ -129,17 +129,16 @@ class VMs:
             if not self.__can_show(session): abort(403)
             vm = self.__db_get_vm(id)
             if not vm: abort(404)
-            return render_template('events/show.html', vm=vm,
+            return render_template('vms/show.html', vm=vm,
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))
         abort(405)
 
     def new(self, request, session):
         if request.method == 'GET':
-            return "inside vms.new"
-            """if not self.__can_create(session): abort(403)
-            return render_template('events/new.html',
-                data={}, submit_button_text='Create')"""
+            if not self.__can_create(session): abort(403)
+            return render_template('vms/new.html',
+                data={}, submit_button_text='Create')
         abort(405)
 
     def create(self, request, session):
@@ -188,5 +187,5 @@ class VMs:
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)
             self.__db_delete_vm(id)
-            return redirect(url_for('events_'))
+            return redirect(url_for('vms_'))
 
