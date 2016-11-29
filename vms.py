@@ -86,14 +86,12 @@ class VMs:
 
     def index(self, request, session):
         if request.method == 'GET':
-            return "inside vms.index"
-            """if not self.__can_index(session): abort(403)
-            events = self.__db_get_events()
-            events = self.__events_date_magic(events)
-            return render_template('events/index.html', events=events,
+            if not self.__can_index(session): abort(403)
+            vms = self.__db_get_vms()
+            return render_template('vms/index.html', vms=vms,
                 can_create=self.__can_create(session),
                 can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))"""
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def show(self, request, session, id):
