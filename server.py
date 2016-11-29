@@ -18,6 +18,7 @@ from requests_ import Requests_
 from robohash import Robohash
 from test import Test
 from vms import VMs
+from presentations import Presentations
 
 app = Flask(__name__)
 # The handler classes for each route type
@@ -31,6 +32,7 @@ requests_ = Requests_()
 robohash = Robohash()
 test = Test()
 vms = VMs()
+presentations = Presentations()
 
 config = globals.config
 
