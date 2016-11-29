@@ -11,7 +11,7 @@ from globals import globals
 
 # Handles the VMs routes.
 
-class VMs:
+class Presentations:
     def __init__(self):
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
@@ -34,91 +34,91 @@ class VMs:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-	def __db_get_vms(self):
+	def __db_get_presentations(self):
 		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
+			presentations, _ = db.get_table("presentations")
 			q = db.query().\
 				add_columns(
-					vms.c.id, vms.c.owner_id, vms.c.name,
-					vms.c.network, vms.c.role)
+					#vms.c.id, vms.c.owner_id, vms.c.name,
+					#vms.c.network, vms.c.role)
 			db.execute(q)
-			vms = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
-			return events[::-1]
+			presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
+			return presentations[::-1]
 	
-	def __db_get_vm(self, data):
+	def __db_get_presentation(self, data):
 		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
+			presentations, _ = db.get_table("presentations")
 			q = db.query().\
 				add_columns(
-					vms.c.id, vms.c.owner_id, vms.c.name, 
-					vms.c.network, vms.c.role).\
-				filter(vms.c.id == id)
+					#vms.c.id, vms.c.owner_id, vms.c.name, 
+					#vms.c.network, vms.c.role).\
+				filter(presentations.c.id == id)
 			db.execute(q)
-			rows = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
+			rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
 			if len(rows) != 1: return None
 			return rows[0]
 
-	def __db_insert_vm(self, data):
+	def __db_insert_presentation(self, data):
 		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
-			q = vms.insert().\
-				returning(vms.c.id).\
+			presentations, _ = db.get_table("presentations")
+			q = presentations.insert().\
+				returning(presentations.c.id).\
 				values(
-					owner_id=data['owner_id'],
-					name=data['name'],
-					network=data['network'],
-					role=data['role'])
+					#owner_id=data['owner_id'],
+					#name=data['name'],
+					#network=data['network'],
+					#role=data['role'])
 			db.execute(q)
 			lastrowid = db.lastrowid()
 			if len(lastrowid) != 1: return None
 			else: return lastrowid[0]
 
-	def __db_update_vm(self, data):
-		self.__db_delete_vm(data['id'])
-		self.__db_insert_vm(data)
+	def __db_update_presentation(self, data):
+		self.__db_delete_presentation(data['id'])
+		self.__db_insert_presentation(data)
 
-	def __db_delete_vm(self, id):
+	def __db_delete_presentation(self, id):
 		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
-			q = vms.delete().\
-				where(vms.c.id == id)
+			presentations, _ = db.get_table("presentations")
+			q = presentations.delete().\
+				where(presentations.c.id == id)
 			db.execute(q)
 
-	def __validate_vm(self, data):
+	def __validate_presentation(self, data):
 		errs = []
 		d = {}
-		if not data['owner_id']:
-			errs.append('Owner_id is required')
-		d['owner_id'] = data['owner_id']
-		d['name'] = data['name']
-		d['network'] = data['network']
-		d['role'] = data['role']
+		#if not data['owner_id']:
+		#	errs.append('Owner_id is required')
+		#d['owner_id'] = data['owner_id']
+		#d['name'] = data['name']
+		#d['network'] = data['network']
+		#d['role'] = data['role']
 		
-	def __create_vm(self, request, session, data):
+	def __create_presentation(self, request, session, data):
 		v_data, errs = self.__validate_vm(data)
 		if errs:
-			return render_template('vms/new.html', data=data,
+			return render_template('presentations/new.html', data=data,
 				errors=errs, submit_button_text='Create')
-		id = self.__db_insert_vm(v_data)
+		id = self.__db_insert_presenation(v_data)
 		id = self.b58.encode(id)
-		return redirect(url_for('vms_id', id=id))
+		return redirect(url_for('presentation_id', id=id))
 
-	def __update_vm(self, request, session, id, data):
+	def __update_presentation(self, request, session, id, data):
 		v_data, errs = self.__validate_vm(data)
 		if errs:
-			return render_template('vms/new.html', data=data, 
+			return render_template('presentations/new.html', data=data, 
 				errors=errs, submit_button_text='Update')
 		v_data['id'] = id
-		id = self.__db_update_vm(v_data)
+		id = self.__db_update_presentation(v_data)
 		id = self.b58.encode(id)
-		return redirect(url_for('vms_id', id=id))
+		return redirect(url_for('presentation_id', id=id))
 	
 
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
-            vms = self.__db_get_vms()
-            return render_template('vms/index.html', vms=vms,
+            presentations = self.__db_get_presentations()
+            return render_template('presentations/index.html', presentations=presentations,
                 can_create=self.__can_create(session),
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))
@@ -127,9 +127,9 @@ class VMs:
     def show(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
-            vm = self.__db_get_vm(id)
-            if not vm: abort(404)
-            return render_template('vms/show.html', vm=vm,
+            presentation = self.__db_get_presentation(id)
+            if not presentation: abort(404)
+            return render_template('presentations/show.html', presentation=presentation,
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))
         abort(405)
@@ -137,7 +137,7 @@ class VMs:
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
-            return render_template('vms/new.html',
+            return render_template('presentations/new.html',
                 data={}, submit_button_text='Create')
         abort(405)
 
@@ -145,12 +145,12 @@ class VMs:
         if request.method == 'POST':
             if not self.__can_create(session): abort(403)
             data = request.form
-            return self.__create_vm(request, session, data)
+            return self.__create_presentation(request, session, data)
         abort(405)
 
     def edit(self, request, session, id):
         if request.method == 'GET':
-            return "inside vms.edit"
+            return "inside presentations.edit"
             """if not self.__can_edit(session): abort(403)
             evt = self.__db_get_event(id)
             data = {}
@@ -180,12 +180,12 @@ class VMs:
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
             data = request.form
-            return self.__update_vm(request, session, id, data)
+            return self.__update_presentation(request, session, id, data)
         abort(405)
 
     def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)
-            self.__db_delete_vm(id)
-            return redirect(url_for('vms_'))
+            self.__db_delete_presentation(id)
+            return redirect(url_for('events_'))
 
