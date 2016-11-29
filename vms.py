@@ -126,14 +126,12 @@ class VMs:
 
     def show(self, request, session, id):
         if request.method == 'GET':
-            return "inside vms.show"
-            """if not self.__can_show(session): abort(403)
-            evt = self.__db_get_event(id)
-            if not evt: abort(404)
-            evt = self.__events_date_magic([evt])[0]
-            return render_template('events/show.html', event=evt,
+            if not self.__can_show(session): abort(403)
+            vm = self.__db_get_vm(id)
+            if not vm: abort(404)
+            return render_template('events/show.html', vm=vm,
                 can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))"""
+                can_delete=self.__can_delete(session))
         abort(405)
 
     def new(self, request, session):
@@ -146,20 +144,9 @@ class VMs:
 
     def create(self, request, session):
         if request.method == 'POST':
-            return "inside vms.create"
-            """if not self.__can_create(session): abort(403)
+            if not self.__can_create(session): abort(403)
             data = request.form
-            if not 'type' in data or data['type'] == 'general':
-                return self.__create_generic(request, session, data)
-            elif data['type'] == 'meeting':
-                return self.__create_meeting(request, session, data)
-            elif data['type'] == 'competition':
-                return self.__create_competition(request, session, data)
-            else:
-                return render_template('events/new.html',
-                    data=data,
-                    submit_button_text='Create',
-                    errors=['Didn\'t understand event type'])"""
+            return self.__create_vm(request, session, data)
         abort(405)
 
     def edit(self, request, session, id):
@@ -192,28 +179,14 @@ class VMs:
 
     def update(self, request, session, id):
         if request.method == 'POST':
-            return "inside vms.update"
-            """if not self.__can_update(session): abort(403)
+            if not self.__can_update(session): abort(403)
             data = request.form
-            if not 'type' in data or data['type'] == 'general':
-                return self.__update_generic(request, session, id, data)
-            elif data['type'] == 'meeting':
-                return self.__update_meeting(request, session, id, data)
-            elif data['type'] == 'competition':
-                return self.__update_competition(request, session, id, data)
-            else:
-                return render_template('events/new.html',
-                    data=data,
-                    submit_button_text='Update',
-                    errors=['Didn\'t understand event type'])"""
+            return self.__update_vm(request, session, id, data)
         abort(405)
 
     def delete(self, request, session, id):
         if request.method == 'GET':
-            return "inside vms.delete"
-            """if not self.__can_delete(session): abort(403)
-            self.__db_delete_competition(id)
-            self.__db_delete_meeting(id)
-            self.__db_delete_event(id)
-            return redirect(url_for('events_'))"""
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete_vm(id)
+            return redirect(url_for('events_'))
 
