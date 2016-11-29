@@ -45,26 +45,32 @@
 			<div class='overlay-content'>
 				<a href='javascript:void(0)' id='{{ event.event_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
 				<h1>{{ event.event_name }}</h1>
-				<p><strong>When:</strong> {{ event.event_end_friendly }}<br>
+				<h3>When</h3>
+				<p><strong>Start:</strong> {{ event.event_end_friendly }}<br>
 					{% if event.event_start_friendly !=  event.event_end_friendly %}
-						<strong>To:</strong> {{ event.event_end_friendly }}
+						<strong>End:</strong> {{ event.event_end_friendly }}
 					{% endif %}
 				</p>
-				<p><strong>Description:</strong><br>{{ event.event_description }}</p>
+				<h3>Description</h3>
+				<p>{{ event.event_description }}</p>
 					
 				{% if event.meeting_id %}
 					{% if event.meeting_minutes %}
+						<h3>Minutes</h3>
 						<p>
-							<strong>Minutes:</strong>
-							<a href='{{event.meeting_minutes }}'>{{ event.meeting_minutes }}</a><br>
-							</p>
+							<a href='{{event.meeting_minutes }}'>{{ event.meeting_minutes }}</a>
+						</p>
 					{% endif %}
+					<p><strong>Required Meeting: </strong></p>
 					{% if event.meeting_required is not none() and event.meeting_required %}
-						<p><strong>This is a required meeting</strong></p><br>
+						<p>Yes</p><br>
+					{% else %}
+						<p>No</p><br>
 					{% endif %}
 				{% endif %}
 
 				{% if event.competition_id %}
+					<h3>Competition Details</h3>
 					{% if event.competition_location %}
 						<p><strong>Location:</strong> {{ event.competition_location }}</p><br>
 					{% endif %}
@@ -75,12 +81,18 @@
 					{% endif %}
 				{% endif %}
 
-				{% if can_edit %}
-					<a href='/events/{{ event.event_id }}/edit'>Edit</a>
-				{% endif %}
-				{% if can_delete %}
-					<a href='/events/{{ event.event_id }}/delete'>Delete</a>
-				{% endif %}
+				<div id="modify-buttons-overlay">
+					{% if can_edit %}
+						<button id='editButton' href='/events/{{ event.event_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</button>
+					{% endif %}
+					{% if can_delete %}
+						<button id='deleteButton' href='/events/{{ event.event_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</button>
+					{% endif %}
+				</div>
 			</div>
 		</div>
 	{% endfor %}
