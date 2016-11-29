@@ -204,6 +204,11 @@ def events_():
         return events.index(request, session)
     else: abort(405)
 
+@app.route('/events/test', methods=['GET'])
+def events_test():
+    if request.method == 'GET':
+        return events.test(request, session)
+
 @app.route('/events/new/', methods=['GET', 'POST'])
 def events_create():
     if request.method == 'GET':
