@@ -30,7 +30,7 @@
 	padding: 8px;
 	text-decoration: none;
 	font-size: 36px;
-	color: #818181;
+	color: black;
 	display: block;
 	transition: 0.3s;
 }
@@ -42,7 +42,13 @@
 .overlay .closebtn {
 	position: absolute;
 	right: 45px;
-	font-size: 60px;
+	font-size: 30px;
+	padding: 0;
+	color: black;
+}
+
+.overlay .closebtn:hover {
+	color: #818181;
 }
 
 @media screen and (max-height: 450px) {

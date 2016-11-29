@@ -43,7 +43,7 @@
 		</a>
 		<div id='{{ event.event_id }}-overlay' class='overlay'>
 			<div class='overlay-content'>
-				<a href='javascript:void(0)' id='{{ event.event_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>&times;</a>
+				<a href='javascript:void(0)' id='{{ event.event_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
 				<h1>{{ event.event_name }}</h1>
 				<p><strong>When:</strong> {{ event.event_end_friendly }}<br>
 					{% if event.event_start_friendly !=  event.event_end_friendly %}
