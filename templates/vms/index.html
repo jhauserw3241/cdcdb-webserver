@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block add_css %}
+	<link rel="stylesheet" href="/static/css/events.css" />
+{% endblock %}
+{% block title %}VMs{% endblock %}
+{% block body %}
+	<h1>Events</h1>
+	{% if can_create %}
+		<p><a href='/vms/new'>Create new VM</a></p>
+	{% endif %}
+	<div class='event-titles'>
+		<p>Name</p>
+		<p>Description</p>
+		<p>Date</p>
+		<p>Duration</p>
+	</div>
+	{% for vm in vms %}
+			<a href='/vms/{{ event.event_id }}'>
+				<div class='event-card'>
+					<p>{{ vm.event_name }}</p>
+					<p>{{ vm.event_description }}</p>
+					<p>{{ vm.event_start_friendly }}</p>
+					<p>{{ vm.event_end_friendly }}</p>
+					{% if can_edit %}
+						<a href='/vms/{{ vm.event_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</a>
+					{% endif %}
+					{% if can_delete %}
+						<a href='/vms/{{ vm.event_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</a>
+					{% endif %}
+				</div>
+			</a>
+	{% endfor %}
+	<script src='/static/events.js'></script>
+{% endblock %}
