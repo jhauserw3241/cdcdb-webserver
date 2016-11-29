@@ -34,6 +34,56 @@ class VMs:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
+	def __db_get_vms(self):
+		with DatabaseConnection() as db:
+			vms, _ = db.get_table("vms")
+			q = db.query().\
+				add_columns(
+					vms.c.id, vms.c.owner_id, vms.c.name,
+					vms.c.network, vms.c.role)
+			db.execute(q)
+			vms = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
+			return events[::-1]
+	
+	def __db_get_vm(self, data):
+		with DatabaseConnection() as db:
+			vms, _ = db.get_table("vms")
+			q = db.query().\
+				add_columns(
+					vms.c.id, vms.c.owner_id, vms.c.name, 
+					vms.c.network, vms.c.role).\
+				filter(vms.c.id == id)
+			db.execute(q)
+			rows = [ self.encode_id(dict(row), 'event_id') for row in db.fetchall() ]
+			if len(rows) != 1: return None
+			return rows[0]
+
+	def __db_insert_vm(self, data):
+		with DatabaseConnection() as db:
+			vms, _ = db.get_table("vms")
+			q = vms.insert().\
+				returning(vms.c.id).\
+				values(
+					owner_id=data['owner_id'],
+					name=data['name'],
+					network=data['network'],
+					role=data['role'])
+			db.execute(q)
+			lastrowid = db.lastrowid()
+			if len(lastrowid) != 1: return None
+			else: return lastrowid[0]
+
+	def __db_update_vm(self, data):
+		self.__db_delete_vm(data['id'])
+		self.__db_insert_vm(data)
+
+	def __db_delete_vm(self, id):
+		with DatabaseConnection() as db:
+			vms, _ = db.get_table("vms")
+			q = vms.delete().\
+				where(vms.c.id == id)
+			db.execute(q)
+
     def index(self, request, session):
         if request.method == 'GET':
             return "inside vms.index"
