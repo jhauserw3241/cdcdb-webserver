@@ -84,6 +84,36 @@ class VMs:
 				where(vms.c.id == id)
 			db.execute(q)
 
+	def __validate_vm(self, data):
+		errs = []
+		d = {}
+		if not data['owner_id']:
+			errs.append('Owner_id is required')
+		d['owner_id'] = data['owner_id']
+		d['name'] = data['name']
+		d['network'] = data['network']
+		d['role'] = data['role']
+		
+	def __create_vm(self, request, session, data):
+		v_data, errs = self.__validate_vm(data)
+		if errs:
+			return render_template('vms/new.html', data=data,
+				errors=errs, submit_button_text='Create')
+		id = self.__db_insert_vm(v_data)
+		id = self.b58.encode(id)
+		return redirect(url_for('vms_id', id=id))
+
+	def __update_vm(self, request, session, id, data):
+		v_data, errs = self.__validate_vm(data)
+		if errs:
+			return render_template('vms/new.html', data=data, 
+				errors=errs, submit_button_text='Update')
+		v_data['id'] = id
+		id = self.__db_update_vm(v_data)
+		id = self.b58.encode(id)
+		return redirect(url_for('vms_id', id=id))
+	
+
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
