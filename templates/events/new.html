@@ -47,26 +47,26 @@
 				<input type='text' name='end_time' value='{{ data.end_time }}'/>
 			</div>
 		</div>
-		<h3>Meeting Details</h3>
-		<div class="form-meet">
-			<div class="form-meet-titles">
+		<h3 class="meeting hide">Meeting Details</h3>
+		<div class="meeting hide form-meet">
+			<div class="meeting hide form-meet-titles">
 				<p><strong>Notes</strong></p>
 				<p></p>
 			</div>
-			<div class="form-meet-info">
+			<div class="meeting hide form-meet-info">
 				<input type='text' name='minutes' value='{{ data.minutes }}' placeholder='link'/><br>
 				<input type='checkbox' name='required' {% if data.required %}checked{% endif %}>
 					<label for='required'>Required</label>
 				</input>
 			</div>
 		</div>
-		<h3>Competition Details</h3>
-		<div class="form-comp">
-			<div class="form-comp-titles">
+		<h3 class="competition hide">Competition Details</h3>
+		<div class="competition hide form-comp">
+			<div class="competition hide form-comp-titles">
 				<p><strong>Location</strong></p>
 				<p><strong>Documentation</strong></p>
 			</div>
-			<div class="form-comp-info">
+			<div class="competition hide form-comp-info">
 				<input type='text' name='location' value='{{ data.location }}'/><br>
 				<input type='text' name='documentation' value='{{ data.documentation }}' placeholder='link'/>
 			</div>
