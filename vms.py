@@ -34,85 +34,84 @@ class VMs:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-	def __db_get_vms(self):
-		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
-			q = db.query().\
-				add_columns(
-					vms.c.id, vms.c.owner_id, vms.c.name,
-					vms.c.network, vms.c.role)
-			db.execute(q)
-			vms = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
-			return events[::-1]
-	
-	def __db_get_vm(self, data):
-		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
-			q = db.query().\
-				add_columns(
-					vms.c.id, vms.c.owner_id, vms.c.name, 
-					vms.c.network, vms.c.role).\
-				filter(vms.c.id == id)
-			db.execute(q)
-			rows = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
-			if len(rows) != 1: return None
-			return rows[0]
+    def __db_get_vms(self):
+        with DatabaseConnection() as db:
+            vms, _ = db.get_table("vms")
+            q = db.query().\
+                add_columns(
+                    vms.c.id, vms.c.owner_id, vms.c.name,
+                    vms.c.network, vms.c.role)
+            db.execute(q)
+            vms = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
+            return events[::-1]
 
-	def __db_insert_vm(self, data):
-		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
-			q = vms.insert().\
-				returning(vms.c.id).\
-				values(
-					owner_id=data['owner_id'],
-					name=data['name'],
-					network=data['network'],
-					role=data['role'])
-			db.execute(q)
-			lastrowid = db.lastrowid()
-			if len(lastrowid) != 1: return None
-			else: return lastrowid[0]
+    def __db_get_vm(self, data):
+        with DatabaseConnection() as db:
+            vms, _ = db.get_table("vms")
+            q = db.query().\
+                add_columns(
+                    vms.c.id, vms.c.owner_id, vms.c.name,
+                    vms.c.network, vms.c.role).\
+                filter(vms.c.id == id)
+            db.execute(q)
+            rows = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
+            if len(rows) != 1: return None
+            return rows[0]
 
-	def __db_update_vm(self, data):
-		self.__db_delete_vm(data['id'])
-		self.__db_insert_vm(data)
+    def __db_insert_vm(self, data):
+        with DatabaseConnection() as db:
+            vms, _ = db.get_table("vms")
+            q = vms.insert().\
+                returning(vms.c.id).\
+                values(
+                    owner_id=data['owner_id'],
+                    name=data['name'],
+                    network=data['network'],
+                    role=data['role'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
 
-	def __db_delete_vm(self, id):
-		with DatabaseConnection() as db:
-			vms, _ = db.get_table("vms")
-			q = vms.delete().\
-				where(vms.c.id == id)
-			db.execute(q)
+    def __db_update_vm(self, data):
+        self.__db_delete_vm(data['id'])
+        self.__db_insert_vm(data)
 
-	def __validate_vm(self, data):
-		errs = []
-		d = {}
-		if not data['owner_id']:
-			errs.append('Owner_id is required')
-		d['owner_id'] = data['owner_id']
-		d['name'] = data['name']
-		d['network'] = data['network']
-		d['role'] = data['role']
-		
-	def __create_vm(self, request, session, data):
-		v_data, errs = self.__validate_vm(data)
-		if errs:
-			return render_template('vms/new.html', data=data,
-				errors=errs, submit_button_text='Create')
-		id = self.__db_insert_vm(v_data)
-		id = self.b58.encode(id)
-		return redirect(url_for('vms_id', id=id))
+    def __db_delete_vm(self, id):
+        with DatabaseConnection() as db:
+            vms, _ = db.get_table("vms")
+            q = vms.delete().\
+                where(vms.c.id == id)
+            db.execute(q)
 
-	def __update_vm(self, request, session, id, data):
-		v_data, errs = self.__validate_vm(data)
-		if errs:
-			return render_template('vms/new.html', data=data, 
-				errors=errs, submit_button_text='Update')
-		v_data['id'] = id
-		id = self.__db_update_vm(v_data)
-		id = self.b58.encode(id)
-		return redirect(url_for('vms_id', id=id))
-	
+    def __validate_vm(self, data):
+        errs = []
+        d = {}
+        if not data['owner_id']:
+            errs.append('Owner_id is required')
+        d['owner_id'] = data['owner_id']
+        d['name'] = data['name']
+        d['network'] = data['network']
+        d['role'] = data['role']
+
+    def __create_vm(self, request, session, data):
+        v_data, errs = self.__validate_vm(data)
+        if errs:
+            return render_template('vms/new.html', data=data,
+                errors=errs, submit_button_text='Create')
+        id = self.__db_insert_vm(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('vms_id', id=id))
+
+    def __update_vm(self, request, session, id, data):
+        v_data, errs = self.__validate_vm(data)
+        if errs:
+            return render_template('vms/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        id = self.__db_update_vm(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('vms_id', id=id))
 
     def index(self, request, session):
         if request.method == 'GET':
