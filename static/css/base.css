@@ -181,6 +181,11 @@ div.nav_profile h4 {
 	text-align: center;
 }
 
+ul#errors li {
+	list-style-type: none;
+	color: red;
+}
+
 :root {
 	--header-dark-purple: #512888;
 	--header-text: white;
