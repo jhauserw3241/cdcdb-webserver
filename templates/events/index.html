@@ -18,7 +18,9 @@
 {% block body %}
 	<h1>Events</h1>
 	{% if can_create %}
-		<button href='/events/new'>Create new event</button><br>
+		<form action='/events/new' method='GET'>
+		<button>Create new event</button><br>
+		</form>
 	{% endif %}
 	<input type='checkbox' id='show_past_events' name='show_past_events'/>
 	<label for='show_past_events'>Show past events</label><br>
