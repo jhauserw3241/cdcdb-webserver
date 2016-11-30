@@ -11,7 +11,7 @@
 	{% if officers|length() > 0 %}
 		<h2>Officers</h2>
 		<table id='officers-table'>
-		{% for o in officers %}
+		{% for o in officers|sort(attribute='officers_title') %}
 			<a href ='/people/{{ o.officers_id }}'>
 				<div class="officer-card">
 					<img src='/robohash/{{ o.officers_id }}?size=100x100'/>
