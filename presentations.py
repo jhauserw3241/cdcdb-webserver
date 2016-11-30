@@ -34,85 +34,85 @@ class Presentations:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-	def __db_get_presentations(self):
-		with DatabaseConnection() as db:
-			presentations, _ = db.get_table("presentations")
-			q = db.query().\
-				add_columns(
-					#vms.c.id, vms.c.owner_id, vms.c.name,
-					#vms.c.network, vms.c.role)
-			db.execute(q)
-			presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
-			return presentations[::-1]
-	
-	def __db_get_presentation(self, data):
-		with DatabaseConnection() as db:
-			presentations, _ = db.get_table("presentations")
-			q = db.query().\
-				add_columns(
-					#vms.c.id, vms.c.owner_id, vms.c.name, 
-					#vms.c.network, vms.c.role).\
-				filter(presentations.c.id == id)
-			db.execute(q)
-			rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
-			if len(rows) != 1: return None
-			return rows[0]
+    def __db_get_presentations(self):
+        with DatabaseConnection() as db:
+            presentations, _ = db.get_table("presentations")
+            q = db.query().\
+                add_columns(
+                    #vms.c.id, vms.c.owner_id, vms.c.name,
+                    #vms.c.network, vms.c.role)
+            db.execute(q)
+            presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
+            return presentations[::-1]
 
-	def __db_insert_presentation(self, data):
-		with DatabaseConnection() as db:
-			presentations, _ = db.get_table("presentations")
-			q = presentations.insert().\
-				returning(presentations.c.id).\
-				values(
-					#owner_id=data['owner_id'],
-					#name=data['name'],
-					#network=data['network'],
-					#role=data['role'])
-			db.execute(q)
-			lastrowid = db.lastrowid()
-			if len(lastrowid) != 1: return None
-			else: return lastrowid[0]
+    def __db_get_presentation(self, data):
+        with DatabaseConnection() as db:
+            presentations, _ = db.get_table("presentations")
+            q = db.query().\
+                add_columns(
+                    #vms.c.id, vms.c.owner_id, vms.c.name,
+                    #vms.c.network, vms.c.role).\
+                filter(presentations.c.id == id)
+            db.execute(q)
+            rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
+            if len(rows) != 1: return None
+            return rows[0]
 
-	def __db_update_presentation(self, data):
-		self.__db_delete_presentation(data['id'])
-		self.__db_insert_presentation(data)
+    def __db_insert_presentation(self, data):
+        with DatabaseConnection() as db:
+            presentations, _ = db.get_table("presentations")
+            q = presentations.insert().\
+                returning(presentations.c.id).\
+                values(
+                    #owner_id=data['owner_id'],
+                    #name=data['name'],
+                    #network=data['network'],
+                    #role=data['role'])
+            db.execute(q)
+            lastrowid = db.lastrowid()
+            if len(lastrowid) != 1: return None
+            else: return lastrowid[0]
 
-	def __db_delete_presentation(self, id):
-		with DatabaseConnection() as db:
-			presentations, _ = db.get_table("presentations")
-			q = presentations.delete().\
-				where(presentations.c.id == id)
-			db.execute(q)
+    def __db_update_presentation(self, data):
+        self.__db_delete_presentation(data['id'])
+        self.__db_insert_presentation(data)
 
-	def __validate_presentation(self, data):
-		errs = []
-		d = {}
-		#if not data['owner_id']:
-		#	errs.append('Owner_id is required')
-		#d['owner_id'] = data['owner_id']
-		#d['name'] = data['name']
-		#d['network'] = data['network']
-		#d['role'] = data['role']
-		
-	def __create_presentation(self, request, session, data):
-		v_data, errs = self.__validate_vm(data)
-		if errs:
-			return render_template('presentations/new.html', data=data,
-				errors=errs, submit_button_text='Create')
-		id = self.__db_insert_presenation(v_data)
-		id = self.b58.encode(id)
-		return redirect(url_for('presentation_id', id=id))
+    def __db_delete_presentation(self, id):
+        with DatabaseConnection() as db:
+            presentations, _ = db.get_table("presentations")
+            q = presentations.delete().\
+                where(presentations.c.id == id)
+            db.execute(q)
 
-	def __update_presentation(self, request, session, id, data):
-		v_data, errs = self.__validate_vm(data)
-		if errs:
-			return render_template('presentations/new.html', data=data, 
-				errors=errs, submit_button_text='Update')
-		v_data['id'] = id
-		id = self.__db_update_presentation(v_data)
-		id = self.b58.encode(id)
-		return redirect(url_for('presentation_id', id=id))
-	
+    def __validate_presentation(self, data):
+        errs = []
+        d = {}
+        #if not data['owner_id']:
+        #    errs.append('Owner_id is required')
+        #d['owner_id'] = data['owner_id']
+        #d['name'] = data['name']
+        #d['network'] = data['network']
+        #d['role'] = data['role']
+
+    def __create_presentation(self, request, session, data):
+        v_data, errs = self.__validate_vm(data)
+        if errs:
+            return render_template('presentations/new.html', data=data,
+                errors=errs, submit_button_text='Create')
+        id = self.__db_insert_presenation(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('presentation_id', id=id))
+
+    def __update_presentation(self, request, session, id, data):
+        v_data, errs = self.__validate_vm(data)
+        if errs:
+            return render_template('presentations/new.html', data=data,
+                errors=errs, submit_button_text='Update')
+        v_data['id'] = id
+        id = self.__db_update_presentation(v_data)
+        id = self.b58.encode(id)
+        return redirect(url_for('presentation_id', id=id))
+
 
     def index(self, request, session):
         if request.method == 'GET':
