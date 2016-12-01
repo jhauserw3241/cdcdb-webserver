@@ -23,5 +23,7 @@
 			</div>
 		</a>
 	{% endfor %}<br>
-	<button type="button">Show all events</button>
+	<form action='/events' method='GET'>
+	<button>Show all events</button>
+	</form>
 {% endblock %}
