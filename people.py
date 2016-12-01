@@ -357,7 +357,7 @@ class People:
                 session.pop('is_admin', None)
                 session.pop('is_officer', None)
                 session.pop('is_student', None)
-            return redirect(url_for('people_login'))
+            return redirect(url_for('index_'))
         abort(405)
 
     def index(self, request, session):
