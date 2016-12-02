@@ -10,7 +10,6 @@
 	{% endif %}
 	{% if officers|length() > 0 %}
 		<h2>Officers</h2>
-		<table id='officers-table'>
 		{% for o in officers|sort(attribute='officers_title') %}
 			<a href ='/people/{{ o.officers_id }}'>
 				<div class="officer-card">
@@ -22,7 +21,6 @@
 				</div>
 			</a>
 		{% endfor %}
-		</table>
 	{% endif %}
 	{% if voting_students|length() > 0 %}
 		<h2>Voting Members</h2>
