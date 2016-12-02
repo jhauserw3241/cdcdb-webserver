@@ -68,6 +68,7 @@ ul#nav li {
 	text-transform: lowercase;
 	transition: .1s;
 	color: var(--color-nav-hover);
+	text-transform: capitalize;
 }
 
 ul#nav li:hover {
