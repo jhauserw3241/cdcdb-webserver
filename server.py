@@ -30,7 +30,7 @@ requests_ = Requests_()
 robohash = Robohash()
 test = Test()
 vms = VMs()
-#presentations = Presentations()
+presentations = Presentations()
 
 config = globals.config
 
@@ -360,55 +360,53 @@ def vms_id_delete(id):
         abort(405)
 
 
-#@app.route('/presentations', methods=['GET'])
-#def presentations_():
-#    if request.method == 'GET':
-#        return presentations.index(request, session)
-#    else:
-#        abort(405)
+@app.route('/presentations', methods=['GET'])
+def presentations_():
+    if request.method == 'GET':
+        return presentations.index(request, session)
+    else:
+        abort(405)
 
 
-#@app.route('/presentations/new/', methods=['GET', 'POST'])
-#def presentations_create():
-#    if request.method == 'GET':
-#        return presentations.new(request, session)
-#    if request.method == 'POST':
-#        return presentations.create(request, session)
-#    else:
-#        abort(405)
+@app.route('/presentations/new/', methods=['GET', 'POST'])
+def presentations_create():
+    if request.method == 'GET':
+        return presentations.new(request, session)
+   if request.method == 'POST':
+        return presentations.create(request, session)
+    else:
+        abort(405)
 
 
-#@app.route('/presentations/<id>', methods=['GET'])
-#def presentations_id(id):
-#    id = decode_id(id)
-#    if id == None: abort(404)
-#    if request.method == 'GET':
-#        return presentations.show(request, session, id)
-#    else:
-#        abort(405)
+@app.route('/presentations/<id>', methods=['GET'])
+def presentations_id(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return presentations.show(request, session, id)
+    else:
+        abort(405)
 
 
-#@app.route('/presentations/<id>/edit', methods=['GET', 'POST'])
-#def presentations_id_edit(id):
-#    id = decode(id)
-#    if id == None: abort(404)
-#    if request.method == 'GET':
-#        return presentations.edit(request, session, id)
-#    if request.method == 'POST':
-#        return presentations.update(request, session, id)
-#    else:
-#        abort(405)
+@app.route('/presentations/<id>/edit', methods=['GET', 'POST'])
+def presentations_id_edit(id):
+    id = decode(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return presentations.edit(request, session, id)
+    if request.method == 'POST':
+        return presentations.update(request, session, id)
+    else:
+        abort(405)
 
-
-#@app.route('/presentations/<id>/delete', methods=['GET'])
-#def presentations_id_delete(id):
-#    id = decode(id)
-#    if id == None: abort(404)
-#    if request.method == 'GET':
-#        return presentations.delete(request, session, id)
-#    else:
-#        abort(405)
-
+@app.route('/presentations/<id>/delete', methods=['GET'])
+def presentations_id_delete(id):
+    id = decode(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return presentations.delete(request, session, id)
+    else:
+        abort(405)
 
 if __name__ == '__main__':
     app.debug = True
