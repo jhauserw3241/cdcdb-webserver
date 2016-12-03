@@ -43,7 +43,7 @@ class VMs:
                     vms.c.network, vms.c.role)
             db.execute(q)
             vms = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
-            return events[::-1]
+            return vms[::-1]
 
     def __db_get_vm(self, data):
         with DatabaseConnection() as db:
