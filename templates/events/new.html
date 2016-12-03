@@ -19,8 +19,8 @@
 				<p><strong>Type</strong></p>
 			</div>
 			<div class="form-basic-info">
-				<input type='text' name='name' value='{{ data.name }}' placeholder='required'/><br>
-				<input type='text' name='description' value='{{ data.description }}'/><br>
+				<input type='text' maxlength='100' name='name' value='{{ data.name }}' placeholder='required'/><br>
+				<input type='text' maxlength='256' name='description' value='{{ data.description }}'/><br>
 				<input type='radio' id='is_meeting' name='type' value='meeting' {% if data.type == 'meeting' %}checked{% endif %}>
 					<label for='is_meeting'>Meeting</label>
 				</input>
@@ -67,7 +67,7 @@
 				<p><strong>Documentation</strong></p>
 			</div>
 			<div class="competition hide form-comp-info">
-				<input type='text' name='location' value='{{ data.location }}'/><br>
+				<input type='text' maxlength='256' name='location' value='{{ data.location }}'/><br>
 				<input type='text' name='documentation' value='{{ data.documentation }}' placeholder='link'/>
 			</div>
 		</div>
