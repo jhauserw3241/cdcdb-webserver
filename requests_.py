@@ -104,6 +104,13 @@ class Requests_:
             db.execute(q)
             return
 
+    def __db_delete(self, id):
+        with DatabaseConnection() as db:
+            co, _ = db.get_table("checked_out")
+            q = co.delete().where(co.c.id == id)
+            db.execute(q)
+            return
+
     def __validate_request(self, data):
         d = {}
         errs = []
@@ -141,6 +148,9 @@ class Requests_:
         return 'is_student' in session and session['is_student']
 
     def __can_approve(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
     def __needs_approval(self, id):
@@ -193,5 +203,12 @@ class Requests_:
             if not self.__needs_approval(id): abort(403)
             approver = session['person_id']
             self.__db_approve(id, approver)
+            return redirect(url_for('requests__'))
+        abort(405)
+
+    def delete(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete(id)
             return redirect(url_for('requests__'))
         abort(405)
