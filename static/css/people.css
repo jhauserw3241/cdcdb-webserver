@@ -24,7 +24,12 @@
 .voting-member-card h4,
 .nonvoting-member-card h4,
 .nonstudent-card h4 {
-	margin: 0;
+	margin: auto;
+	width: 300px;
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .officer-card p {
