@@ -29,8 +29,8 @@ class Events:
                 duration = ""
             else:
                 duration = self.td_to_rel(duration)
-            e['relative_start'] = self.sqlts_to_rel(str(start))
-            e['relative_end'] = self.sqlts_to_rel(str(end))
+            e['relative_start'] = self.sqlts_to_rel(str(start).split('.')[0])
+            e['relative_end'] = self.sqlts_to_rel(str(end).split('.')[0])
             e['duration'] = duration
             e['event_start_friendly'] = self.frmt_dt(start, "%d %b %Y")
             if start.hour != 0 or start.minute != 0:
