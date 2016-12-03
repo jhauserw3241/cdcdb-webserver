@@ -34,12 +34,20 @@
 
 .event-card p {
 	text-align: center;
-	margin: 0;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .event-card h3 {
 	text-align: center;
-	margin: 0;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .event-card button {

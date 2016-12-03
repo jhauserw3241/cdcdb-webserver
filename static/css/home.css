@@ -21,5 +21,10 @@
 
 .upcoming-event-card p,
 .upcoming-event-card h3 {
-	margin: 0;
+	margin: auto;
+	width: 300px;
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }

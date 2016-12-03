@@ -35,7 +35,11 @@
 .inventory-card p,
 .inventory-card h3 {
 	text-align: center;
-	margin: 0;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .inventory-card button {
