@@ -87,12 +87,8 @@ class Presentations:
     def __validate_presentation(self, data):
         errs = []
         d = {}
-        if not data['owner_id']:
-            errs.append('Owner_id is required')
-        d['owner_id'] = data['owner_id']
         d['name'] = data['name']
-        d['network'] = data['network']
-        d['role'] = data['role']
+        d['slides'] = data['slides']
 
     def __create_presentation(self, request, session, data):
         v_data, errs = self.__validate_vm(data)
