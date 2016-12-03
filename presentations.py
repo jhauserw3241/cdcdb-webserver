@@ -9,7 +9,7 @@ import json
 from database_connection import DatabaseConnection
 from globals import globals
 
-# Handles the VMs routes.
+# Handles the Presentations routes.
 
 class Presentations:
     def __init__(self):
@@ -36,22 +36,22 @@ class Presentations:
 
     def __db_get_presentations(self):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
+            presentations, _ = db.get_table("presentation")
             q = db.query().\
                 add_columns(
-                    vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role)
+                    presentations.c.id, presentations.c.name,
+                    presentations.c.slides)
             db.execute(q)
             presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
             return presentations[::-1]
 
     def __db_get_presentation(self, data):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
+            presentations, _ = db.get_table("presentation")
             q = db.query().\
                 add_columns(
-                    vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role).\
+                    presentations.c.id, presentations.c.name,
+                    presentations.c.slides).\
                 filter(presentations.c.id == id)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
@@ -60,14 +60,12 @@ class Presentations:
 
     def __db_insert_presentation(self, data):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
+            presentations, _ = db.get_table("presentation")
             q = presentations.insert().\
                 returning(presentations.c.id).\
                 values(
-                    owner_id=data['owner_id'],
                     name=data['name'],
-                    network=data['network'],
-                    role=data['role'])
+                    slides=data['slides'])
             db.execute(q)
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
@@ -79,7 +77,7 @@ class Presentations:
 
     def __db_delete_presentation(self, id):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
+            presentations, _ = db.get_table("presentation")
             q = presentations.delete().\
                 where(presentations.c.id == id)
             db.execute(q)
@@ -91,7 +89,7 @@ class Presentations:
         d['slides'] = data['slides']
 
     def __create_presentation(self, request, session, data):
-        v_data, errs = self.__validate_vm(data)
+        v_data, errs = self.__validate_presentation(data)
         if errs:
             return render_template('presentations/new.html', data=data,
                 errors=errs, submit_button_text='Create')
@@ -100,7 +98,7 @@ class Presentations:
         return redirect(url_for('presentation_id', id=id))
 
     def __update_presentation(self, request, session, id, data):
-        v_data, errs = self.__validate_vm(data)
+        v_data, errs = self.__validate_presentation(data)
         if errs:
             return render_template('presentations/new.html', data=data,
                 errors=errs, submit_button_text='Update')
