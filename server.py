@@ -184,7 +184,7 @@ def requests_new():
 @app.route('/requests/<id>', methods=['GET'])
 def requests_show(id):
     if request.method == 'GET':
-        abort(501)
+        abort(405)
     else:
         abort(405)
 
