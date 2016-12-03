@@ -90,6 +90,8 @@ class VMs:
         if not data['owner_id']:
             errs.append('Owner_id is required')
         d['owner_id'] = data['owner_id']
+        if not data['name']:
+            err.append('VM name is required')
         d['name'] = data['name']
         d['network'] = data['network']
         d['role'] = data['role']
