@@ -25,7 +25,12 @@
 			</div>
 			<ul id='nav'>
 				<li><a href='/'>Home</a></li>
-				<li><a href='/events'>Events</a></li>
+				<li>
+					<a href='/events'>Events</a>
+					<ul>
+						<li><a href='/presentations'>Presentations</a></li>
+					</ul>
+				</li>
 				{% if session.is_student %}
 					<li><a href='/inventory'>Inventory</a></li>
 				{% endif %}
