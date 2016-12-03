@@ -188,6 +188,14 @@ def requests_show(id):
     else:
         abort(405)
 
+@app.route('/requests/<id>/approve', methods=['GET'])
+def _requests_id_approve(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return requests_.approve(request, session, id)
+    else:
+        abort (405)
 
 @app.route('/people/', methods=['GET'])
 def people_():
