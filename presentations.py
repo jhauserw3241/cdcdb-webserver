@@ -39,8 +39,8 @@ class Presentations:
             presentations, _ = db.get_table("presentations")
             q = db.query().\
                 add_columns(
-                    #vms.c.id, vms.c.owner_id, vms.c.name,
-                    #vms.c.network, vms.c.role)
+                    vms.c.id, vms.c.owner_id, vms.c.name,
+                    vms.c.network, vms.c.role)
             db.execute(q)
             presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
             return presentations[::-1]
@@ -50,8 +50,8 @@ class Presentations:
             presentations, _ = db.get_table("presentations")
             q = db.query().\
                 add_columns(
-                    #vms.c.id, vms.c.owner_id, vms.c.name,
-                    #vms.c.network, vms.c.role).\
+                    vms.c.id, vms.c.owner_id, vms.c.name,
+                    vms.c.network, vms.c.role).\
                 filter(presentations.c.id == id)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
@@ -64,10 +64,10 @@ class Presentations:
             q = presentations.insert().\
                 returning(presentations.c.id).\
                 values(
-                    #owner_id=data['owner_id'],
-                    #name=data['name'],
-                    #network=data['network'],
-                    #role=data['role'])
+                    owner_id=data['owner_id'],
+                    name=data['name'],
+                    network=data['network'],
+                    role=data['role'])
             db.execute(q)
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
@@ -87,12 +87,12 @@ class Presentations:
     def __validate_presentation(self, data):
         errs = []
         d = {}
-        #if not data['owner_id']:
-        #    errs.append('Owner_id is required')
-        #d['owner_id'] = data['owner_id']
-        #d['name'] = data['name']
-        #d['network'] = data['network']
-        #d['role'] = data['role']
+        if not data['owner_id']:
+            errs.append('Owner_id is required')
+        d['owner_id'] = data['owner_id']
+        d['name'] = data['name']
+        d['network'] = data['network']
+        d['role'] = data['role']
 
     def __create_presentation(self, request, session, data):
         v_data, errs = self.__validate_vm(data)
