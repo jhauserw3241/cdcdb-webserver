@@ -11,31 +11,31 @@
 <table id='create-item'>
 <tr>
 	<td>Description</td>
-	<td colspan='2'><input type='text' name='description' value='{{ data.description }}'/></td>
+	<td colspan='2'><input type='text' maxlength='256' name='description' value='{{ data.description }}'/></td>
 </tr>
 <tr>
 	<td>Serial Number</td>
-	<td colspan='2'><input type='text' name='serial_number' value='{{ data.serial_number }}'/></td>
+	<td colspan='2'><input type='text' maxlength='256' name='serial_number' value='{{ data.serial_number }}'/></td>
 </tr>
 <tr>
 	<td>Make</td>
-	<td colspan='2'><input type='text' name='make' value='{{ data.make }}'/></td>
+	<td colspan='2'><input type='text' maxlength='256' name='make' value='{{ data.make }}'/></td>
 </tr>
 <tr>
 	<td>Model</td>
-	<td colspan='2'><input type='text' name='model' value='{{ data.model }}'/></td>
+	<td colspan='2'><input type='text' maxlength='256' name='model' value='{{ data.model }}'/></td>
 </tr>
 <tr>
 	<td>Manufacturer</td>
-	<td colspan='2'><input type='text' name='manufacturer' value='{{ data.manufacturer }}'/></td>
+	<td colspan='2'><input type='text' maxlength='256' name='manufacturer' value='{{ data.manufacturer }}'/></td>
 </tr>
 <tr>
 	<td>Location</td>
-	<td colspan='2'><input type='text' name='location' value='{{ data.location }}' placeholder='required'/></td>
+	<td colspan='2'><input type='text' maxlength='256' name='location' value='{{ data.location }}' placeholder='required'/></td>
 </tr>
 <tr>
 	<td>Notes</td>
-	<td><textarea name='other_notes'>{{ data.other_notes }}</textarea></td>
+	<td><textarea maxlength='256' name='other_notes'>{{ data.other_notes }}</textarea></td>
 </tr>
 <tr>
 	<td><input type='submit' name='create' value='{{ submit_button_text }}'/></td>
