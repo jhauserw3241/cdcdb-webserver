@@ -11,7 +11,7 @@ from globals import globals
 
 # Handles the VMs routes.
 
-class Presentations:
+class Positions:
     def __init__(self):
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id

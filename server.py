@@ -428,7 +428,7 @@ def positions_create():
 @app.route('/positions/<id>/edit', methods=['GET', 'POST'])
 def positions_id_edit(id):
     id = decode(id)
-    if id = None: abort(404)
+    if id == None: abort(404)
     if request.method == 'GET':
         return positions.edit(request, session, id)
     if request.method ==  'POST':
