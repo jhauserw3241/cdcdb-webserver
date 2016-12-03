@@ -12,7 +12,7 @@ from help import Help
 from index import Index
 from inventory import Inventory
 from people import People
-#from presentations import Presentations
+from presentations import Presentations
 from requests_ import Requests_
 from robohash import Robohash
 from test import Test
@@ -372,7 +372,7 @@ def presentations_():
 def presentations_create():
     if request.method == 'GET':
         return presentations.new(request, session)
-   if request.method == 'POST':
+    if request.method == 'POST':
         return presentations.create(request, session)
     else:
         abort(405)
