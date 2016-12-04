@@ -100,29 +100,32 @@ class Positions:
             errs.append('start_date is required')
         d['start_date'] = data['start_date']
         s['end_date'] = data['end_date']
+
+    def __create_position(self, request, session, data):
+        v_data, errs = self.__validate_position(data)
         if errs:
-            return render_template('presentations/new.html', data=data,
+            return render_template('positions/new.html', data=data,
                 errors=errs, submit_button_text='Create')
         id = self.__db_insert_presenation(v_data)
         id = self.b58.encode(id)
-        return redirect(url_for('presentation_id', id=id))
+        return redirect(url_for('position_id', id=id))
 
-    def __update_presentation(self, request, session, id, data):
-        v_data, errs = self.__validate_vm(data)
+    def __update_position(self, request, session, id, data):
+        v_data, errs = self.__validate_position(data)
         if errs:
-            return render_template('presentations/new.html', data=data,
+            return render_template('positions/new.html', data=data,
                 errors=errs, submit_button_text='Update')
         v_data['id'] = id
-        id = self.__db_update_presentation(v_data)
+        id = self.__db_update_position(v_data)
         id = self.b58.encode(id)
-        return redirect(url_for('presentation_id', id=id))
+        return redirect(url_for('position_id', id=id))
 
 
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
-            """presentations = self.__db_get_presentations()
-            return render_template('presentations/index.html', presentations=presentations,
+            """positions = self.__db_get_positions()
+            return render_template('positions/index.html', positions=positions,
                 can_create=self.__can_create(session),
                 can_edit=self.__can_edit(session),
                 can_delete=self.__can_delete(session))"""
@@ -133,7 +136,7 @@ class Positions:
         if request.method == 'GET':
             return "You are in positions.new"
             """"if not self.__can_create(session): abort(403)
-            return render_template('presentations/new.html',
+            return render_template('positions/new.html',
                 data={}, submit_button_text='Create')"""
         abort(405)
 
@@ -142,7 +145,7 @@ class Positions:
             return "You are in positions.create"
             """if not self.__can_create(session): abort(403)
             data = request.form
-            return self.__create_presentation(request, session, data)"""
+            return self.__create_position(request, session, data)"""
         abort(405)
 
     def edit(self, request, session, id):
@@ -178,11 +181,11 @@ class Positions:
             if not self.__can_update(session): abort(403)
             return "You are in position.update"
             #data = request.form
-            #return self.__update_presentation(request, session, id, data)
+            #return self.__update_position(request, session, id, data)
         abort(405)
 
     """def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)
-            self.__db_delete_presentation(id)
+            self.__db_delete_position(id)
             return redirect(url_for('events_'))"""
