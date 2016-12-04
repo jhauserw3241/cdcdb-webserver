@@ -9,7 +9,7 @@ import json
 from database_connection import DatabaseConnection
 from globals import globals
 
-# Handles the VMs routes.
+# Handles the positions routes.
 
 class Positions:
     def __init__(self):
@@ -34,68 +34,72 @@ class Positions:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __db_get_presentations(self):
+    def __db_get_positions(self):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
+            positions, _ = db.get_table("position")
             q = db.query().\
                 add_columns(
-                    vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role)
+                    positions.c.pos_id, positions.c.person_id, positions.c.title,
+                    positions.c.start_date, positions.c.end_date)
             db.execute(q)
-            presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
-            return presentations[::-1]
+            positions = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
+            return positions[::-1]
 
-    def __db_get_presentation(self, data):
+    def __db_get_position(self, data):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
+            positions, _ = db.get_table("position")
             q = db.query().\
                 add_columns(
-                    vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role).\
-                filter(presentations.c.id == id)
+                    positions.c.pos_id, positions.c.person_id, positions.c.title,
+                    positions.c.start_date, positions.c.end_date).\
+                filter(positions.c.pos_id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
+            rows = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
             if len(rows) != 1: return None
             return rows[0]
 
-    def __db_insert_presentation(self, data):
+    def __db_insert_position(self, data):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
-            q = presentations.insert().\
-                returning(presentations.c.id).\
+            positions, _ = db.get_table("position")
+            q = positions.insert().\
+                returning(positions.c.pos_id).\
                 values(
-                    owner_id=data['owner_id'],
-                    name=data['name'],
-                    network=data['network'],
-                    role=data['role'])
+                    person_id=data['person_id'], 
+                    title=data['title'],
+                    start_date=data['start_date'], 
+                    end_date=data['end_date'])
             db.execute(q)
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
-    def __db_update_presentation(self, data):
-        self.__db_delete_presentation(data['id'])
-        self.__db_insert_presentation(data)
+    def __db_update_position(self, data):
+        self.__db_delete_position(data['id'])
+        self.__db_insert_position(data)
 
-    def __db_delete_presentation(self, id):
+    def __db_delete_position(self, id):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentations")
-            q = presentations.delete().\
-                where(presentations.c.id == id)
+            positions, _ = db.get_table("position")
+            q = positions.delete().\
+                where(positions.c.pos_id == id)
             db.execute(q)
 
-    def __validate_presentation(self, data):
+    def __validate_position(self, data):
         errs = []
         d = {}
-        if not data['owner_id']:
-            errs.append('Owner_id is required')
-        d['owner_id'] = data['owner_id']
-        d['name'] = data['name']
-        d['network'] = data['network']
-        d['role'] = data['role']
-
-    def __create_presentation(self, request, session, data):
-        v_data, errs = self.__validate_vm(data)
+        if not data['pos_id']:
+            errs.append('pos_id is required')
+        d['pos_id'] = data['pos_id']
+        if not data['person_id']:
+            errs.append('person_id is required')
+        d['person_id'] = data['person_id']
+        if not data['title']:
+            errs.append('title is required')
+        d['title'] = data['title']
+        if not data['start_date']
+            errs.append('start_date is required')
+        d['start_date'] = data['start_date']
+        s['end_date'] = data['end_date']
         if errs:
             return render_template('presentations/new.html', data=data,
                 errors=errs, submit_button_text='Create')
