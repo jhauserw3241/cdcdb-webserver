@@ -79,4 +79,18 @@ form .form-other,
 form .form-student-info {
 	display: inline-flex;
 	text-align: left;
+	position: relative;
+	width: 300px;
+}
+
+form .form-name-textboxes,
+form .form-creds-textboxes,
+form .form-other-textboxes,
+form .form-student-info-textboxes {
+	position: absolute;
+	right: 0px;
+}
+
+form .form-other {
+	height: 50px;
 }
