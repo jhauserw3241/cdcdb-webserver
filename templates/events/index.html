@@ -17,11 +17,18 @@
 {% block title %}Events{% endblock %}
 {% block body %}
 	<h1>Events</h1>
-	{% if can_create %}
-		<button onclick='location.href="/events/new"'>Create new event</button><br>
-	{% endif %}
-	<input type='checkbox' id='show_past_events' name='show_past_events'/>
-	<label for='show_past_events'>Show past events</label><br>
+	<div class='other-event-options'>
+		<div class='create-new-button'>
+			{% if can_create %}
+				<button onclick='location.href="/events/new"'>Create new event</button>
+			{% endif %}
+		</div>
+		<div class='show-past'>
+			<input type='checkbox' id='show_past_events' name='show_past_events'>
+				<label for='show_past_events'>Show past events</label>
+			</input><br>
+		</div>
+	</div>
 	{% for event in events %}
 		<a onclick="showDetails(this.id)" id='{{ event.event_id }}' class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
 			<div class='event-card'>

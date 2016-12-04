@@ -61,6 +61,17 @@
 	text-decoration: none;
 }
 
+.other-event-options {
+	display: flex;
+	position: relative;
+}
+
+.show-past {
+	position: absolute;
+	right: 10px;
+	padding: 0.5em;
+}
+
 .modify-buttons {
 	text-align: center;
 }
