@@ -96,7 +96,7 @@ class Positions:
         if not data['title']:
             errs.append('title is required')
         d['title'] = data['title']
-        if not data['start_date']
+        if not data['start_date']:
             errs.append('start_date is required')
         d['start_date'] = data['start_date']
         s['end_date'] = data['end_date']
