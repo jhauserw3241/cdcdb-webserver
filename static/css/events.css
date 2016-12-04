@@ -91,7 +91,26 @@ form select {
 
 form .form-basic,
 form .form-date,
-form .form-meet,
-form .form-comp {
+form .meeting-hide-form-meet,
+form .competition-hide-form-comp {
 	display: inline-flex;
+	width: 370px;
+	position: relative;
+}
+
+form .form-basic-info,
+form .form-date-info,
+form .meeting-hide-form-meet-info,
+form .competition-hide-form-comp-info {
+	position: absolute;
+	right: 0px;
+	text-align: right;
+}
+
+form .form-basic {
+	height: 82px;
+}
+
+form .meeting-hide-form-meet {
+	height: 55px;
 }
