@@ -95,7 +95,7 @@ class VMs:
         d['name'] = data['name']
         d['network'] = data['network']
         d['role'] = data['role']
-        return d
+        return d, errs
 
     def __create_vm(self, request, session, data):
         v_data, errs = self.__validate_vm(data)
