@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block add_css %}
-	<link rel="stylesheet" href="/static/css/events.css">
+	<link rel="stylesheet" href="/static/css/vms.css">
 	<link rel="stylesheet" href="/static/css/overlay.css">
 {% endblock %}
 {% block add_head %}
@@ -18,7 +18,7 @@
 {% block body %}
 	<h1>VMs</h1>
 	{% if can_create %}
-		<button href='/vms/new'>Create new VM</button><br>
+		<button onclick="location.href='/vms/new';">Create new VM</button><br>
 	{% endif %}
 	{% for vm in vms %}
 		<a onclick="showDetails(this.id)" id='{{ vm.vm_id }}' >
