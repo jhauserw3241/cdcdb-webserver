@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block add_css %}
+	<link rel="stylesheet" href="/static/css/events.css">
+	<link rel="stylesheet" href="/static/css/overlay.css">
+{% endblock %}
+{% block add_head %}
+	<script>
+		function showDetails(id) {
+			document.getElementById(id + "-overlay").style.width = "100%";
+		}
+
+		function hideDetails(id) {
+			document.getElementById(id).style.width = "0%";
+		}
+	</script>
+{% endblock %}
+{% block title %}Events{% endblock %}
+{% block body %}
+	<h1>Events</h1>
+	{% if can_create %}
+		<button href='/events/new'>Create new event</button><br>
+	{% endif %}
+	<input type='checkbox' id='show_past_events' name='show_past_events'/>
+	<label for='show_past_events'>Show past events</label><br>
+	{% for event in events %}
+		<a onclick="showDetails(this.id)" id='{{ event.event_id }}' class='{{ 'past_event hide' if event.event_start_timestamp < now }}'>
+			<div class='event-card'>
+				<h3>{{ event.event_name }}</h3>
+				<p title='{{ event.event_start_friendly }}'>{{ event.relative_start }}</p>
+				<div class='modify-buttons'>
+					{% if can_edit %}
+						<button id='editButton' href='/events/{{ event.event_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</button>
+					{% endif %}
+					{% if can_delete %}
+						<button id='deleteButton' href='/events/{{ event.event_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</button>
+					{% endif %}
+				</div>
+			</div>
+		</a>
+		<div id='{{ event.event_id }}-overlay' class='overlay'>
+			<div class='overlay-content'>
+				<a href='javascript:void(0)' id='{{ event.event_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
+				<h1>{{ event.event_name }}</h1>
+				<h3>When</h3>
+				<p><strong>Start:</strong> {{ event.event_end_friendly }}<br>
+					{% if event.event_start_friendly !=  event.event_end_friendly %}
+						<strong>End:</strong> {{ event.event_end_friendly }}
+					{% endif %}
+				</p>
+				<h3>Description</h3>
+				<p>{{ event.event_description }}</p>
+					
+				{% if event.meeting_id %}
+					{% if event.meeting_minutes %}
+						<h3>Minutes</h3>
+						<p>
+							<a href='{{event.meeting_minutes }}'>{{ event.meeting_minutes }}</a>
+						</p>
+					{% endif %}
+					<p><strong>Required Meeting: </strong></p>
+					{% if event.meeting_required is not none() and event.meeting_required %}
+						<p>Yes</p><br>
+					{% else %}
+						<p>No</p><br>
+					{% endif %}
+				{% endif %}
+
+				{% if event.competition_id %}
+					<h3>Competition Details</h3>
+					{% if event.competition_location %}
+						<p><strong>Location:</strong> {{ event.competition_location }}</p><br>
+					{% endif %}
+					{% if event.competition_documentation %}
+						<p><strong>Documentation:</strong>
+							<a href='{{ event.competition_documentation }}'>{{ event.competition_documentation }}</a>
+						</p><br>
+					{% endif %}
+				{% endif %}
+
+				<div id="modify-buttons-overlay">
+					{% if can_edit %}
+						<button id='editButton' href='/events/{{ event.event_id }}/edit'>
+							<img width=15px src='/static/edit.png' alt='edit'/>
+						</button>
+					{% endif %}
+					{% if can_delete %}
+						<button id='deleteButton' href='/events/{{ event.event_id }}/delete'>
+							<img width=15px src='/static/delete.png' alt='delete'/>
+						</button>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	<script src='/static/events.js'></script>
+{% endblock %}
