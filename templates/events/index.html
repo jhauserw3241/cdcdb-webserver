@@ -41,8 +41,10 @@
 						<strong>End:</strong> {{ event.event_end_friendly }}
 					{% endif %}
 				</p>
-				<h3>Description</h3>
-				<p>{{ event.event_description }}</p>
+				{% if event.description %}
+					<h3>Description</h3>
+					<p>{{ event.event_description }}</p>
+				{% endif %}
 					
 				{% if event.meeting_id %}
 					{% if event.meeting_minutes %}
