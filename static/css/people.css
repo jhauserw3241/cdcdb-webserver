@@ -11,13 +11,22 @@
 	height: 100px;
 	background-color: var(--card-background);
 	border-radius: 3px;
-	width: 45%;
 	margin: 10px;
 	text-align: center;
 	color: var(--card-font);
 	text-decoration: none;
 	padding-top: 1em;
 	padding-bottom: 1em;
+}
+
+.officer-card {
+	width: 45%;
+}
+
+.voting-member-card,
+.non-voting-member-card,
+.nonstudent-card {
+	width: 31%;
 }
 
 .officer-card h4,
