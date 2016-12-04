@@ -50,7 +50,10 @@
 	text-overflow: ellipsis;
 }
 
-.officer-card:hover {
+.officer-card:hover,
+.voting-member-card:hover,
+.nonvoting-member-card:hover,
+.nonstudent-card:hover {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
 	background-color: var(--card-back-highlight);
 	color: var(--card-font);
