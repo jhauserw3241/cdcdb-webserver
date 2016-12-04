@@ -42,9 +42,9 @@
 			</div>
 			<div class="form-date-info">
 				<input type='text' name='start_date' value='{{ data.start_date}}' placeholder='required'/><br>
-				<input type='text' name='start_time' value='{{ data.start_time }}'/><br>
-				<input type='text' name='end_date' value='{{ data.end_date}}'/><br>
-				<input type='text' name='end_time' value='{{ data.end_time }}'/>
+				<input type='text' name='start_time' value='{{ data.start_time }}' placeholder='required'/><br>
+				<input type='text' name='end_date' value='{{ data.end_date}}' placeholder='required'/><br>
+				<input type='text' name='end_time' value='{{ data.end_time }}' placeholder='required'/>
 			</div>
 		</div>
 		<h3 class="meeting hide">Meeting Details</h3>
@@ -67,7 +67,7 @@
 				<p><strong>Documentation</strong></p>
 			</div>
 			<div class="competition hide form-comp-info">
-				<input type='text' maxlength='256' name='location' value='{{ data.location }}'/><br>
+				<input type='text' maxlength='256' name='location' value='{{ data.location }}' placeholder='required'/><br>
 				<input type='text' name='documentation' value='{{ data.documentation }}' placeholder='link'/>
 			</div>
 		</div>
