@@ -17,6 +17,7 @@ from requests_ import Requests_
 from robohash import Robohash
 from test import Test
 from vms import VMs
+from positions import Positions
 
 app = Flask(__name__)
 # The handler classes for each route type
@@ -31,7 +32,7 @@ robohash = Robohash()
 test = Test()
 vms = VMs()
 presentations = Presentations()
-
+positions = Positions()
 config = globals.config
 
 
@@ -183,10 +184,27 @@ def requests_new():
 @app.route('/requests/<id>', methods=['GET'])
 def requests_show(id):
     if request.method == 'GET':
-        abort(501)
+        abort(405)
     else:
         abort(405)
 
+@app.route('/requests/<id>/approve', methods=['GET'])
+def requests_id_approve(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return requests_.approve(request, session, id)
+    else:
+        abort (405)
+
+@app.route('/requests/<id>/delete', methods=['GET'])
+def requests_id_delete(id):
+    id = decode_id(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return requests_.delete(request, session, id)
+    else:
+        abort(405)
 
 @app.route('/people/', methods=['GET'])
 def people_():
@@ -405,6 +423,33 @@ def presentations_id_delete(id):
     if id == None: abort(404)
     if request.method == 'GET':
         return presentations.delete(request, session, id)
+    else:
+        abort(405)
+        
+@app.route('/positions', methods=['GET'])
+def positions_():
+    if request.method == 'GET':
+        return positions.index(request, session)
+    else:
+        abort(405)
+        
+@app.route('/positions/new/', methods=['GET', 'POST'])
+def positions_create():
+    if request.method == 'GET':
+        return presentations.new(request, session)
+    if request.method == 'POST':
+        return presentations.create(request, session)
+    else:
+        abort(405)
+        
+@app.route('/positions/<id>/edit', methods=['GET', 'POST'])
+def positions_id_edit(id):
+    id = decode(id)
+    if id == None: abort(404)
+    if request.method == 'GET':
+        return positions.edit(request, session, id)
+    if request.method ==  'POST':
+        return positions.update(request, session, id)
     else:
         abort(405)
 

@@ -9,9 +9,9 @@ import json
 from database_connection import DatabaseConnection
 from globals import globals
 
-# Handles the Presentations routes.
+# Handles the positions routes.
 
-class Presentations:
+class Positions:
     def __init__(self):
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
@@ -34,117 +34,123 @@ class Presentations:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-    def __db_get_presentations(self):
+    def __db_get_positions(self):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentation")
+            positions, _ = db.get_table("position")
             q = db.query().\
                 add_columns(
-                    presentations.c.id, presentations.c.name,
-                    presentations.c.slides)
+                    positions.c.pos_id, positions.c.person_id, positions.c.title,
+                    positions.c.start_date, positions.c.end_date)
             db.execute(q)
-            presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
-            return presentations[::-1]
+            positions = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
+            return positions[::-1]
 
-    def __db_get_presentation(self, data):
+    def __db_get_position(self, data):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentation")
+            positions, _ = db.get_table("position")
             q = db.query().\
                 add_columns(
-                    presentations.c.id, presentations.c.name,
-                    presentations.c.slides).\
-                filter(presentations.c.id == id)
+                    positions.c.pos_id, positions.c.person_id, positions.c.title,
+                    positions.c.start_date, positions.c.end_date).\
+                filter(positions.c.pos_id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
+            rows = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
             if len(rows) != 1: return None
             return rows[0]
 
-    def __db_insert_presentation(self, data):
+    def __db_insert_position(self, data):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentation")
-            q = presentations.insert().\
-                returning(presentations.c.id).\
+            positions, _ = db.get_table("position")
+            q = positions.insert().\
+                returning(positions.c.pos_id).\
                 values(
-                    name=data['name'],
-                    slides=data['slides'])
+                    person_id=data['person_id'], 
+                    title=data['title'],
+                    start_date=data['start_date'], 
+                    end_date=data['end_date'])
             db.execute(q)
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
-    def __db_update_presentation(self, data):
-        self.__db_delete_presentation(data['id'])
-        self.__db_insert_presentation(data)
+    def __db_update_position(self, data):
+        self.__db_delete_position(data['id'])
+        self.__db_insert_position(data)
 
-    def __db_delete_presentation(self, id):
+    def __db_delete_position(self, id):
         with DatabaseConnection() as db:
-            presentations, _ = db.get_table("presentation")
-            q = presentations.delete().\
-                where(presentations.c.id == id)
+            positions, _ = db.get_table("position")
+            q = positions.delete().\
+                where(positions.c.pos_id == id)
             db.execute(q)
 
-    def __validate_presentation(self, data):
+    def __validate_position(self, data):
         errs = []
         d = {}
-        d['name'] = data['name']
-        d['slides'] = data['slides']
+        if not data['pos_id']:
+            errs.append('pos_id is required')
+        d['pos_id'] = data['pos_id']
+        if not data['person_id']:
+            errs.append('person_id is required')
+        d['person_id'] = data['person_id']
+        if not data['title']:
+            errs.append('title is required')
+        d['title'] = data['title']
+        if not data['start_date']
+            errs.append('start_date is required')
+        d['start_date'] = data['start_date']
+        s['end_date'] = data['end_date']
 
-    def __create_presentation(self, request, session, data):
-        v_data, errs = self.__validate_presentation(data)
+    def __create_position(self, request, session, data):
+        v_data, errs = self.__validate_position(data)
         if errs:
-            return render_template('presentations/new.html', data=data,
+            return render_template('positions/new.html', data=data,
                 errors=errs, submit_button_text='Create')
         id = self.__db_insert_presenation(v_data)
         id = self.b58.encode(id)
-        return redirect(url_for('presentation_id', id=id))
+        return redirect(url_for('position_id', id=id))
 
-    def __update_presentation(self, request, session, id, data):
-        v_data, errs = self.__validate_presentation(data)
+    def __update_position(self, request, session, id, data):
+        v_data, errs = self.__validate_position(data)
         if errs:
-            return render_template('presentations/new.html', data=data,
+            return render_template('positions/new.html', data=data,
                 errors=errs, submit_button_text='Update')
         v_data['id'] = id
-        id = self.__db_update_presentation(v_data)
+        id = self.__db_update_position(v_data)
         id = self.b58.encode(id)
-        return redirect(url_for('presentation_id', id=id))
+        return redirect(url_for('position_id', id=id))
 
 
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
-            presentations = self.__db_get_presentations()
-            return render_template('presentations/index.html', presentations=presentations,
+            """positions = self.__db_get_positions()
+            return render_template('positions/index.html', positions=positions,
                 can_create=self.__can_create(session),
                 can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))
-        abort(405)
-
-    def show(self, request, session, id):
-        if request.method == 'GET':
-            if not self.__can_show(session): abort(403)
-            presentation = self.__db_get_presentation(id)
-            if not presentation: abort(404)
-            return render_template('presentations/show.html', presentation=presentation,
-                can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))
+                can_delete=self.__can_delete(session))"""
+            return "You are in positions.index"
         abort(405)
 
     def new(self, request, session):
         if request.method == 'GET':
-            if not self.__can_create(session): abort(403)
-            return render_template('presentations/new.html',
-                data={}, submit_button_text='Create')
+            return "You are in positions.new"
+            """"if not self.__can_create(session): abort(403)
+            return render_template('positions/new.html',
+                data={}, submit_button_text='Create')"""
         abort(405)
 
     def create(self, request, session):
         if request.method == 'POST':
-            if not self.__can_create(session): abort(403)
+            return "You are in positions.create"
+            """if not self.__can_create(session): abort(403)
             data = request.form
-            return self.__create_presentation(request, session, data)
+            return self.__create_position(request, session, data)"""
         abort(405)
 
     def edit(self, request, session, id):
         if request.method == 'GET':
-            return "inside presentations.edit"
+            return "inside positions.edit"
             """if not self.__can_edit(session): abort(403)
             evt = self.__db_get_event(id)
             data = {}
@@ -173,13 +179,13 @@ class Presentations:
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
-            data = request.form
-            return self.__update_presentation(request, session, id, data)
+            return "You are in position.update"
+            #data = request.form
+            #return self.__update_position(request, session, id, data)
         abort(405)
 
-    def delete(self, request, session, id):
+    """def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)
-            self.__db_delete_presentation(id)
-            return redirect(url_for('events_'))
-
+            self.__db_delete_position(id)
+            return redirect(url_for('events_'))"""

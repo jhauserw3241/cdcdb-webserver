@@ -6,7 +6,9 @@
 {% block body %}
 	<h1>Inventory</h1>
 	{% if can_create %}
-		<button href='/inventory/new'>Create new item</button><br>
+		<form action='/inventory/new' method='GET'>
+		<button>Create new item</button><br>
+		</form>
 	{% endif %}
 	{% for item in items %}
 		<a href='/inventory/{{ item.inventory_id }}'>

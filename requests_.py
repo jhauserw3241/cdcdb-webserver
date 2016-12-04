@@ -61,7 +61,7 @@ class Requests_:
                 join(inv, inv.c.id == co.c.item_id).\
                 join(ppl, ppl.c.id == co.c.requested_by)
             if only_open:
-                q.filter(co.c.approved_by != None)
+                q = q.filter(co.c.approved_by == None)
             db.execute(q)
             rows = [ dict(r) for r in db.fetchall() ]
             for r in rows:
@@ -72,6 +72,44 @@ class Requests_:
                 self.encode_id(r, 'checked_out_requested_by')
             return rows
 
+    def __db_get_request(self, id):
+        with DatabaseConnection() as db:
+            co, _ = db.get_table("checked_out")
+            inv, _ = db.get_table("inventory")
+            ppl, _ = db.get_table("people_read")
+            q = db.query().\
+                add_columns(co).\
+                add_columns(inv).\
+                add_columns(ppl.c.full_name, ppl.c.id).\
+                join(inv, inv.c.id == co.c.item_id).\
+                join(ppl, ppl.c.id == co.c.requested_by).\
+                filter(co.c.id == id)
+            db.execute(q)
+            rows = [ dict(r) for r in db.fetchall() ]
+            for r in rows:
+                self.encode_id(r, 'checked_out_id')
+                self.encode_id(r, 'checked_out_item_id')
+                if r['checked_out_approved_by'] != None:
+                    self.encode_id(r, 'checked_out_approved_by')
+                self.encode_id(r, 'checked_out_requested_by')
+            if len(rows) != 1: return None
+            return rows[0]
+
+    def __db_approve(self, id, approver):
+        with DatabaseConnection() as db:
+            co, _ = db.get_table("checked_out")
+            q = co.update().\
+                where(co.c.id == id).\
+                values(approved_by=approver)
+            db.execute(q)
+            return
+
+    def __db_delete(self, id):
+        with DatabaseConnection() as db:
+            co, _ = db.get_table("checked_out")
+            q = co.delete().where(co.c.id == id)
+            db.execute(q)
+            return
 
     def __validate_request(self, data):
         d = {}
@@ -109,6 +147,19 @@ class Requests_:
     def __can_create(self, session):
         return 'is_student' in session and session['is_student']
 
+    def __can_approve(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __can_delete(self, session):
+        return 'is_officer' in session and session['is_officer']
+
+    def __needs_approval(self, id):
+        req = self.__db_get_request(id)
+        if not req: return False
+        if 'checked_out_approved_by' in req and req['checked_out_approved_by']:
+            return False
+        return True
+
     def new(self, request, session, inventory):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
@@ -144,4 +195,20 @@ class Requests_:
             open_requests = self.__db_get_requests(only_open=True)
             open_requests = self.__requests_date_magic(open_requests)
             return render_template('requests/index.html', requests=open_requests)
+        abort(405)
+
+    def approve(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_approve(session): abort(403)
+            if not self.__needs_approval(id): abort(403)
+            approver = session['person_id']
+            self.__db_approve(id, approver)
+            return redirect(url_for('requests__'))
+        abort(405)
+
+    def delete(self, request, session, id):
+        if request.method == 'GET':
+            if not self.__can_delete(session): abort(403)
+            self.__db_delete(id)
+            return redirect(url_for('requests__'))
         abort(405)
