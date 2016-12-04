@@ -1,74 +1,36 @@
 {% extends 'base.html' %}
 {% block add_css %}
-	<link rel="stylesheet" href="/static/css/events.css">
+	<link rel="stylesheet" href="/static/css/vms.css">
 {% endblock %}
-{% block title %}Create/Edit Event{% endblock %}
+{% block title %}Create/Edit VM{% endblock %}
 {% block body %}
-	<h1>Create Event</h1>
+	<h1>Create VM</h1>
 	<ul id='errors'>
 	{% for err in errors %}
 		<li>{{ err }}</li>
 	{% endfor %}
 	</ul>
-	<form id='event_form' action='{{ form_action }}' method='POST'>
+	<form id='vm_form' action='{{ form_action }}' method='POST'>
 		<h3>Basic Info</h3>
 		<div class="form-basic">
 			<div class="form-basic-titles">
 				<p><strong>Name</strong></p>
-				<p><strong>Description</strong></p>
-				<p><strong>Type</strong></p>
+				<p><strong>Owner</strong></p>
 			</div>
 			<div class="form-basic-info">
-				<input type='text' name='name' value='{{ data.name }}' placeholder='required'/><br>
-				<input type='text' name='description' value='{{ data.description }}'/><br>
-				<input type='radio' id='is_meeting' name='type' value='meeting' {% if data.type == 'meeting' %}checked{% endif %}>
-					<label for='is_meeting'>Meeting</label>
-				</input>
-				<input type='radio' id='is_competition' name='type' value='competition' {% if data.type == 'competition' %}checked{% endif %}>
-					<label for='is_competition'>Competition</label>
-				</input>
-				<input type='radio' id='is_general' name='type' value='general' {% if data.type == 'general' %}checked{% endif %}>
-					<label for='is_general'>Other</label>
-				</input><br>
+				<input type='text' name='name' value='{{ data.name }}' maxlength='256' placeholder='required'/><br>
+				<input type='text' name='owner_id' value='{{ data.owner_id }}' maxlength='256'placeholder='required'/>
 			</div>
 		</div>
-		<h3>Date Information</h3>
+		<h3>Network Information</h3>
 		<div class="form-date">
 			<div class="form-date-titles">
-				<p><strong>Start Date (mm/dd/yyyy)</strong></p>
-				<p><strong>Start Time (hh:mm)</strong></p>
-				<p><strong>End Date (mm/dd/yyyy)</strong></p>
-				<p><strong>End Time (hh:mm)</strong></p>
+				<p><strong>Network</strong></p>
+				<p><strong>Role</strong></p>
 			</div>
 			<div class="form-date-info">
-				<input type='text' name='start_date' value='{{ data.start_date}}' placeholder='required'/><br>
-				<input type='text' name='start_time' value='{{ data.start_time }}'/><br>
-				<input type='text' name='end_date' value='{{ data.end_date}}'/><br>
-				<input type='text' name='end_time' value='{{ data.end_time }}'/>
-			</div>
-		</div>
-		<h3>Meeting Details</h3>
-		<div class="form-meet">
-			<div class="form-meet-titles">
-				<p><strong>Notes</strong></p>
-				<p></p>
-			</div>
-			<div class="form-meet-info">
-				<input type='text' name='minutes' value='{{ data.minutes }}' placeholder='link'/><br>
-				<input type='checkbox' name='required' {% if data.required %}checked{% endif %}>
-					<label for='required'>Required</label>
-				</input>
-			</div>
-		</div>
-		<h3>Competition Details</h3>
-		<div class="form-comp">
-			<div class="form-comp-titles">
-				<p><strong>Location</strong></p>
-				<p><strong>Documentation</strong></p>
-			</div>
-			<div class="form-comp-info">
-				<input type='text' name='location' value='{{ data.location }}'/><br>
-				<input type='text' name='documentation' value='{{ data.documentation }}' placeholder='link'/>
+				<input type='text' name='network' value='{{ data.network}}' /><br>
+				<input type='text' name='role' value='{{ data.role }}'/>
 			</div>
 		</div>
 		<div class="form-buttons">
@@ -76,5 +38,4 @@
 			<button href=''>Start over</button>
 		</div>
 	</form>
-	<script src='/static/events.js'></script>
 {% endblock %}
