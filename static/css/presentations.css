@@ -1,0 +1,86 @@
+.hide {
+	display: none;
+}
+
+.presentation-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+	background-color: var(--card-background);
+	display: inline-block;
+	width: 45%;
+	table-layout: inherit;
+	margin: 5px;
+	border-radius: 3px;
+	color: var(--card-font);
+	text-decoration: none;
+	padding: 1em;
+}
+
+.presentation-card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+	background-color: var(--card-back-highlight);
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.presentation-card a {
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.presentation-card:hover a {
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.presentation-card p {
+	text-align: center;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.presentation-card h3 {
+	text-align: center;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.presentation-card button {
+	background-color: var(--card-background);
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+.presentation-card:hover button {
+	background-color: var(--card-back-highlight);
+	text-decoration: none;
+}
+
+.modify-buttons {
+	text-align: center;
+}
+
+form {
+	text-align: center;
+}
+
+form p,
+form input,
+form select {
+	margin-top: 0;
+	margin-right: 5px;
+	margin-bottom: 0.5em;
+	text-align: left;
+}
+
+form .form-basic,
+form .form-date,
+form .form-meet,
+form .form-comp {
+	display: inline-flex;
+}
