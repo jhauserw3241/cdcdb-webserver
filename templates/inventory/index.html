@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% block add_css %}
 	<link rel="stylesheet" href="/static/css/inventory.css">
+	<link rel="stylesheet" href="/static/css/overlay.css">
+{% endblock %}
+{% block add_head %}
+	<script>
+		function showDetails(id) {
+			document.getElementById(id + "-overlay").style.width = "100%";
+		}
+		function hideDetails(id) {
+			document.getElementById(id).style.width = "0%";
+		}
+	</script>
 {% endblock %}
 {% block title %}Inventory{% endblock %}
 {% block body %}
@@ -11,7 +22,7 @@
 		</form>
 	{% endif %}
 	{% for item in items %}
-		<a href='/inventory/{{ item.inventory_id }}'>
+		<a onclick='showDetails(this.id)' id='{{ item.inventory_id }}'>
 			<div class='inventory-card'>
 				<h3>{{ item.inventory_description if item.inventory_description is not none() else '' }}</h3>
 				<p>{{ item.inventory_manufacturer if item.inventory_manufacturer is not none() else '' }}</p>
@@ -30,5 +41,21 @@
 				</div>
 			</div>
 		</a>
+		<div id='{{ item.inventory_id }}-overlay' class='overlay'>
+			<div class='overlay-content'>
+				<a href='javascript:void(0)' id='{{ item.inventory_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
+				<h1>{{ item.inventory_description if item_inventory_description is not none() else '' }}</h1>
+
+				{% if item.inventory_manufacturer is not none() %}
+					<h3>Manufacturer</h3>
+					<p>{{ item.inventory_manufacturer }}</p>
+				{% endif %}
+
+				{% if item.inventory_make is not none() %}
+					<h3>Make</h3>
+					<p>{{ item.inventory_make }}</p>
+				{% endif %}
+			</div>
+		</div>
 	{% endfor %}
 {% endblock %}
