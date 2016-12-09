@@ -64,6 +64,7 @@
 .other-event-options {
 	display: flex;
 	position: relative;
+	height: 35px;
 }
 
 .show-past {
