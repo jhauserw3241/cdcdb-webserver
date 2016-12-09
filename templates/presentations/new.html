@@ -16,10 +16,12 @@
 			<div class="form-basic-titles">
 				<p><strong>Name</strong></p>
 				<p><strong>Link to Slides</strong></p>
+                <p><strong>Presenter ID</strong></p>
 			</div>
 			<div class="form-basic-info">
 				<input type='text' name='name' value='{{ data.name }}' maxlength='256' /><br>
-				<input type='text' name='slides' value='{{ data.slides }}' maxlength='256'placeholder='required' />
+				<input type='text' name='slides' value='{{ data.slides }}' maxlength='256' /><br>
+                <input type='text' name='presenter_id' value='{{data.presenter_id}}' maxlength='256' />
 			</div>
 		</div>
 		<div class="form-buttons">
