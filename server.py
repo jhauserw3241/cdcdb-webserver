@@ -358,7 +358,7 @@ def vms_id(id):
 
 @app.route('/vms/<id>/edit', methods=['GET', 'POST'])
 def vms_id_edit(id):
-    id = decode(id)
+    id = decode_id(id)
     if id == None: abort(404)
     if request.method == 'GET':
         return vms.edit(request, session, id)
@@ -370,7 +370,7 @@ def vms_id_edit(id):
 
 @app.route('/vms/<id>/delete', methods=['GET'])
 def vms_id_delete(id):
-    id = decode(id)
+    id = decode_id(id)
     if id == None: abort(404)
     if request.method == 'GET':
         return vms.delete(request, session, id)
@@ -408,7 +408,7 @@ def presentations_id(id):
 
 @app.route('/presentations/<id>/edit', methods=['GET', 'POST'])
 def presentations_id_edit(id):
-    id = decode(id)
+    id = decode_id(id)
     if id == None: abort(404)
     if request.method == 'GET':
         return presentations.edit(request, session, id)
@@ -419,7 +419,7 @@ def presentations_id_edit(id):
 
 @app.route('/presentations/<id>/delete', methods=['GET'])
 def presentations_id_delete(id):
-    id = decode(id)
+    id = decode_id(id)
     if id == None: abort(404)
     if request.method == 'GET':
         return presentations.delete(request, session, id)
@@ -444,7 +444,7 @@ def positions_create():
         
 @app.route('/positions/<id>/edit', methods=['GET', 'POST'])
 def positions_id_edit(id):
-    id = decode(id)
+    id = decode_id(id)
     if id == None: abort(404)
     if request.method == 'GET':
         return positions.edit(request, session, id)
