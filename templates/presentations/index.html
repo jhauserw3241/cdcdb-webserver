@@ -19,7 +19,7 @@
 	<h1>Presentations</h1>
     {{presentations}}
 	{% if can_create %}
-		<button onclick="location.href='/presentation/new';">Create new Presentation</button><br>
+		<button onclick="location.href='/presentations/new';">Create new Presentation</button><br>
 	{% endif %}
 	{% for presentation in presentations %}
 		<a onclick="showDetails(this.id)" id='{{ presentation.presentation_id }}' >
