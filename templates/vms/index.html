@@ -28,9 +28,9 @@
 				<p>{{ vm.people_read_full_name }}</p>
 				<div class='modify-buttons'>
 					{% if can_edit %}
-						<button id='editButton' href='/vms/{{ vm.vms_id }}/edit'>
+						<a href='/vms/{{ vm.vms_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
-						</button>
+						</a>
 					{% endif %}
 					{% if can_delete %}
 						<button id='deleteButton' href='/vms/{{ vm.vms_id }}/delete'>
@@ -52,14 +52,14 @@
 
 				<div id="modify-buttons-overlay">
 					{% if can_edit %}
-						<button id='editButton' href='/vms/{{ vm.vms_id }}/edit'>
+						<a href='/vms/{{ vm.vms_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
-						</button>
+						</a>
 					{% endif %}
 					{% if can_delete %}
-						<button id='deleteButton' href='/vms/{{ vm.vms_id }}/delete'>
+						<a href='/vms/{{ vm.vms_id }}/delete'>
 							<img width=15px src='/static/delete.png' alt='delete'/>
-						</button>
+						</a>
 					{% endif %}
 				</div>
 			</div>
