@@ -155,7 +155,7 @@ class VMs:
             if not self.__can_edit(session): abort(403)
             vm = self.__db_get_vm(id)
             data = {}
-            data['name'] = vm['vm_name']
+            data['name'] = vm['vms_name']
             data['owner_id'] = vm['vms_owner_id']
             data['network'] = vm['vms_network']
             data['role'] = vm['vms_role']
