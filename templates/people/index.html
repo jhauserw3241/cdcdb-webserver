@@ -69,7 +69,7 @@
 			</a>
 			<div id='{{ s.students_id }}-overlay' class='overlay'>
 				<div class='overlay-content'>
-					<a href='javascript:void(0)' id='{{ s.students_id }}'>
+					<a href='javascript:void(0)' id='{{ s.students_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
 					<h1>{{ s.not_officers_full_name }}</h1>
 				</div>
 			</div>
@@ -86,8 +86,8 @@
 			</a>
 			<div id='{{ o.not_students_id }}-overlay' class='overlay'>
 				<div class='overlay-content'>
-					<a href='javascript:void(0)' id='{{ o.not_students_id }}'>
-					<h1>{{ o.not_students_id }}</h1>
+					<a href='javascript:void(0)' id='{{ o.not_students_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
+					<h1>{{ o.not_students_full_name }}</h1>
 				</div>
 			</div>
 		{% endfor %}
