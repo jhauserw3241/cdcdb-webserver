@@ -49,7 +49,7 @@ class Presentations:
             presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
             return presentations[::-1]
 
-    def __db_get_presentation(self, data):
+    def __db_get_presentation(self, id):
         with DatabaseConnection() as db:
             presentations, _ = db.get_table("presentation")
             pres_pers,_ = db.get_table("presenters")

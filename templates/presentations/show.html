@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}Presentations - {{ presentation.presentations_name }}{% endblock %}
+{% block title %}Presentations - {{ presentation.presentation_name }}{% endblock %}
 {% block body %}
 <h1><a href='/presentations'>Presentations</a></h1>
 <h2>Presentation Information</h2>
 <p>
-Name: <strong>{{ presentation.presentations_name }}</strong>
+Name: <strong>{{ presentation.presentation_name }}</strong>
 </p>
 <p>
-Slides: <strong>{{ presentation.presentations_slides }}</strong><br/>
+Slides: <strong>{{ presentation.presentation_slides }}</strong><br/>
 </p>
 {% if can_edit %}
-<a href='/presentations/{{ presentation.presentations_id }}/edit'>Edit</a><br/>
+<a href='/presentations/{{ presentation.presentation_id }}/edit'>Edit</a><br/>
 {% endif %}
 {% if can_delete %}
-<a href='/presentations/{{ presentation.presentations_id }}/delete'>Delete</a>
+<a href='/presentations/{{ presentation.presentation_id }}/delete'>Delete</a>
 {% endif %}
 {% endblock %}
