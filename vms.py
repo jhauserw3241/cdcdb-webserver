@@ -45,7 +45,7 @@ class VMs:
             vms = [ self.encode_id(dict(row), 'vms_id') for row in db.fetchall() ]
             return vms[::-1]
 
-    def __db_get_vm(self, data):
+    def __db_get_vm(self, id):
         with DatabaseConnection() as db:
             vms, _ = db.get_table("vms")
             q = db.query().\
