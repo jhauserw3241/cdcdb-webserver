@@ -23,8 +23,8 @@
 	{% for vm in vms %}
 		<a onclick="showDetails(this.id)" id='{{ vm.vm_id }}' >
 			<div class='vm-card'>
-				<h3>{{ event.name }}</h3>
-				<p>{{ event.owner_id }}</p>
+				<h3>{{ vm.name }}</h3>
+				<p>{{ vm.owner_id }}</p>
 				<div class='modify-buttons'>
 					{% if can_edit %}
 						<button id='editButton' href='/vms/{{ vm.vm_id }}/edit'>
