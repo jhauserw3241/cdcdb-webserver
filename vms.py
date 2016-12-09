@@ -42,7 +42,7 @@ class VMs:
                     vms.c.id, vms.c.owner_id, vms.c.name,
                     vms.c.network, vms.c.role)
             db.execute(q)
-            vms = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
+            vms = [ self.encode_id(dict(row), 'vms_id') for row in db.fetchall() ]
             return vms[::-1]
 
     def __db_get_vm(self, data):
@@ -54,7 +54,7 @@ class VMs:
                     vms.c.network, vms.c.role).\
                 filter(vms.c.id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'vm_id') for row in db.fetchall() ]
+            rows = [ self.encode_id(dict(row), 'vms_id') for row in db.fetchall() ]
             if len(rows) != 1: return None
             return rows[0]
 
