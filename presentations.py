@@ -37,10 +37,14 @@ class Presentations:
     def __db_get_presentations(self):
         with DatabaseConnection() as db:
             presentations, _ = db.get_table("presentation")
+            pres_pers,_ = db.get_table("presenters")
+            people,_ = db.get_table("people_read")
             q = db.query().\
                 add_columns(
                     presentations.c.id, presentations.c.name,
-                    presentations.c.slides)
+                    presentations.c.slides, pres_pers.c.person_id, people.c.full_name).\
+                outerjoin(pres_pers, pres_pers.c.presentation_id == presentations.c.id).\
+                outerjoin(people, people.c.id == pres_pers.c.person_id)
             db.execute(q)
             presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
             return presentations[::-1]
@@ -69,8 +73,16 @@ class Presentations:
             db.execute(q)
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
-            else: return lastrowid[0]
-
+            else
+                pres_pers,_ = db.get_table("presenters")
+                q = pres_pers.insert().\
+                    returning(pres_pers.c.presentation_id).\
+                    values(
+                        presentation_id=data[lastrowid[0]]
+                        person_id=data['presenter_id']
+                    )
+                return lastrowid[0]
+                
     def __db_update_presentation(self, data):
         self.__db_delete_presentation(data['id'])
         self.__db_insert_presentation(data)
@@ -87,6 +99,7 @@ class Presentations:
         d = {}
         d['name'] = data['name']
         d['slides'] = data['slides']
+        d['presenter_id'] = data['presenter_id']
         return d,errs
 
     def __create_presentation(self, request, session, data):
