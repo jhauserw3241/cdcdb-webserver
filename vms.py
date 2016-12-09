@@ -152,30 +152,16 @@ class VMs:
 
     def edit(self, request, session, id):
         if request.method == 'GET':
-            return "inside vms.edit"
-            """if not self.__can_edit(session): abort(403)
-            evt = self.__db_get_event(id)
+            if not self.__can_edit(session): abort(403)
+            vm = self.__db_get_vm(id)
             data = {}
-            data['name'] = evt['event_name']
-            data['description'] = evt['event_description']
-            data['start_date'] = self.frmt_dt(evt['event_start_timestamp'], '%m/%d/%Y')
-            data['start_time'] = self.frmt_dt(evt['event_start_timestamp'], '%H:%M')
-            data['end_date'] = self.frmt_dt(evt['event_end_timestamp'], '%m/%d/%Y')
-            data['end_time'] = self.frmt_dt(evt['event_end_timestamp'], '%H:%M')
-            if evt['meeting_id'] and evt['competition_id']:
-                raise Exception('This is event is f\'ed up: both a meeting and competition')
-            if evt['meeting_id']: data['type'] = 'meeting'
-            elif evt['competition_id']: data['type'] = 'competition'
-            else: data['type'] = "general"
-            data['minutes'] = evt['meeting_minutes'] if evt['meeting_minutes'] else ''
-            data['required'] = evt['meeting_required']
-            data['documentation'] = evt['competition_documentation'] if\
-                evt['competition_documentation'] else ''
-            data['location'] = evt['competition_location'] if\
-                evt['competition_location'] else ''
-            print(evt)
-            return render_template('events/new.html', data=data,
-                submit_button_text='Update')"""
+            data['name'] = vm['vm_name']
+            data['owner_id'] = vm['vms_owner_id']
+            data['network'] = vm['vms_network']
+            data['role'] = vm['vms_role']
+            print(vm)
+            return render_template('vms/new.html', data=data,
+                submit_button_text='Update')
         abort(405)
 
     def update(self, request, session, id):
