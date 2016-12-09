@@ -17,6 +17,7 @@
 {% block title %}VMs{% endblock %}
 {% block body %}
 	<h1>VMs</h1>
+    {{vms}}
 	{% if can_create %}
 		<button onclick="location.href='/vms/new';">Create new VM</button><br>
 	{% endif %}
