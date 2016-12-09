@@ -38,12 +38,7 @@ class Inventory:
     def __db_get_item(self, id):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
-            q = db.query().\
-                add_columns(
-                    inv.c.id, inv.c.description, inv.c.serial_number, inv.c.make,
-                    inv.c.model, inv.c.manufacturer, inv.c.location,
-                    inv.c.other_notes).\
-                filter(inv.c.id == id)
+            q = db.query().add_columns(inv).filter(inv.c.id == id)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'inventory_id') for row in db.fetchall() ]
             if len(rows) != 1: return None
@@ -73,6 +68,7 @@ class Inventory:
                     make=data['make'],
                     model=data['model'],
                     manufacturer=data['manufacturer'],
+                    category=data['category'],
                     location=data['location'],
                     other_notes=data['other_notes'])
             db.execute(q)
@@ -95,6 +91,7 @@ class Inventory:
         d['make'] = data['make']
         d['model'] = data['model']
         d['manufacturer'] = data['manufacturer']
+        d['category'] = data['category']
         if not data['location']:
             errs.append('Location is required')
         d['location'] = data['location']

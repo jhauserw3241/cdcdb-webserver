@@ -30,6 +30,19 @@
 	<td colspan='2'><input type='text' maxlength='256' name='manufacturer' value='{{ data.manufacturer }}'/></td>
 </tr>
 <tr>
+	<td>Category</td>
+	<td colspan='2'>
+		<select name='category'>
+			<option value='Uncategorized'>None</option>
+			<option value='Infrastructure'>Infrastructure</option>
+			<option value='Laptop'>Laptop</option>
+			<option value='Lockpick'>Lockpick</option>
+			<option value='Documentation'>Documentation</option>
+			<option value='Misc'>Miscelaneous</option>
+		</select>
+	</td>
+</tr>
+<tr>
 	<td>Location</td>
 	<td colspan='2'><input type='text' maxlength='256' name='location' value='{{ data.location }}' placeholder='required'/></td>
 </tr>
