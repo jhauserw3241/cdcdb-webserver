@@ -37,10 +37,12 @@ class VMs:
     def __db_get_vms(self):
         with DatabaseConnection() as db:
             vms, _ = db.get_table("vms")
+            people,_= db.get_table("people_read")
             q = db.query().\
                 add_columns(
                     vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role)
+                    vms.c.network, vms.c.role, people.c.id,people.full_name).\
+                 outerjoin(people, people.c.id == vms.c.owner_id)
             db.execute(q)
             vms = [ self.encode_id(dict(row), 'vms_id') for row in db.fetchall() ]
             return vms[::-1]
