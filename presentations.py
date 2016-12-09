@@ -73,7 +73,7 @@ class Presentations:
             db.execute(q)
             lastrowid = db.lastrowid()
             if len(lastrowid) != 1: return None
-            else
+            else:
                 pres_pers,_ = db.get_table("presenters")
                 q = pres_pers.insert().\
                     returning(pres_pers.c.presentation_id).\
