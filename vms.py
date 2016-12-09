@@ -79,7 +79,7 @@ class VMs:
 
     def __db_update_vm(self, data):
         self.__db_delete_vm(data['id'])
-        self.__db_insert_vm(data)
+        return self.__db_insert_vm(data)
 
     def __db_delete_vm(self, id):
         with DatabaseConnection() as db:
