@@ -22,42 +22,42 @@
 		<button onclick="location.href='/vms/new';">Create new VM</button><br>
 	{% endif %}
 	{% for vm in vms %}
-		<a onclick="showDetails(this.id)" id='{{ vm.vm_id }}' >
+		<a onclick="showDetails(this.id)" id='{{ vm.vms_id }}' >
 			<div class='vm-card'>
-				<h3>{{ vm.name }}</h3>
-				<p>{{ vm.owner_id }}</p>
+				<h3>{{ vm.vms_name }}</h3>
+				<p>{{ vm.vms_owner_id }}</p>
 				<div class='modify-buttons'>
 					{% if can_edit %}
-						<button id='editButton' href='/vms/{{ vm.vm_id }}/edit'>
+						<button id='editButton' href='/vms/{{ vm.vms_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
 						</button>
 					{% endif %}
 					{% if can_delete %}
-						<button id='deleteButton' href='/vms/{{ vm.vm_id }}/delete'>
+						<button id='deleteButton' href='/vms/{{ vm.vms_id }}/delete'>
 							<img width=15px src='/static/delete.png' alt='delete'/>
 						</button>
 					{% endif %}
 				</div>
 			</div>
 		</a>
-		<div id='{{ vm.vm_id }}-overlay' class='overlay'>
+		<div id='{{ vm.vms_id }}-overlay' class='overlay'>
 			<div class='overlay-content'>
-				<a href='javascript:void(0)' id='{{ vm.vm_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
-				<h1>{{ vm.name }}</h1>
+				<a href='javascript:void(0)' id='{{ vm.vms_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
+				<h1>{{ vm.vms_name }}</h1>
 				<h3>Owner</h3>
-				<p><strong>Name:</strong> {{ vm.owner_id }}</p>
+				<p><strong>Name:</strong> {{ vm.vms_owner_id }}</p>
 				<h3>Network Information</h3>
-				<p><strong>Network:</strong> {{ vm.network }}</p>
-				<p><strong>Role:</strong> {{ vm.role}}</p>	
+				<p><strong>Network:</strong> {{ vm.vms_network }}</p>
+				<p><strong>Role:</strong> {{ vm.vms_role}}</p>	
 
 				<div id="modify-buttons-overlay">
 					{% if can_edit %}
-						<button id='editButton' href='/vms/{{ vm.vm_id }}/edit'>
+						<button id='editButton' href='/vms/{{ vm.vms_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
 						</button>
 					{% endif %}
 					{% if can_delete %}
-						<button id='deleteButton' href='/vms/{{ vm.vm_id }}/delete'>
+						<button id='deleteButton' href='/vms/{{ vm.vms_id }}/delete'>
 							<img width=15px src='/static/delete.png' alt='delete'/>
 						</button>
 					{% endif %}
