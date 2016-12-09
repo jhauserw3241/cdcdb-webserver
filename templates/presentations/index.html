@@ -24,35 +24,35 @@
 	{% for presentation in presentations %}
 		<a onclick="showDetails(this.id)" id='{{ presentation.presentation_id }}' >
 			<div class='presentation-card'>
-				<h3>{{ presentation.presentations_name }}</h3>
+				<h3>{{ presentation.presentation_name }}</h3>
 				<div class='modify-buttons'>
 					{% if can_edit %}
-						<button id='editButton' href='/presentations/{{ presentation.presentations_id }}/edit'>
+						<button id='editButton' href='/presentations/{{ presentation.presentation_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
 						</button>
 					{% endif %}
 					{% if can_delete %}
-						<button id='deleteButton' href='/presentations/{{ presentation.presentations_id }}/delete'>
+						<button id='deleteButton' href='/presentations/{{ presentation.presentation_id }}/delete'>
 							<img width=15px src='/static/delete.png' alt='delete'/>
 						</button>
 					{% endif %}
 				</div>
 			</div>
 		</a>
-		<div id='{{ presentation.presentations_id }}-overlay' class='overlay'>
+		<div id='{{ presentation.presentation_id }}-overlay' class='overlay'>
 			<div class='overlay-content'>
-				<a href='javascript:void(0)' id='{{ presentation.presentations_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
-				<h1>{{ presentation.presentations_name }}</h1>
-				<p><strong>Slides:</strong> {{presentation.presentations_slides}}</p>	
+				<a href='javascript:void(0)' id='{{ presentation.presentation_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
+				<h1>{{ presentation.presentation_name }}</h1>
+				<p><strong>Slides:</strong> {{presentation.presentation_slides}}</p>	
 
 				<div id="modify-buttons-overlay">
 					{% if can_edit %}
-						<button id='editButton' href='/presentations/{{ presentation.presentations_id }}/edit'>
+						<button id='editButton' href='/presentations/{{ presentation.presentation_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
 						</button>
 					{% endif %}
 					{% if can_delete %}
-						<button id='deleteButton' href='/presentations/{{ presentation.presentations_id }}/delete'>
+						<button id='deleteButton' href='/presentations/{{ presentation.presentation_id }}/delete'>
 							<img width=15px src='/static/delete.png' alt='delete'/>
 						</button>
 					{% endif %}
