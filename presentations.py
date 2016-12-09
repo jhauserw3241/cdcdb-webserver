@@ -87,6 +87,7 @@ class Presentations:
         d = {}
         d['name'] = data['name']
         d['slides'] = data['slides']
+        return d,errs
 
     def __create_presentation(self, request, session, data):
         v_data, errs = self.__validate_presentation(data)
