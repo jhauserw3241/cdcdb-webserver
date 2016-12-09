@@ -41,7 +41,7 @@ class VMs:
             q = db.query().\
                 add_columns(
                     vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role, people.c.id,people.full_name).\
+                    vms.c.network, vms.c.role, people.c.id, people.c.full_name).\
                  outerjoin(people, people.c.id == vms.c.owner_id)
             db.execute(q)
             vms = [ self.encode_id(dict(row), 'vms_id') for row in db.fetchall() ]
