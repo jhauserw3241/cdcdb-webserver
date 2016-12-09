@@ -25,7 +25,7 @@
 		<a onclick="showDetails(this.id)" id='{{ vm.vms_id }}' >
 			<div class='vm-card'>
 				<h3>{{ vm.vms_name }}</h3>
-				<p>{{ vm.vms_owner_id }}</p>
+				<p>{{ vm.people_read_full_name }}</p>
 				<div class='modify-buttons'>
 					{% if can_edit %}
 						<button id='editButton' href='/vms/{{ vm.vms_id }}/edit'>
@@ -45,7 +45,7 @@
 				<a href='javascript:void(0)' id='{{ vm.vms_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
 				<h1>{{ vm.vms_name }}</h1>
 				<h3>Owner</h3>
-				<p><strong>Name:</strong> {{ vm.vms_owner_id }}</p>
+				<p><strong>Name:</strong> {{ vm.people_read_full_name }}</p>
 				<h3>Network Information</h3>
 				<p><strong>Network:</strong> {{ vm.vms_network }}</p>
 				<p><strong>Role:</strong> {{ vm.vms_role}}</p>	
