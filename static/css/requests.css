@@ -1,0 +1,105 @@
+.hide {
+	display: none;
+}
+
+.request-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+	background-color: var(--card-background);
+	display: inline-block;
+	width: 45%;
+	table-layout: inherit;
+	margin: 5px;
+	border-radius: 3px;
+	color: var(--card-font);
+	text-decoration: none;
+	padding: 1em;
+}
+
+.request-card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+	background-color: var(--card-back-highlight);
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.request-card a {
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.request-card:hover a {
+	color: var(--card-font);
+	text-decoration: none;
+}
+
+.request-card p {
+	text-align: center;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.request-card h3 {
+	text-align: center;
+	margin: auto;
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.modify-buttons button {
+	background-color: var(--card-background);
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+.modify-buttons button:hover {
+	background-color: var(--card-back-highlight);
+	text-decoration: none;
+}
+
+.modify-buttons {
+	text-align: center;
+}
+
+form {
+	text-align: center;
+}
+
+form p,
+form input,
+form select {
+	margin-top: 0;
+	margin-right: 5px;
+	margin-bottom: 0.5em;
+	text-align: left;
+}
+
+form .form-basic,
+form .form-date,
+form .meeting-hide-form-meet,
+form .competition-hide-form-comp {
+	display: inline-flex;
+	width: 370px;
+	position: relative;
+}
+
+form .form-basic-info,
+form .form-date-info,
+form .meeting-hide-form-meet-info,
+form .competition-hide-form-comp-info {
+	position: absolute;
+	right: 0px;
+	text-align: right;
+}
+
+form .form-basic {
+	height: 82px;
+}
+
+form .meeting-hide-form-meet {
+	height: 55px;
+}

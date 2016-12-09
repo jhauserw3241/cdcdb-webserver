@@ -1,28 +1,50 @@
 {% extends 'base.html' %}
+{% block add_css %}
+	<link rel="stylesheet" href="/static/css/requests.css">
+	<link rel="stylesheet" href="/static/css/overlay.css">
+{% endblock %}
+{% block add_head %}
+	<script>
+		function showDetails(id) {
+			document.getElementById(id + "-overlay").style.width = "100%";
+		}
+		function hideDetails(id) {
+			document.getElementById(id).style.width="0%";
+		}
+	</script>
+{% endblock %}
 {% block title %}Requests{% endblock %}
 {% block body %}
-<h1>Requests</h1>
-<p>Requests pending approval</p>
-<table id='requests-table'>
-<tr>
-    <th>Item</th>
-    <th>Requester</th>
-    <th>Start</th>
-    <th>Expected End</th>
-</tr>
-{% for r in requests %}
-<tr>
-    <td><a href='/inventory/{{ r.checked_out_item_id }}'>{{ r.inventory_description }}</a></td>
-    <td><a href='/people/{{ r.checked_out_requested_by }}'>{{ r.people_read_full_name }}</a></td>
-    <td>{{ r.start_friendly }}</td>
-    <td>{{ r.expected_end_friendly }}</td>
-    <td class='button'>
-		<a href='/requests/{{ r.checked_out_id }}/approve'><img width=15px src='/static/approve.png' alt='approve'/></a>
-	</td>
-    <td class='button'>
-		<a href='/requests/{{ r.checked_out_id }}/delete'><img width=15px src='/static/delete.png' alt='delete'/></a>
-	</td>
-</tr>
-{% endfor %}
-</table>
+	<h1>Requests</h1>
+	<h4>Requests pending approval</h4>
+	{% for r in requests %}
+    		<a onclick='showDetails(this.id)' id='{{ r.checked_out_item_id }}'>
+			<div class='request-card'>
+				<h3>{{ r.inventory_description }}</h3>
+				<p>{{ r.people_read_full_name }}</p>
+			</div>
+		</a>
+		<div id='{{ r.checked_out_item_id }}-overlay' class='overlay'>
+			<div class='overlay-content'>
+				<a href='javascript:void(0)' id='{{ r.checked_out_item_id }}-overlay' class='closebtn' onclick='hideDetails(this.id)'>X</a>
+				<h1>{{ r.inventory_description }}</h1>
+
+				<h3>Requester</h3>
+				<p>{{ r.people_read_full_name }}</p>
+
+				<h3>Dates</h3>
+				<p><strong>Start: </strong>{{ r.start_friendly }}</p>
+    				<p><strong>Expected End: </strong>{{ r.expected_end_friendly }}</p>
+
+				<div class='modify-buttons'>
+					<button href='/requests/{{ r.checked_out_id }}/approve'>
+						<img width=15px src='/static/approve.png' alt='approve'/>
+					</button>
+					<button href='/requests/{{ r.checked_out_id }}/delete'>
+						<img width=15px src='/static/delete.png' alt='delete'/>
+					</button>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 {% endblock %}
