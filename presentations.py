@@ -94,9 +94,9 @@ class Presentations:
         if errs:
             return render_template('presentations/new.html', data=data,
                 errors=errs, submit_button_text='Create')
-        id = self.__db_insert_presenation(v_data)
+        id = self.__db_insert_presentation(v_data)
         id = self.b58.encode(id)
-        return redirect(url_for('presentation_id', id=id))
+        return redirect(url_for('presentations_id', id=id))
 
     def __update_presentation(self, request, session, id, data):
         v_data, errs = self.__validate_presentation(data)
@@ -106,7 +106,7 @@ class Presentations:
         v_data['id'] = id
         id = self.__db_update_presentation(v_data)
         id = self.b58.encode(id)
-        return redirect(url_for('presentation_id', id=id))
+        return redirect(url_for('presentations_id', id=id))
 
 
     def index(self, request, session):
