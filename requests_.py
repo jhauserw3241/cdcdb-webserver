@@ -186,7 +186,7 @@ class Requests_:
                 return render_template('error.html', errors=errs)
             else:
                 self.__db_insert_request(v_data)
-                return "It has probably been done."
+                return redirect(url_for('requests__'))
         abort(405)
 
     def index(self, request, session):
