@@ -78,7 +78,7 @@ class Presentations:
                 q = pres_pers.insert().\
                     returning(pres_pers.c.presentation_id).\
                     values(
-                        presentation_id=data[lastrowid[0]]
+                        presentation_id=data[lastrowid[0]],
                         person_id=data['presenter_id']
                     )
                 return lastrowid[0]
