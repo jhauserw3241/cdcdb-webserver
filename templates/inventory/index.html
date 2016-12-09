@@ -18,14 +18,14 @@
 				<p>{{ item.inventory_make if item.inventory_make is not none() else '' }}</p>
 				<div class='modify-buttons'>
 					{% if can_edit %}
-						<button href='/inventory/{{ item.inventory_id }}/edit'>
+						<a href='/inventory/{{ item.inventory_id }}/edit'>
 							<img width=15px src='/static/edit.png' alt='edit'/>
-						</button>
+						</a>
 					{% endif %}
 					{% if can_delete %}
-						<button href='/inventory/{{ item.inventory_id }}/delete'>
+						<a href='/inventory/{{ item.inventory_id }}/delete'>
 							<img width=15px src='/static/delete.png' alt='delete'/>
-						</button>
+						</a>
 					{% endif %}
 				</div>
 			</div>
