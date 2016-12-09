@@ -1,40 +1,26 @@
 {% extends 'base.html' %}
-{% block title %}Events - {{ event.event_name }}{% endblock %}
+{% block title %}VMs - {{ vm.vms_name }}{% endblock %}
 {% block body %}
-<h1><a href='/events'>Events</a></h1>
-<h2>{{ event.event_name }}</h2>
+<h1><a href='/vms'>VMs</a></h1>
+<h2>VM Information</h2>
 <p>
-When: <strong>{{ event.event_start_friendly }}</strong><br/>
-{% if event.event_start_friendly != event.event_end_friendly %}
-To: <strong>{{ event.event_end_friendly }}</strong>
-{% endif %}
+Name: <strong>{{ vm.vms_name }}</strong>
+</p>
+<p>
+Owner: <strong>{{ vm.vms_owner_id }}</strong><br/>
 </p>
 <p>{{ event.event_description }}</p>
-
-{% if event.meeting_id %}
-{% if event.meeting_minutes %}
-<p>Minutes:
-<a href='{{ event.meeting_minutes }}'>{{ event.meeting_minutes }}</a></p>
-{% endif %}
-{% if event.meeting_required is not none() and event.meeting_required %}
-<p><strong>This is a required meeting</strong></p>
-{% endif %}
-{% endif %}
-
-{% if event.competition_id %}
-{% if event.competition_location %}
-<p>Location: {{ event.competition_location }}</p>
-{% endif %}
-{% if event.competition_documentation %}
-<p>Documentation:
-<a href='{{ event.competition_documentation }}'>{{ event.competition_documentation }}</a></p>
-{% endif %}
-{% endif %}
-
+<h2>Network Information</h2>
+<p>
+Network: <strong>{{vm.vms_network}}</strong>
+</p>
+<p>
+Role: <strong>{{vm.vms_role}}</strong>
+</p>
 {% if can_edit %}
-<a href='/events/{{ event.event_id }}/edit'>Edit</a><br/>
+<a href='/vms/{{ vm.vms_id }}/edit'>Edit</a><br/>
 {% endif %}
 {% if can_delete %}
-<a href='/events/{{ event.event_id }}/delete'>Delete</a>
+<a href='/vms/{{ vm.vms_id }}/delete'>Delete</a>
 {% endif %}
 {% endblock %}
