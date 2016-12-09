@@ -50,11 +50,13 @@ class VMs:
     def __db_get_vm(self, id):
         with DatabaseConnection() as db:
             vms, _ = db.get_table("vms")
+            people,_=db.get_table("people_read")
             q = db.query().\
                 add_columns(
                     vms.c.id, vms.c.owner_id, vms.c.name,
-                    vms.c.network, vms.c.role).\
-                filter(vms.c.id == id)
+                    vms.c.network, vms.c.role, people.c.id, people.c.full_name).\
+                filter(vms.c.id == id).\
+                outerjoin(people, people.c.id == vms.c.owner_id)
             db.execute(q)
             rows = [ self.encode_id(dict(row), 'vms_id') for row in db.fetchall() ]
             if len(rows) != 1: return None
