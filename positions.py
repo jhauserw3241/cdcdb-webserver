@@ -16,6 +16,10 @@ class Positions:
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
+    #####
+    # PERMISSION CHECKS
+    #####
+
     def __can_index(self, session):
         return True
 
@@ -34,6 +38,7 @@ class Positions:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    # Get all rows in the position table
     def __db_get_positions(self):
         with DatabaseConnection() as db:
             positions, _ = db.get_table("position")
@@ -45,6 +50,7 @@ class Positions:
             positions = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
             return positions[::-1]
 
+    # Get the position with the given ID
     def __db_get_position(self, data):
         with DatabaseConnection() as db:
             positions, _ = db.get_table("position")
@@ -58,6 +64,7 @@ class Positions:
             if len(rows) != 1: return None
             return rows[0]
 
+    # Add a single position to the DB
     def __db_insert_position(self, data):
         with DatabaseConnection() as db:
             positions, _ = db.get_table("position")
@@ -73,10 +80,12 @@ class Positions:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+    # Instead of implementing an update function, just remove and then reinsert
     def __db_update_position(self, data):
         self.__db_delete_position(data['id'])
         self.__db_insert_position(data)
 
+    # Remove the given position
     def __db_delete_position(self, id):
         with DatabaseConnection() as db:
             positions, _ = db.get_table("position")
@@ -84,6 +93,7 @@ class Positions:
                 where(positions.c.pos_id == id)
             db.execute(q)
 
+    # Parse data, collect errors, and return data and errors
     def __validate_position(self, data):
         errs = []
         d = {}
@@ -101,6 +111,8 @@ class Positions:
         d['start_date'] = data['start_date']
         s['end_date'] = data['end_date']
 
+    # middle layer between create() and db functions to actually create a
+    # position
     def __create_position(self, request, session, data):
         v_data, errs = self.__validate_position(data)
         if errs:
@@ -110,6 +122,7 @@ class Positions:
         id = self.b58.encode(id)
         return redirect(url_for('position_id', id=id))
 
+    # middle layer between update() and db funcs to actually update a position
     def __update_position(self, request, session, id, data):
         v_data, errs = self.__validate_position(data)
         if errs:
@@ -121,6 +134,7 @@ class Positions:
         return redirect(url_for('position_id', id=id))
 
 
+    # Router calls this to display all positions
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
@@ -132,6 +146,7 @@ class Positions:
             return "You are in positions.index"
         abort(405)
 
+    # Router calls this to show the create new position form
     def new(self, request, session):
         if request.method == 'GET':
             return "You are in positions.new"
@@ -140,6 +155,7 @@ class Positions:
                 data={}, submit_button_text='Create')"""
         abort(405)
 
+    # Router calls this to process a complete new position form
     def create(self, request, session):
         if request.method == 'POST':
             return "You are in positions.create"
@@ -148,6 +164,7 @@ class Positions:
             return self.__create_position(request, session, data)"""
         abort(405)
 
+    # Router calls this to show the edit position form
     def edit(self, request, session, id):
         if request.method == 'GET':
             return "inside positions.edit"
@@ -176,6 +193,7 @@ class Positions:
                 submit_button_text='Update')"""
         abort(405)
 
+    # Router calls this to process a complete edit position form
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
@@ -184,6 +202,7 @@ class Positions:
             #return self.__update_position(request, session, id, data)
         abort(405)
 
+    # Router calls this to remove the position with the given ID
     """def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)

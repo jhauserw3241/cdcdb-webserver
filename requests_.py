@@ -25,6 +25,8 @@ class Requests_:
         if len(id) != 1: return None
         return id[0]
 
+    # Do magic with the given list of requests
+    # It adds a few attributes for handy human-readable formats
     def __requests_date_magic(self, requests):
         for r in requests:
             start = r['checked_out_start_date']
@@ -38,6 +40,7 @@ class Requests_:
             else: r['actual_end_friendly'] = 'Unknown'
         return requests
 
+    # add a new request
     def __db_insert_request(self, data):
         with DatabaseConnection() as db:
             co, _ = db.get_table("checked_out")
@@ -49,6 +52,7 @@ class Requests_:
                     expected_return_date=data['end_date'])
             db.execute(q)
 
+    # get all requests, optionally only the ones that haven't been approved
     def __db_get_requests(self, only_open=False):
         with DatabaseConnection() as db:
             co, _ = db.get_table("checked_out")
@@ -72,6 +76,7 @@ class Requests_:
                 self.encode_id(r, 'checked_out_requested_by')
             return rows
 
+    # get the request with the given id
     def __db_get_request(self, id):
         with DatabaseConnection() as db:
             co, _ = db.get_table("checked_out")
@@ -95,6 +100,7 @@ class Requests_:
             if len(rows) != 1: return None
             return rows[0]
 
+    # approve a request by attached the officer's id
     def __db_approve(self, id, approver):
         with DatabaseConnection() as db:
             co, _ = db.get_table("checked_out")
@@ -104,6 +110,7 @@ class Requests_:
             db.execute(q)
             return
 
+    # disapprove or just remove a request by deleting the row
     def __db_delete(self, id):
         with DatabaseConnection() as db:
             co, _ = db.get_table("checked_out")
@@ -111,6 +118,7 @@ class Requests_:
             db.execute(q)
             return
 
+    # parse the request and return any errors
     def __validate_request(self, data):
         d = {}
         errs = []
@@ -141,6 +149,10 @@ class Requests_:
             errs.append('End date must be after start date')
         return d, errs
 
+    #####
+    # PERMISSIONS CHECKS
+    #####
+
     def __can_index(self, session):
         return 'is_officer' in session and session['is_officer']
 
@@ -160,6 +172,7 @@ class Requests_:
             return False
         return True
 
+    # Router calls this to return new request form
     def new(self, request, session, inventory):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
@@ -178,6 +191,7 @@ class Requests_:
             return render_template('requests/new.html', data=data)
         abort(405)
 
+    # Router calls this to process new request form
     def create(self, request, session):
         if request.method == 'POST':
             if not self.__can_create(session): abort(403)
@@ -189,6 +203,7 @@ class Requests_:
                 return redirect(url_for('requests__'))
         abort(405)
 
+    # Router calls this to show all requests
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
@@ -197,6 +212,7 @@ class Requests_:
             return render_template('requests/index.html', requests=open_requests)
         abort(405)
 
+    # Router calls this to approve an existing request
     def approve(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_approve(session): abort(403)
@@ -206,6 +222,7 @@ class Requests_:
             return redirect(url_for('requests__'))
         abort(405)
 
+    # Router calls this to disapprove or otherwise remove an existing request
     def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)

@@ -9,37 +9,44 @@ class Test:
     def __init__(self):
         self.b58 = globals.base58_hashids
         self.base_url = "http://localhost:5000"
-        pass
+
     def encode_id(self, id):
         return self.b58.encode(id)
     def decode_id(self, id):
         return self.b58.decode(id)
 
+    # Try to login with the given username and password
     def login(self, u, p):
         data = { 'username': u, 'password': p}
         r = requests.post(self.base_url+"/login/", data)
         return r.cookies if r.cookies else None
 
+    # Check if the given url returns the given status code
     def gives_return_code(self, code, url):
         url = self.base_url + url
         r = requests.get(url, timeout=2)
         return r.status_code == code
 
+    # Check if the given url returns the give nstatus code when logged in with
+    # the given credentials
     def cred_gives_return_code(self, code, u, p, url):
         url = self.base_url + url
         cookies = self.login(u, p)
         r = requests.get(url, timeout=2, cookies=cookies)
         return r.status_code == code
 
+    # Check if the creds are valid
     def login_valid(self, u, p, valid):
         cookies = self.login(u, p)
         return (not not cookies) == valid
 
+    # main
     def do(self, request, session):
         return_code_tests = []
         cred_return_code_tests = []
         login_tests = []
 
+        # Define all the urls to test for return codes that require no creds
         test_url_codes = [
             {'url': '/', 'code': 200},
             {'url': '/badurl', 'code': 404},
@@ -63,12 +70,14 @@ class Test:
             {'url': '/robohash/'+self.encode_id(0)+'?size=20', 'code': 404},
             {'url': '/robohash/'+self.encode_id(0)+'?size=20x201', 'code': 404},
         ]
+        # Actually do the above tests
         for tuc in test_url_codes:
             return_code_tests.append({ 'url': tuc['url'],
                 'code': tuc['code'],
                 'good': self.gives_return_code(tuc['code'], tuc['url'])
             })
 
+        # Define all the urls and creds for more return code tests
         test_cred_url_codes = [
             {'url': '/people', 'code': 200, 'u': 'root', 'p': 'root' },
             {'url': '/people', 'code': 403, 'u': 'admin', 'p': 'admin' },
@@ -111,6 +120,8 @@ class Test:
             {'url': '/inventory/AAAAAAAAAA', 'code': 404, 'u': 'officer', 'p': 'officer' },
             {'url': '/inventory/AAAAAAAAAA', 'code': 404, 'u': 'student', 'p': 'student' },
         ]
+
+        # Actually do the above tests
         for tcuc in test_cred_url_codes:
             cred_return_code_tests.append({ 'url': tcuc['url'],
                 'code': tcuc['code'], 'u': tcuc['u'], 'p': tcuc['p'],
@@ -119,6 +130,7 @@ class Test:
                 )
             })
 
+        # Define all the creds we want to test
         test_logins = [
             {'u': 'student', 'p': 'student', 'valid': True},
             {'u': 'root', 'p': 'root', 'valid': True},
@@ -126,12 +138,15 @@ class Test:
             {'u': 'officer', 'p': 'officer', 'valid': True},
             {'u': 'doesnotexist', 'p': 'doesnotexist', 'valid': False},
         ]
+
+        # Actually do the above tests
         for tl in test_logins:
             login_tests.append({'u': tl['u'], 'p': tl['p'],
                 'valid': tl['valid'],
                 'good': self.login_valid(tl['u'], tl['p'], tl['valid'])
             })
 
+        # Make a pretty webpage with the results of all the testing
         return render_template('test/index.html',
             return_code_tests=return_code_tests,
             cred_return_code_tests=cred_return_code_tests,

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Look at all these imports. Wonder if any of them are unnecessary
 from about import About
 from events import Events
 from flask import Flask
@@ -20,6 +21,7 @@ from vms import VMs
 from positions import Positions
 
 app = Flask(__name__)
+
 # The handler classes for each route type
 about = About()
 help = Help()
@@ -33,9 +35,12 @@ test = Test()
 vms = VMs()
 presentations = Presentations()
 positions = Positions()
+
+# parsed config from config.ini
 config = globals.config
 
 
+# Two helper functions to save typing
 def encode_id(id):
     id = globals.base58_hashids.encode(id)
     if id == None: return None
@@ -453,6 +458,7 @@ def positions_id_edit(id):
     else:
         abort(405)
 
+# int main(int argc, char *argv[]) {
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = globals.config['common']['secret']
@@ -461,3 +467,4 @@ if __name__ == '__main__':
     app.run(host=config['common']['listen_ip'],
             port=int(config['common']['listen_port']),
             threaded=True)
+# }

@@ -16,6 +16,10 @@ class Presentations:
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
+    #####
+    # PERMISSION CHECKS
+    #####
+
     def __can_index(self, session):
         return True
 
@@ -34,6 +38,7 @@ class Presentations:
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    # Get all presentations in the db
     def __db_get_presentations(self):
         with DatabaseConnection() as db:
             presentations, _ = db.get_table("presentation")
@@ -49,6 +54,7 @@ class Presentations:
             presentations = [ self.encode_id(dict(row), 'presentation_id') for row in db.fetchall() ]
             return presentations[::-1]
 
+    # Get the presentation with the given id
     def __db_get_presentation(self, id):
         with DatabaseConnection() as db:
             presentations, _ = db.get_table("presentation")
@@ -66,6 +72,7 @@ class Presentations:
             if len(rows) != 1: return None
             return rows[0]
 
+    # Insert a new presentation row
     def __db_insert_presentation(self, data):
         with DatabaseConnection() as db:
             presentations, _ = db.get_table("presentation")
@@ -87,10 +94,12 @@ class Presentations:
                     )
                 return lastrowid[0]
                 
+    # Be lazy and just delete and readd
     def __db_update_presentation(self, data):
         self.__db_delete_presentation(data['id'])
         self.__db_insert_presentation(data)
 
+    # Remove the presentation with the given id
     def __db_delete_presentation(self, id):
         with DatabaseConnection() as db:
             presentations, _ = db.get_table("presentation")
@@ -98,6 +107,7 @@ class Presentations:
                 where(presentations.c.id == id)
             db.execute(q)
 
+    # Parse the data given, validate, and return the data with any errors
     def __validate_presentation(self, data):
         errs = []
         d = {}
@@ -106,6 +116,7 @@ class Presentations:
         d['presenter_id'] = data['presenter_id']
         return d,errs
 
+    # layer between create() and db functions
     def __create_presentation(self, request, session, data):
         v_data, errs = self.__validate_presentation(data)
         if errs:
@@ -115,6 +126,7 @@ class Presentations:
         id = self.b58.encode(id)
         return redirect(url_for('presentations_id', id=id))
 
+    # layer between update() and db funcs
     def __update_presentation(self, request, session, id, data):
         v_data, errs = self.__validate_presentation(data)
         if errs:
@@ -126,6 +138,7 @@ class Presentations:
         return redirect(url_for('presentations_id', id=id))
 
 
+    # Router calls this to show all presentations
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
@@ -136,6 +149,7 @@ class Presentations:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    # Router calls this to show an single presentation
     def show(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
@@ -146,6 +160,7 @@ class Presentations:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    # Router calls this to return new presentation form
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
@@ -153,6 +168,7 @@ class Presentations:
                 data={}, submit_button_text='Create')
         abort(405)
 
+    # Router calls this to process a new presentation form
     def create(self, request, session):
         if request.method == 'POST':
             if not self.__can_create(session): abort(403)
@@ -160,6 +176,7 @@ class Presentations:
             return self.__create_presentation(request, session, data)
         abort(405)
 
+    # Router calls this to return edit presentation form
     def edit(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_edit(session): abort(403)
@@ -172,6 +189,7 @@ class Presentations:
                 submit_button_text='Update')
         abort(405)
 
+    # Router calls this to process an edit presentation form
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
@@ -179,6 +197,7 @@ class Presentations:
             return self.__update_presentation(request, session, id, data)
         abort(405)
 
+    # Router calls this to delete the presentation with the given id
     def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)

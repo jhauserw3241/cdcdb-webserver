@@ -98,6 +98,7 @@ class People:
             rows = [ r for r in db.fetchall() ]
             return rows
 
+    # Add a password and salt to the person with the given email
     def __db_register_person(self, data):
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people")
@@ -112,6 +113,7 @@ class People:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+    # Insert a person with the given information
     def __db_insert_person(self, data):
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people")
@@ -128,6 +130,8 @@ class People:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+    # Insert a student with the given information. A person needs to be inserted
+    # seperately
     def __db_insert_student(self, data):
         with DatabaseConnection() as db:
             std, _ = db.get_table("students")
@@ -140,6 +144,7 @@ class People:
                     voting_member=data['voting_member'])
             db.execute(q)
 
+    # Update the person with the given ID with all the information given
     def __db_update_person(self, data):
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people")
@@ -157,10 +162,14 @@ class People:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+    # Instead of actually implementing an update function, just delete and
+    # re-insert the student with the given ID
     def __db_update_student(self, data):
         self.__db_delete_student(data['id'])
         self.__db_insert_student(data)
 
+
+    # Delete the person with the given ID.
     def __db_delete_person(self, id):
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people")
@@ -168,6 +177,7 @@ class People:
                 where(ppl.c.id == id)
             db.execute(q)
 
+    # Delete the student with the given ID.
     def __db_delete_student(self, id):
         with DatabaseConnection() as db:
             stud, _ = db.get_table("students")
@@ -175,9 +185,13 @@ class People:
                 where(stud.c.id == id)
             db.execute(q)
 
+    # THE place to check to see if a password is valid or not. Currently only a
+    # minimum length check
     def __valid_password(self, password):
         return password != None and len(password) >= 8
 
+    # Take data, parse it, collect any errors, then return the parsed data and a
+    # list of errors
     def __validate_generic(self, data):
         # parse and validate *data* into *d* while also
         # listing any errors in *errs*
@@ -197,6 +211,8 @@ class People:
         d['email'] = data['email']
         return d, errs
 
+    # Take data, parse it, collect any errors, then return the parsed data and a
+    # list of errors
     def __validate_student(self, data):
         d, errs = self.__validate_generic(data)
         if not data['eid']:
@@ -209,6 +225,8 @@ class People:
         d['voting_member'] = 'voting_member' in data
         return d, errs
 
+    # Take data, parse it, collect any errors, then return the parsed data and a
+    # list of errors
     def __validate_registration(self, data):
         # makes sure the given email is an exact match for an
         # existing record, hashes password, generates a salt
@@ -230,6 +248,8 @@ class People:
             errs.append('An error occured during securing the given password. Contact an administrator.')
         return d, errs
 
+    # Intermediate step between create() and the db functions. Validates the
+    # data and calls the db functions necessary to do the create
     def __create_generic(self, request, session, data):
         v_data, errs = self.__validate_generic(data)
         if errs:
@@ -239,6 +259,8 @@ class People:
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
 
+    # Intermediate step between create() and the db functions. Validates the
+    # data and calls the db functions necessary to do the create
     def __create_student(self, request, session, data):
         v_data, errs = self.__validate_student(data)
         if errs:
@@ -251,6 +273,8 @@ class People:
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
 
+    # Intermediate step between update() and the db functions. Validates the
+    # data and calls the db functions necessary to do the update
     def __update_generic(self, request, session, id, data):
         v_data, errs = self.__validate_generic(data)
         if errs:
@@ -267,6 +291,8 @@ class People:
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
 
+    # Intermediate step between update() and the db functions. Validates the
+    # data and calls the db functions necessary to do the update
     def __update_student(self, request, session, id, data):
         v_data, errs = self.__validate_student(data)
         if errs:
@@ -278,6 +304,10 @@ class People:
         self.__db_update_student(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
+
+    #####
+    # PERMISSION CHECKS
+    #####
 
     def __can_index(self, session):
         return True
@@ -316,6 +346,7 @@ class People:
     def __can_register(self, session):
         return 'is_officer' in session and session['is_officer']
 
+    # Router calls this when to login a user or return the login form
     def login(self, request, session):
         if request.method == 'GET':
             if 'person_id' not in session:
@@ -348,6 +379,7 @@ class People:
             return redirect(url_for('index_'))
         abort(405)
 
+    # Router calls this to logout a user
     def logout(self, request, session):
         if request.method == 'GET':
             if session:
@@ -360,6 +392,7 @@ class People:
             return redirect(url_for('index_'))
         abort(405)
 
+    # Router calls this to show all people
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
@@ -385,6 +418,8 @@ class People:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    # Router calls this to show info on a specific person. Probably unused if
+    # cards are being displayed
     def show(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_show(session, id): abort(403)
@@ -397,6 +432,7 @@ class People:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+    # Router calls this to return the form for creating a new person
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
@@ -404,6 +440,7 @@ class People:
                 data={}, submit_button_text='Create')
         abort(405)
 
+    # Router calls this to process the form for creating a new person
     def create(self, request, session):
         if request.method == 'POST':
             if not self.__can_create(session): abort(403)
@@ -419,6 +456,7 @@ class People:
                     errors=['Didn\'t understand person type'])
         abort(405)
 
+    # Router calls this to return the form for editing a person
     def edit(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_edit(session, id): abort(403)
@@ -440,6 +478,7 @@ class People:
             pass
         abort(405)
 
+    # Router calls this to process the form for editing a person
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session, id): abort(403)
@@ -454,6 +493,7 @@ class People:
                     submit_button_text='Update',
                     errors=['Didn\'t understand event type'])
 
+    # Router calls this to remove an entity from the db
     def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)
@@ -461,6 +501,8 @@ class People:
             self.__db_delete_person(id)
             return redirect(url_for('people_'))
 
+    # Router calls this to return the register form or to process a filled-out
+    # registration form
     def register(self, request, session):
         if request.method == 'GET':
             if not self.__can_register(session): abort(403)

@@ -8,20 +8,29 @@ from globals import globals
 
 # Handles the Robohash routes.
 
+# We had issues with robohash staying up, so we started caching the images it
+# gives us
+
 class Robohash:
     def __init__(self):
         self.cache_dir = os.path.abspath('cache')
         os.makedirs(self.cache_dir, exist_ok=True)
 
+    #####
+    # PERMISSION CHECKS
+    #####
+
     def __can_get(self, session):
         return True
 
+    # Determine whether the string is okay
     def s_ok(self, s):
         for c in s:
             if c not in globals.config['b58']['alphabet']:
                 return False
         return True
 
+    # Determine if the given size is out of bounds
     def size_ok(self, size):
         try:
             first, second = size.split('x', maxsplit=1)
@@ -33,6 +42,9 @@ class Robohash:
         if second < 1 or second > 300: return False
         return True
 
+    # Router calls this to fetch an image, from cache if possible. If not in
+    # cache already, go get it from robohash.org and save it in the cache for
+    # the future before returning it
     def get(self, request, session, s):
         if request.method == 'GET':
             if not self.__can_get(session): abort(403)
