@@ -12,14 +12,16 @@ from globals import globals
 # Handles the events routes.
 
 class Events:
-    def __init__(self):
+    # Initializes the Events object to include functions from globals
+	def __init__(self):
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
         self.sqlts_to_rel = globals.sqltimestamp_to_relative
         self.frmt_dt = globals.format_datetime
         self.dt_diff = globals.datetime_difference
         self.td_to_rel = globals.timedelta_to_relative
-
+	
+	# Formats the dates and times returned from the database
     def __events_date_magic(self, events):
         for e in events:
             start = e['event_start_timestamp']
@@ -40,6 +42,8 @@ class Events:
                 e['event_end_friendly'] += self.frmt_dt(end, " %H:%M")
         return events
 
+	# Returns either all of the events in the events table, or only those
+	# in the future based on the provided boolean.
     def __db_get_events(self, future_only=False):
         with DatabaseConnection() as db:
             evts, _ = db.get_table("event")
@@ -54,7 +58,9 @@ class Events:
             db.execute(q)
             events = [ self.encode_id(dict(row), 'event_id') for row in db.fetchall() ]
             return events[::-1]
-
+	
+	# Returns the details of the event with the provided ID, including any
+	# meeting or competition information if applicable.
     def __db_get_event(self, id):
         with DatabaseConnection() as db:
             evts, _ = db.get_table("event")
@@ -74,6 +80,8 @@ class Events:
             if len(rows) != 1: return None
             return rows[0]
 
+	# Inserts an event with the provided data into the database. Returns the
+	# id of the newly created event
     def __db_insert_event(self, data):
         with DatabaseConnection() as db:
             evts, _ = db.get_table("event")
@@ -89,6 +97,7 @@ class Events:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+	# Inserts a meeting with the provided data into the database.
     def __db_insert_meeting(self, data):
         with DatabaseConnection() as db:
             mts, _ = db.get_table("meeting")
@@ -99,6 +108,7 @@ class Events:
                     required=data['required'])
             db.execute(q)
 
+	# Inserts a new competition with the given information.
     def __db_insert_competition(self, data):
         with DatabaseConnection() as db:
             comps, _ = db.get_table("competition")
@@ -109,6 +119,8 @@ class Events:
                     location=data['location'])
             db.execute(q)
 
+	# Updates the an event with the provided data. The event
+	# to update is determined by the ID of the provided information.
     def __db_update_event(self, data):
         with DatabaseConnection() as db:
             evts, _ = db.get_table("event")
@@ -125,21 +137,27 @@ class Events:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
+	# Updates a meeting by deleting the meeting with the same ID
+	# and replacing it with a new meeting
     def __db_update_meeting(self, data):
         self.__db_delete_meeting(data['id'])
         self.__db_insert_meeting(data)
 
+	# Updates a competition by deleting the competition with the 
+	# matching ID in the provided information and creating a new
+	# competition. 
     def __db_update_competition(self, data):
         self.__db_delete_competition(data['id'])
         self.__db_insert_competition(data)
 
+	# Deletes the event with the provided ID
     def __db_delete_event(self, id):
         with DatabaseConnection() as db:
             evts, _ = db.get_table("event")
             q = evts.delete().\
                 where(evts.c.id == id)
             db.execute(q)
-
+	# Deletes the meeting with the provided ID
     def __db_delete_meeting(self, id):
         with DatabaseConnection() as db:
             mts, _ = db.get_table("meeting")
@@ -147,6 +165,7 @@ class Events:
                 where(mts.c.id == id)
             db.execute(q)
 
+	# Deletes the competition with the provided ID
     def __db_delete_competition(self, id):
         with DatabaseConnection() as db:
             comps, _ = db.get_table("competition")
@@ -154,24 +173,34 @@ class Events:
                 where(comps.c.id == id)
             db.execute(q)
 
+	# Determines if the user can view the list of events.
     def __can_index(self, session):
         return True
 
+	# Determines if the user can view details on any of the events
     def __can_show(self, session):
         return True
 
+	# Determines if the user can view the edit page
     def __can_edit(self, session):
         return 'is_officer' in session and session['is_officer']
 
+	# Determines if the user can update events
     def __can_update(self, session):
         return 'is_officer' in session and session['is_officer']
-
+	
+	# Determines if the user can create new events
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
-
+	
+	#Determines if the user can delete events
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
+	# Ensures that sufficient data is provided for a generic event.
+	# This ensures that all NOTNULL contraints in the database are
+	# observed before attempting to add information to the database
+	# itself
     def __validate_generic(self, data):
         # parse and validate *data* into *d* while also
         # listing any errors in *errs*
@@ -224,18 +253,23 @@ class Events:
             errs.append("End date must be after start date")
         return d, errs
 
+	# Ensures that all required information for a meeting
+	# is provided before inserting/updating the database
     def __validate_meeting(self, data):
         d, errs = self.__validate_generic(data)
         d['minutes'] = data['minutes']
         d['required'] = ('required' in data)
         return d, errs
 
+	# Ensures that all required competition information is 
+	# provided before passing the information to the database
     def __validate_competition(self, data):
         d, errs = self.__validate_generic(data)
         d['documentation'] = data['documentation']
         d['location'] = data['location']
         return d, errs
 
+	# Validates information and inserts a generic event
     def __create_generic(self, request, session, data):
         v_data, errs = self.__validate_generic(data)
         if errs:
@@ -244,7 +278,8 @@ class Events:
         id = self.__db_insert_event(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
-
+	
+	# Validates and inserts a meeting 
     def __create_meeting(self, request, session, data):
         v_data, errs = self.__validate_meeting(data)
         if errs:
@@ -257,6 +292,7 @@ class Events:
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
 
+	# Validates and inserts a competition
     def __create_competition(self, request, session, data):
         v_data, errs = self.__validate_competition(data)
         if errs:
@@ -269,6 +305,7 @@ class Events:
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
 
+	# Validates and updates a generic event
     def __update_generic(self, request, session, id, data):
         v_data, errs = self.__validate_generic(data)
         if errs:
@@ -281,6 +318,7 @@ class Events:
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
 
+	# Validates and updates a meeting
     def __update_meeting(self, request, session, id, data):
         v_data, errs = self.__validate_meeting(data)
         if errs:
@@ -294,6 +332,7 @@ class Events:
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
 
+	# Validates and updates a competition.
     def __update_competition(self, request, session, id, data):
         v_data, errs = self.__validate_competition(data)
         if errs:
@@ -307,12 +346,15 @@ class Events:
         id = self.b58.encode(id)
         return redirect(url_for('events_id', id=id))
 
+	# Checks user permissions and then returns all future events 
     def future_events(self, request, session):
         if not self.__can_index(session): abort(403)
         events = self.__db_get_events(future_only=True)
         events = self.__events_date_magic(events)
         return events
 
+	# Checks user permissions and then returns a rendered index
+	# page with all of the events listed
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
@@ -324,7 +366,9 @@ class Events:
                 can_delete=self.__can_delete(session),
                 now=globals.current_datetime(utc=False))
         abort(405)
-
+	
+	# Checks user permissions and then returns a rendered page 
+	# with the details of the specified event
     def show(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
@@ -336,18 +380,22 @@ class Events:
                 can_delete=self.__can_delete(session))
         abort(405)
 
+	# Renders the events test page
     def test(self, request, session):
         if request.method == 'GET':
             return render_template('events/test.html')
         abort(405)
-
+	
+	# Checks permissions then returns the page to insert
+	# event information
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
             return render_template('events/new.html',
                 data={}, submit_button_text='Create')
         abort(405)
-
+	# Checks permissions then creates a new event from the
+	# provided information
     def create(self, request, session):
         if request.method == 'POST':
             if not self.__can_create(session): abort(403)
@@ -365,6 +413,8 @@ class Events:
                     errors=['Didn\'t understand event type'])
         abort(405)
 
+	# Checks permissions then returns a page to insert event information
+	# with the information of the provided event already filled out.
     def edit(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_edit(session): abort(403)
@@ -392,6 +442,8 @@ class Events:
                 submit_button_text='Update')
         abort(405)
 
+	# Checks for proper permissions then updates the specified event
+	# with the provided information
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
@@ -409,6 +461,7 @@ class Events:
                     errors=['Didn\'t understand event type'])
         abort(405)
 
+	# Checks the users permissions then deletes the specified event
     def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)

@@ -9,15 +9,17 @@ from database_connection import DatabaseConnection
 from globals import globals
 
 # Handles the inventory routes.
-
 class Index:
     def __init__(self):
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
+	# Determines if the user can view the index page.
     def __can_index(self, session):
         return True
 
+	# Returns a rendered version of the home page, including
+	# future event information.
     def index(self, request, session, events):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
