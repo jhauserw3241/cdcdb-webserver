@@ -11,6 +11,7 @@ from globals import globals
 
 # Handles the events routes.
 
+
 class Events:
     # Initializes the Events object to include functions from globals
 	def __init__(self):
@@ -20,7 +21,7 @@ class Events:
         self.frmt_dt = globals.format_datetime
         self.dt_diff = globals.datetime_difference
         self.td_to_rel = globals.timedelta_to_relative
-	
+
 	# Formats the dates and times returned from the database
     def __events_date_magic(self, events):
         for e in events:
@@ -193,7 +194,7 @@ class Events:
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 	
-	#Determines if the user can delete events
+	# Determines if the user can delete events
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 

@@ -7,6 +7,7 @@ from globals import globals
 # with DatabaseConnection() as db:
 #       pass
 
+
 class DatabaseConnection:
     # Called as the python 'with' block is entered
     def __enter__(self):
@@ -63,5 +64,6 @@ class DatabaseConnection:
     # Useful little wrapper to get everything about the given table
     def get_table(self, table_name):
         meta = MetaData(self.engine)
-        table = Table(table_name, meta, autoload=True, autoload_with=self.engine)
+        table = Table(table_name, meta, autoload=True,
+                      autoload_with=self.engine)
         return table, meta

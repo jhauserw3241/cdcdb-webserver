@@ -1,8 +1,11 @@
-# Modify this file to configure the webserver
-# DO NOT COMMIT THIS TO THE REPOSITORY! CONTAINS PASSWORDS!
+# Copy this file to 'config.ini' in the root directory
+# and modify to configure the webserver
+#
+# DO NOT COMMIT THIS TO THE REPOSITORY! CONTAINS PASSWORDS!i
+#
 # This IS NOT a complete example. Search the codebase for 'config[' for
 # more required values
-#[db]
+[db]
 type = pg
 user = alice
 pass = password

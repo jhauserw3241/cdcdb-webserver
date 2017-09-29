@@ -11,6 +11,7 @@ from globals import globals
 # We had issues with robohash staying up, so we started caching the images it
 # gives us
 
+
 class Robohash:
     def __init__(self):
         self.cache_dir = os.path.abspath('cache')
@@ -38,8 +39,10 @@ class Robohash:
             second = int(second)
         except ValueError:
             return False
-        if first < 1 or first > 300: return False
-        if second < 1 or second > 300: return False
+        if first < 1 or first > 300:
+            return False
+        if second < 1 or second > 300:
+            return False
         return True
 
     # Router calls this to fetch an image, from cache if possible. If not in
@@ -47,19 +50,22 @@ class Robohash:
     # the future before returning it
     def get(self, request, session, s):
         if request.method == 'GET':
-            if not self.__can_get(session): abort(403)
-            if not self.s_ok(s): abort(404)
+            if not self.__can_get(session):
+                abort(403)
+            if not self.s_ok(s):
+                abort(404)
             if 'size' in request.args and request.args['size']:
                 size = request.args['size']
             else:
                 size = '300x300'
-            if not self.size_ok(size): abort(404)
-            f = os.path.join(self.cache_dir, s+'.'+size+'.png')
+            if not self.size_ok(size):
+                abort(404)
+            f = os.path.join(self.cache_dir, s + '.' + size + '.png')
             if os.path.isfile(f):
                 return send_file(f, mimetype='image/png', conditional=True)
             else:
                 r = requests.get('http://robohash.org/{}?size={}'.format(s, size),
-                    verify=True)
+                                 verify=True)
                 if r.status_code == requests.codes.ok:
                     with open(f, 'wb') as fp:
                         fp.write(r.content)
