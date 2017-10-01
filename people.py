@@ -13,6 +13,7 @@ from globals import globals
 
 # Handles the people routes. Also has the job of logging in/out and registering
 
+
 class People:
     def __init__(self):
         self.b58 = globals.base58_hashids
@@ -28,8 +29,8 @@ class People:
             others, _ = db.get_table("not_students")
             q = db.query().add_columns(others)
             db.execute(q)
-            rows = [ self.encode_id(dict(r), 'not_students_id') for r in
-                db.fetchall() ]
+            rows = [self.encode_id(dict(r), 'not_students_id') for r in
+                    db.fetchall()]
             return rows
 
     # Suitable for getting either every officer ever, or just the current ones
@@ -40,8 +41,8 @@ class People:
                 db.get_table("all_officers")
             q = db.query().add_columns(offs)
             db.execute(q)
-            rows = [ self.encode_id(dict(r), 'officers_id') for r in
-                db.fetchall() ]
+            rows = [self.encode_id(dict(r), 'officers_id') for r in
+                    db.fetchall()]
             return rows
 
     # Suitable for getting all non-current-officer students from the DB for the
@@ -56,16 +57,17 @@ class People:
                 join(studs, studs.c.id == not_offs.c.id).\
                 filter(studs.c.voting_member == are_voting)
             db.execute(q)
-            rows = [ self.encode_id(dict(r), 'students_id') for r in
-                db.fetchall() ]
-            rows = [ globals.decode_year(r, 'students_year') for r in rows ]
-            rows = [ globals.decode_major(r, 'students_major') for r in rows ]
+            rows = [self.encode_id(dict(r), 'students_id') for r in
+                    db.fetchall()]
+            rows = [globals.decode_year(r, 'students_year') for r in rows]
+            rows = [globals.decode_major(r, 'students_major') for r in rows]
             return rows
 
     # Get a single person from the DB with all their student info (if any) and
     # officer info (if current)
     def __db_get_person(self, id=None, email=None):
-        if not id and not email: return None
+        if not id and not email:
+            return None
         with DatabaseConnection() as db:
             ppl, _ = db.get_table("people_read")
             studs, _ = db.get_table("students")
@@ -79,8 +81,8 @@ class People:
             elif email:
                 q = q.filter(ppl.c.email == email)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'people_read_id') for row in
-                db.fetchall() ]
+            rows = [self.encode_id(dict(row), 'people_read_id') for row in
+                    db.fetchall()]
             if len(rows) != 1:
                 return None
             return rows[0]
@@ -95,7 +97,7 @@ class People:
             if search_email:
                 q = q.filter(ppl.c.email == search_email)
             db.execute(q)
-            rows = [ r for r in db.fetchall() ]
+            rows = [r for r in db.fetchall()]
             return rows
 
     # Add a password and salt to the person with the given email
@@ -110,8 +112,10 @@ class People:
                     salt=data['salt'])
             db.execute(q)
             lastrowid = db.lastrowid()
-            if len(lastrowid) != 1: return None
-            else: return lastrowid[0]
+            if len(lastrowid) != 1:
+                return None
+            else:
+                return lastrowid[0]
 
     # Insert a person with the given information
     def __db_insert_person(self, data):
@@ -127,8 +131,10 @@ class People:
                     email=data['email'])
             db.execute(q)
             lastrowid = db.lastrowid()
-            if len(lastrowid) != 1: return None
-            else: return lastrowid[0]
+            if len(lastrowid) != 1:
+                return None
+            else:
+                return lastrowid[0]
 
     # Insert a student with the given information. A person needs to be inserted
     # seperately
@@ -159,15 +165,16 @@ class People:
                     email=data['email'])
             db.execute(q)
             lastrowid = db.lastrowid()
-            if len(lastrowid) != 1: return None
-            else: return lastrowid[0]
+            if len(lastrowid) != 1:
+                return None
+            else:
+                return lastrowid[0]
 
     # Instead of actually implementing an update function, just delete and
     # re-insert the student with the given ID
     def __db_update_student(self, data):
         self.__db_delete_student(data['id'])
         self.__db_insert_student(data)
-
 
     # Delete the person with the given ID.
     def __db_delete_person(self, id):
@@ -236,7 +243,8 @@ class People:
             errs.append('Must provide an email')
         if not self.__valid_password(data['password']):
             errs.append('Invalid password: must be at least 8 characters')
-        if errs: return d, errs
+        if errs:
+            return d, errs
         people = self.__db_get_unregistered_people(search_email=data['email'])
         if len(people) != 1:
             errs.append('Email doesn\'t belong to an unregistered person')
@@ -245,7 +253,8 @@ class People:
             else globals.gen_salt()
         d['password'] = globals.hash_password(data['password'], d['salt'])
         if not globals.check_password(data['password'], d['password'], d['salt']):
-            errs.append('An error occured during securing the given password. Contact an administrator.')
+            errs.append(
+                'An error occured during securing the given password. Contact an administrator.')
         return d, errs
 
     # Intermediate step between create() and the db functions. Validates the
@@ -254,7 +263,7 @@ class People:
         v_data, errs = self.__validate_generic(data)
         if errs:
             return render_template('people/new.html', data=data,
-                errors=errs, submit_button_text='Create')
+                                   errors=errs, submit_button_text='Create')
         id = self.__db_insert_person(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
@@ -265,9 +274,10 @@ class People:
         v_data, errs = self.__validate_student(data)
         if errs:
             return render_template('people/new.html', data=data,
-                errors=errs, submit_button_text='Create')
+                                   errors=errs, submit_button_text='Create')
         id = self.__db_insert_person(v_data)
-        if not id: abort(500)
+        if not id:
+            abort(500)
         v_data['id'] = id
         self.__db_insert_student(v_data)
         id = self.b58.encode(id)
@@ -279,13 +289,13 @@ class People:
         v_data, errs = self.__validate_generic(data)
         if errs:
             return render_template('people/new.html', data=data,
-                errors=errs, submit_button_text='Update')
+                                   errors=errs, submit_button_text='Update')
         v_data['id'] = id
         id = self.__db_update_person(v_data)
         if v_data['password']:
-            reg_data = { 'email': v_data['email'], 'salt': globals.gen_salt() }
+            reg_data = {'email': v_data['email'], 'salt': globals.gen_salt()}
             reg_data['password'] = globals.hash_password(v_data['password'],
-                reg_data['salt'])
+                                                         reg_data['salt'])
             self.__db_register_person(reg_data)
         self.__db_delete_student(id)
         id = self.b58.encode(id)
@@ -297,10 +307,11 @@ class People:
         v_data, errs = self.__validate_student(data)
         if errs:
             return render_template('people/new.html', data=data,
-                errors=errs, submit_button_text='Update')
+                                   errors=errs, submit_button_text='Update')
         v_data['id'] = id
         id = self.__db_update_person(v_data)
-        if not id: abort(500)
+        if not id:
+            abort(500)
         self.__db_update_student(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('people_id', id=id))
@@ -316,7 +327,8 @@ class People:
         return 'is_officer' in session and session['is_officer']
 
     def __can_index_officers(self, session, current_only=False):
-        if current_only: return True
+        if current_only:
+            return True
         return 'is_officer' in session and session['is_officer']
 
     def __can_index_others(self, session):
@@ -359,13 +371,13 @@ class People:
             person = self.__db_get_person(email=e)
             if not person:
                 return render_template('people/login.html',
-                    errors=['Email or password incorrect'])
+                                       errors=['Email or password incorrect'])
             password_good = globals.check_password(p,
-                person['people_read_password'],
-                person['people_read_salt'])
+                                                   person['people_read_password'],
+                                                   person['people_read_salt'])
             if not password_good:
                 return render_template('people/login.html',
-                    errors=['Email or password incorrect'])
+                                       errors=['Email or password incorrect'])
             session['username'] = person['people_read_preferred_name'] if \
                 person['people_read_preferred_name'] else \
                 person['people_read_first_name']
@@ -395,7 +407,8 @@ class People:
     # Router calls this to show all people
     def index(self, request, session):
         if request.method == 'GET':
-            if not self.__can_index(session): abort(403)
+            if not self.__can_index(session):
+                abort(403)
             v_studs = self.__db_get_students(are_voting=True) if \
                 self.__can_index_students(session) else []
             nv_studs = self.__db_get_students(are_voting=False) if \
@@ -404,46 +417,52 @@ class People:
                 self.__can_index_officers(session, current_only=True) else []
             others = self.__db_get_others() if \
                 self.__can_index_others(session) else []
-            v_studs = sorted(v_studs, key=lambda k: k['not_officers_last_name'])
-            nv_studs = sorted(nv_studs, key=lambda k: k['not_officers_last_name'])
+            v_studs = sorted(
+                v_studs, key=lambda k: k['not_officers_last_name'])
+            nv_studs = sorted(
+                nv_studs, key=lambda k: k['not_officers_last_name'])
             officers = sorted(officers, key=lambda k: k['officers_last_name'])
             others = sorted(others, key=lambda k: k['not_students_last_name'])
             return render_template('people/index.html',
-                voting_students=v_studs,
-                nonvoting_students=nv_studs,
-                officers=officers,
-                others=others,
-                can_create=self.__can_create(session),
-                can_edit=self.__can_edit(session),
-                can_delete=self.__can_delete(session))
+                                   voting_students=v_studs,
+                                   nonvoting_students=nv_studs,
+                                   officers=officers,
+                                   others=others,
+                                   can_create=self.__can_create(session),
+                                   can_edit=self.__can_edit(session),
+                                   can_delete=self.__can_delete(session))
         abort(405)
 
     # Router calls this to show info on a specific person. Probably unused if
     # cards are being displayed
     def show(self, request, session, id):
         if request.method == 'GET':
-            if not self.__can_show(session, id): abort(403)
+            if not self.__can_show(session, id):
+                abort(403)
             person = self.__db_get_person(id)
-            if person == None: abort(404)
+            if person == None:
+                abort(404)
             person = globals.decode_year(person, 'students_year')
             person = globals.decode_major(person, 'students_major')
             return render_template('people/show.html', person=person,
-                can_edit=self.__can_edit(session, id),
-                can_delete=self.__can_delete(session))
+                                   can_edit=self.__can_edit(session, id),
+                                   can_delete=self.__can_delete(session))
         abort(405)
 
     # Router calls this to return the form for creating a new person
     def new(self, request, session):
         if request.method == 'GET':
-            if not self.__can_create(session): abort(403)
+            if not self.__can_create(session):
+                abort(403)
             return render_template('people/new.html',
-                data={}, submit_button_text='Create')
+                                   data={}, submit_button_text='Create')
         abort(405)
 
     # Router calls this to process the form for creating a new person
     def create(self, request, session):
         if request.method == 'POST':
-            if not self.__can_create(session): abort(403)
+            if not self.__can_create(session):
+                abort(403)
             data = request.form
             if not 'type' in data or data['type'] == 'general':
                 return self.__create_generic(request, session, data)
@@ -451,15 +470,16 @@ class People:
                 return self.__create_student(request, session, data)
             else:
                 return render_template('people/new.html',
-                    data=data,
-                    submit_button_text='Create',
-                    errors=['Didn\'t understand person type'])
+                                       data=data,
+                                       submit_button_text='Create',
+                                       errors=['Didn\'t understand person type'])
         abort(405)
 
     # Router calls this to return the form for editing a person
     def edit(self, request, session, id):
         if request.method == 'GET':
-            if not self.__can_edit(session, id): abort(403)
+            if not self.__can_edit(session, id):
+                abort(403)
             prsn = self.__db_get_person(id)
             data = {}
             data['fname'] = prsn['people_read_first_name']
@@ -467,21 +487,24 @@ class People:
             data['prefname'] = prsn['people_read_preferred_name'] if prsn['people_read_preferred_name'] else ''
             data['company'] = prsn['people_read_company'] if prsn['people_read_company'] else ''
             data['email'] = prsn['people_read_email']
-            if prsn['students_id']: data['type'] = 'student'
-            else: data['type'] = 'general'
+            if prsn['students_id']:
+                data['type'] = 'student'
+            else:
+                data['type'] = 'general'
             data['eid'] = prsn['students_eid'] if prsn['students_eid'] else ''
             data['year'] = prsn['students_year']
             data['major'] = prsn['students_major'] if prsn['students_major'] else ''
             data['voting_member'] = prsn['students_voting_member']
             return render_template('people/new.html', data=data,
-                submit_button_text='Update')
+                                   submit_button_text='Update')
             pass
         abort(405)
 
     # Router calls this to process the form for editing a person
     def update(self, request, session, id):
         if request.method == 'POST':
-            if not self.__can_update(session, id): abort(403)
+            if not self.__can_update(session, id):
+                abort(403)
             data = request.form
             if not 'type' in data or data['type'] == 'general':
                 return self.__update_generic(request, session, id, data)
@@ -489,14 +512,15 @@ class People:
                 return self.__update_student(request, session, id, data)
             else:
                 return render_template('people/new.html',
-                    data=data,
-                    submit_button_text='Update',
-                    errors=['Didn\'t understand event type'])
+                                       data=data,
+                                       submit_button_text='Update',
+                                       errors=['Didn\'t understand event type'])
 
     # Router calls this to remove an entity from the db
     def delete(self, request, session, id):
         if request.method == 'GET':
-            if not self.__can_delete(session): abort(403)
+            if not self.__can_delete(session):
+                abort(403)
             self.__db_delete_student(id)
             self.__db_delete_person(id)
             return redirect(url_for('people_'))
@@ -505,22 +529,25 @@ class People:
     # registration form
     def register(self, request, session):
         if request.method == 'GET':
-            if not self.__can_register(session): abort(403)
+            if not self.__can_register(session):
+                abort(403)
             unreg_ppl = self.__db_get_unregistered_people()
             return render_template('people/register.html',
-                unregistered_people=unreg_ppl)
+                                   unregistered_people=unreg_ppl)
         elif request.method == 'POST':
-            if not self.__can_register(session): abort(403)
+            if not self.__can_register(session):
+                abort(403)
             data = request.form
             v_data, errs = self.__validate_registration(data)
             if errs:
                 unreg_ppl = self.__db_get_unregistered_people()
                 return render_template('people/register.html',
-                    unregistered_people=unreg_ppl,
-                    errors=errs)
+                                       unregistered_people=unreg_ppl,
+                                       errors=errs)
             else:
                 id = self.__db_register_person(v_data)
-                if not id: abort(500)
+                if not id:
+                    abort(500)
                 id = self.b58.encode(id)
                 return redirect(url_for('people_id', id=id))
         abort(405)

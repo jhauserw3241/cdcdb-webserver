@@ -43,14 +43,17 @@ config = globals.config
 # Two helper functions to save typing
 def encode_id(id):
     id = globals.base58_hashids.encode(id)
-    if id == None: return None
+    if id == None:
+        return None
     return id
 
 
 def decode_id(id):
     id = globals.base58_hashids.decode(id)
-    if id == None: return None
-    if len(id) != 1: return None
+    if id == None:
+        return None
+    if len(id) != 1:
+        return None
     return id[0]
 
 
@@ -130,7 +133,8 @@ def inventory_new():
 @app.route('/inventory/<id>', methods=['GET'])
 def inventory_id(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return inventory.show(request, session, id)
     else:
@@ -140,7 +144,8 @@ def inventory_id(id):
 @app.route('/inventory/<id>/edit', methods=['GET', 'POST'])
 def inventory_id_edit(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return inventory.edit(request, session, id)
     if request.method == 'POST':
@@ -152,7 +157,8 @@ def inventory_id_edit(id):
 @app.route('/inventory/<id>/delete', methods=['GET'])
 def inventory_id_delete(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return inventory.delete(request, session, id)
     else:
@@ -162,7 +168,8 @@ def inventory_id_delete(id):
 @app.route('/inventory/<id>/request', methods=['GET'])
 def inventory_id_request(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     id = encode_id(id)
     if request.method == 'GET':
         return redirect(url_for('requests_new', id=id))
@@ -193,23 +200,28 @@ def requests_show(id):
     else:
         abort(405)
 
+
 @app.route('/requests/<id>/approve', methods=['GET'])
 def requests_id_approve(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return requests_.approve(request, session, id)
     else:
-        abort (405)
+        abort(405)
+
 
 @app.route('/requests/<id>/delete', methods=['GET'])
 def requests_id_delete(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return requests_.delete(request, session, id)
     else:
         abort(405)
+
 
 @app.route('/people/', methods=['GET'])
 def people_():
@@ -232,7 +244,8 @@ def people_new():
 @app.route('/people/<id>', methods=['GET'])
 def people_id(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return people.show(request, session, id)
     else:
@@ -242,7 +255,8 @@ def people_id(id):
 @app.route('/people/<id>/edit', methods=['GET', 'POST'])
 def people_id_edit(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return people.edit(request, session, id)
     elif request.method == 'POST':
@@ -254,7 +268,8 @@ def people_id_edit(id):
 @app.route('/people/<id>/delete', methods=['GET'])
 def people_id_delete(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return people.delete(request, session, id)
     else:
@@ -288,7 +303,8 @@ def events_create():
 @app.route('/events/<id>', methods=['GET'])
 def events_id(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return events.show(request, session, id)
     else:
@@ -298,7 +314,8 @@ def events_id(id):
 @app.route('/events/<id>/edit', methods=['GET', 'POST'])
 def events_id_edit(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return events.edit(request, session, id)
     if request.method == 'POST':
@@ -310,7 +327,8 @@ def events_id_edit(id):
 @app.route('/events/<id>/delete', methods=['GET'])
 def events_id_delete(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return events.delete(request, session, id)
     else:
@@ -354,7 +372,8 @@ def vms_create():
 @app.route('/vms/<id>', methods=['GET'])
 def vms_id(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return vms.show(request, session, id)
     else:
@@ -364,7 +383,8 @@ def vms_id(id):
 @app.route('/vms/<id>/edit', methods=['GET', 'POST'])
 def vms_id_edit(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return vms.edit(request, session, id)
     if request.method == 'POST':
@@ -376,7 +396,8 @@ def vms_id_edit(id):
 @app.route('/vms/<id>/delete', methods=['GET'])
 def vms_id_delete(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return vms.delete(request, session, id)
     else:
@@ -404,7 +425,8 @@ def presentations_create():
 @app.route('/presentations/<id>', methods=['GET'])
 def presentations_id(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return presentations.show(request, session, id)
     else:
@@ -414,7 +436,8 @@ def presentations_id(id):
 @app.route('/presentations/<id>/edit', methods=['GET', 'POST'])
 def presentations_id_edit(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return presentations.edit(request, session, id)
     if request.method == 'POST':
@@ -422,22 +445,26 @@ def presentations_id_edit(id):
     else:
         abort(405)
 
+
 @app.route('/presentations/<id>/delete', methods=['GET'])
 def presentations_id_delete(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return presentations.delete(request, session, id)
     else:
         abort(405)
-        
+
+
 @app.route('/positions', methods=['GET'])
 def positions_():
     if request.method == 'GET':
         return positions.index(request, session)
     else:
         abort(405)
-        
+
+
 @app.route('/positions/new/', methods=['GET', 'POST'])
 def positions_create():
     if request.method == 'GET':
@@ -446,17 +473,20 @@ def positions_create():
         return presentations.create(request, session)
     else:
         abort(405)
-        
+
+
 @app.route('/positions/<id>/edit', methods=['GET', 'POST'])
 def positions_id_edit(id):
     id = decode_id(id)
-    if id == None: abort(404)
+    if id == None:
+        abort(404)
     if request.method == 'GET':
         return positions.edit(request, session, id)
-    if request.method ==  'POST':
+    if request.method == 'POST':
         return positions.update(request, session, id)
     else:
         abort(405)
+
 
 # int main(int argc, char *argv[]) {
 if __name__ == '__main__':

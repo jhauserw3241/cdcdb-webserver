@@ -11,6 +11,7 @@ from globals import globals
 
 # Handles the positions routes.
 
+
 class Positions:
     def __init__(self):
         self.b58 = globals.base58_hashids
@@ -47,7 +48,8 @@ class Positions:
                     positions.c.pos_id, positions.c.person_id, positions.c.title,
                     positions.c.start_date, positions.c.end_date)
             db.execute(q)
-            positions = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
+            positions = [self.encode_id(dict(row), 'position_id')
+                         for row in db.fetchall()]
             return positions[::-1]
 
     # Get the position with the given ID
@@ -60,8 +62,10 @@ class Positions:
                     positions.c.start_date, positions.c.end_date).\
                 filter(positions.c.pos_id == id)
             db.execute(q)
-            rows = [ self.encode_id(dict(row), 'position_id') for row in db.fetchall() ]
-            if len(rows) != 1: return None
+            rows = [self.encode_id(dict(row), 'position_id')
+                    for row in db.fetchall()]
+            if len(rows) != 1:
+                return None
             return rows[0]
 
     # Add a single position to the DB
@@ -71,14 +75,16 @@ class Positions:
             q = positions.insert().\
                 returning(positions.c.pos_id).\
                 values(
-                    person_id=data['person_id'], 
+                    person_id=data['person_id'],
                     title=data['title'],
-                    start_date=data['start_date'], 
+                    start_date=data['start_date'],
                     end_date=data['end_date'])
             db.execute(q)
             lastrowid = db.lastrowid()
-            if len(lastrowid) != 1: return None
-            else: return lastrowid[0]
+            if len(lastrowid) != 1:
+                return None
+            else:
+                return lastrowid[0]
 
     # Instead of implementing an update function, just remove and then reinsert
     def __db_update_position(self, data):
@@ -117,7 +123,7 @@ class Positions:
         v_data, errs = self.__validate_position(data)
         if errs:
             return render_template('positions/new.html', data=data,
-                errors=errs, submit_button_text='Create')
+                                   errors=errs, submit_button_text='Create')
         id = self.__db_insert_presenation(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('position_id', id=id))
@@ -127,17 +133,17 @@ class Positions:
         v_data, errs = self.__validate_position(data)
         if errs:
             return render_template('positions/new.html', data=data,
-                errors=errs, submit_button_text='Update')
+                                   errors=errs, submit_button_text='Update')
         v_data['id'] = id
         id = self.__db_update_position(v_data)
         id = self.b58.encode(id)
         return redirect(url_for('position_id', id=id))
 
-
     # Router calls this to display all positions
     def index(self, request, session):
         if request.method == 'GET':
-            if not self.__can_index(session): abort(403)
+            if not self.__can_index(session):
+                abort(403)
             """positions = self.__db_get_positions()
             return render_template('positions/index.html', positions=positions,
                 can_create=self.__can_create(session),
@@ -196,10 +202,11 @@ class Positions:
     # Router calls this to process a complete edit position form
     def update(self, request, session, id):
         if request.method == 'POST':
-            if not self.__can_update(session): abort(403)
+            if not self.__can_update(session):
+                abort(403)
             return "You are in position.update"
             #data = request.form
-            #return self.__update_position(request, session, id, data)
+            # return self.__update_position(request, session, id, data)
         abort(405)
 
     # Router calls this to remove the position with the given ID

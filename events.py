@@ -11,6 +11,7 @@ from globals import globals
 
 # Handles the events routes.
 
+
 class Events:
     # Initializes the Events object to include functions from globals
     def __init__(self):
@@ -20,26 +21,26 @@ class Events:
         self.frmt_dt = globals.format_datetime
         self.dt_diff = globals.datetime_difference
         self.td_to_rel = globals.timedelta_to_relative
-  
+
     # Formats the dates and times returned from the database
     def __events_date_magic(self, events):
         for e in events:
-                start = e['event_start_timestamp']
-                end = e['event_end_timestamp']
-                duration = self.dt_diff(start, end)
-                if duration == timedelta():
-                        duration = ""
-                else:
-                        duration = self.td_to_rel(duration)
-                e['relative_start'] = self.sqlts_to_rel(str(start))
-                e['relative_end'] = self.sqlts_to_rel(str(end))
-                e['duration'] = duration
-                e['event_start_friendly'] = self.frmt_dt(start, "%d %b %Y")
-                if start.hour != 0 or start.minute != 0:
-                        e['event_start_friendly'] += self.frmt_dt(start, " %H:%M")
-                e['event_end_friendly'] = self.frmt_dt(end, "%d %b %Y")
-                if end.hour != 0 or end.minute != 0:
-                        e['event_end_friendly'] += self.frmt_dt(end, " %H:%M")
+            start = e['event_start_timestamp']
+            end = e['event_end_timestamp']
+            duration = self.dt_diff(start, end)
+            if duration == timedelta():
+                    duration = ""
+            else:
+                    duration = self.td_to_rel(duration)
+            e['relative_start'] = self.sqlts_to_rel(str(start))
+            e['relative_end'] = self.sqlts_to_rel(str(end))
+            e['duration'] = duration
+            e['event_start_friendly'] = self.frmt_dt(start, "%d %b %Y")
+            if start.hour != 0 or start.minute != 0:
+                    e['event_start_friendly'] += self.frmt_dt(start, " %H:%M")
+            e['event_end_friendly'] = self.frmt_dt(end, "%d %b %Y")
+            if end.hour != 0 or end.minute != 0:
+                    e['event_end_friendly'] += self.frmt_dt(end, " %H:%M")
         return events
 
     # Returns either all of the events in the events table, or only those
@@ -192,7 +193,7 @@ class Events:
     # Determines if the user can create new events
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
-  
+    
     # Determines if the user can delete events
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
