@@ -45,49 +45,49 @@ class globals:
             config['db']['path']
         )
     )
-	
-	# Returns an encoded version of the ID to prevent ID enumeration
-	# in the url
+  
+  # Returns an encoded version of the ID to prevent ID enumeration
+  # in the url
     def encode_id(thing, column='id'):
         thing[column] = globals.base58_hashids.encode(thing[column])
         return thing
 
-	# Returns a decoded ID to use within the application
+  # Returns a decoded ID to use within the application
     def decode_id(thing):
         thing['id'] = globals.base58_hashids.decode(thing['id'])
         return thing
-	
-	# Returns the decoded year of a student
+  
+  # Returns the decoded year of a student
     def decode_year(thing, column='year'):
         thing[column] = globals.translate_year(thing[column])
         return thing
-	
-	# Returns the decoded major of a student
+  
+  # Returns the decoded major of a student
     def decode_major(thing, column='major'):
         thing[column] = globals.translate_major(thing[column])
         return thing
-	
-	# Generates a salt value of the specified length
+  
+  # Generates a salt value of the specified length
     def gen_salt(length=32):
         data = os.urandom(length)
         #data = binascii.hexlify(data)
         return data
 
-	# Hashes the provided password with the provided salt to 
-	# compare against the values stored in the database
+  # Hashes the provided password with the provided salt to 
+  # compare against the values stored in the database
     def hash_password(plain_text, salt):
         plain_text = bytes(plain_text, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
         return hash
 
-	# Checks the password to ensure it matches the provided hash
+  # Checks the password to ensure it matches the provided hash
     def check_password(plain_text, cipher_text, salt):
         if not plain_text or not cipher_text or not salt: return False
         plain_text = bytes(plain_text, 'utf-8')
         hash = hashlib.pbkdf2_hmac('sha256', plain_text, salt, int(config['common']['hash_rounds']))
         return hash == cipher_text
 
-	# Converts the change in time to a relative time
+  # Converts the change in time to a relative time
     def timedelta_to_relative(td):
         v = td.seconds + td.days * sec_in_day
         if v < sec_in_min:
@@ -105,7 +105,7 @@ class globals:
             ret = str(days) + " day" + ("s" if days!=1 else "")
         return ret
 
-	# Converts an SQL timestampt to a recognizable date and time
+  # Converts an SQL timestampt to a recognizable date and time
     def sqltimestamp_to_relative(timestamp):
         now = globals.current_datetime(utc=False)
         timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
@@ -142,7 +142,7 @@ class globals:
         else:
             return value + " ago"
 
-	# Formats the provided date_time to match the given format
+  # Formats the provided date_time to match the given format
     def format_datetime(dt, frmt="%x %X"):
         return dt.strftime(frmt)
 
@@ -153,11 +153,11 @@ class globals:
     def current_datetime(utc=True):
         return datetime.utcnow() if utc else datetime.now()
 
-	# Determines the difference between two date-times
+  # Determines the difference between two date-times
     def datetime_difference(dt_start, dt_end):
         return dt_end - dt_start
 
-	# Converts class standing abbreviations into full titles
+  # Converts class standing abbreviations into full titles
     def translate_year(year):
         if   year == 'FR': return 'Freshman'
         elif year == 'SO': return 'Sophomore'
@@ -167,7 +167,7 @@ class globals:
         elif year == 'GP': return 'Grad (Doctorate)'
         else: return ''
 
-	# Converts major designation abbreviations into the full major name
+  # Converts major designation abbreviations into the full major name
     def translate_major(major):
         if   major == 'IS': return 'IS (Information Systems)'
         elif major == 'CS': return 'CS (Computer Science)'

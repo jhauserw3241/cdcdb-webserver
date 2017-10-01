@@ -14,7 +14,7 @@ class Inventory:
         self.b58 = globals.base58_hashids
         self.encode_id = globals.encode_id
 
-	# Returns the available items in the inventory
+  # Returns the available items in the inventory
     def __db_is_item_available(self, id):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("available_items")
@@ -24,7 +24,7 @@ class Inventory:
             db.execute(q)
             return len([ r for r in db.fetchall()]) > 0
 
-	# Returns all of the items in the inventory
+  # Returns all of the items in the inventory
     def __db_get_inventory(self):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
@@ -36,7 +36,7 @@ class Inventory:
             db.execute(q)
             return [ self.encode_id(dict(row), 'inventory_id') for row in db.fetchall() ]
 
-	# Gets all of the information for the specified item.
+  # Gets all of the information for the specified item.
     def __db_get_item(self, id):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
@@ -46,8 +46,8 @@ class Inventory:
             if len(rows) != 1: return None
             return rows[0]
 
-	# Function responsible for updating the specified item 
-	# in the inventory to match the provided information.
+  # Function responsible for updating the specified item 
+  # in the inventory to match the provided information.
     def __db_update_item(self, id, data):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
@@ -61,8 +61,8 @@ class Inventory:
                 )
             db.execute(q)
 
-	# Function responsible for adding a new item to the 
-	# inventory table with the information provided
+  # Function responsible for adding a new item to the 
+  # inventory table with the information provided
     def __db_insert_item(self, data):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
@@ -82,8 +82,8 @@ class Inventory:
             if len(lastrowid) != 1: return None
             else: return lastrowid[0]
 
-	# Function responsible for deletion of the specified
-	# item from the database
+  # Function responsible for deletion of the specified
+  # item from the database
     def __db_delete_item(self, id):
         with DatabaseConnection() as db:
             inv, _ = db.get_table("inventory")
@@ -91,9 +91,9 @@ class Inventory:
                 where(inv.c.id == id)
             db.execute(q)
 
-	# Function which verifies that all information required
-	# by the database is provided before the information is
-	# added to the database
+  # Function which verifies that all information required
+  # by the database is provided before the information is
+  # added to the database
     def __validate_item(self, data):
         d = {}
         errs = []
@@ -109,8 +109,8 @@ class Inventory:
         d['other_notes'] = data['other_notes']
         return d, errs
 
-	# Function responsible for the validiation and addition
-	# of a new inventory item.
+  # Function responsible for the validiation and addition
+  # of a new inventory item.
     def __create_item(self, request, session, data):
         v_data, errs = self.__validate_item(data)
         if errs:
@@ -120,38 +120,38 @@ class Inventory:
         id = self.b58.encode(id)
         return redirect(url_for('inventory_id', id=id))
 
-	# Function to determine if the user possesses sufficient
-	# permissions to view the list of inventory items
+  # Function to determine if the user possesses sufficient
+  # permissions to view the list of inventory items
     def __can_index(self, session):
         return 'is_student' in session and session['is_student']
 
-	# Function to determine if the user possesses sufficient
-	# permissions to view the detailed information of any 
-	# inventory items
+  # Function to determine if the user possesses sufficient
+  # permissions to view the detailed information of any 
+  # inventory items
     def __can_show(self, session):
         return 'is_student' in session and session['is_student']
 
-	# Function to determine if the user is allowed to view the
-	# edit page for inventory items
+  # Function to determine if the user is allowed to view the
+  # edit page for inventory items
     def __can_edit(self, session):
         return 'is_officer' in session and session['is_officer']
 
-	# Function to determine if the user is allowed to make changes
-	# to inventory items in the database
+  # Function to determine if the user is allowed to make changes
+  # to inventory items in the database
     def __can_update(self, session):
         return 'is_officer' in session and session['is_officer']
-	
-	# Function to determine if the user is allowed to create new
-	# inventory items
+  
+  # Function to determine if the user is allowed to create new
+  # inventory items
     def __can_create(self, session):
         return 'is_officer' in session and session['is_officer']
 
-	# Determines if the user is allowed to delete inventory items
+  # Determines if the user is allowed to delete inventory items
     def __can_delete(self, session):
         return 'is_officer' in session and session['is_officer']
 
-	# Function which checks permissions and then renders the index page
-	# with a list of all inventory items
+  # Function which checks permissions and then renders the index page
+  # with a list of all inventory items
     def index(self, request, session):
         if request.method == 'GET':
             if not self.__can_index(session): abort(403)
@@ -172,8 +172,8 @@ class Inventory:
         if not self.__can_show(session): abort(403)
         return self.__db_get_item(id)
 
-	# Function to check permissions and render a page showing the details
-	# for the specified item
+  # Function to check permissions and render a page showing the details
+  # for the specified item
     def show(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_show(session): abort(403)
@@ -186,8 +186,8 @@ class Inventory:
             is_available=self.__db_is_item_available(id))
         abort(405)
 
-	# Function to render a page to allow a user to change information
-	# for a given item
+  # Function to render a page to allow a user to change information
+  # for a given item
     def edit(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_edit(session): abort(403)
@@ -212,8 +212,8 @@ class Inventory:
                 submit_button_text='Update')
         abort(405)
 
-	# Function to update an item in the inventory based off of the 
-	# user provided information
+  # Function to update an item in the inventory based off of the 
+  # user provided information
     def update(self, request, session, id):
         if request.method == 'POST':
             if not self.__can_update(session): abort(403)
@@ -221,8 +221,8 @@ class Inventory:
             return redirect(url_for('inventory_id', id=self.b58.encode(id)))
         abort(405)
 
-	# Renders a page where the user can input information for a new 
-	# inventory item
+  # Renders a page where the user can input information for a new 
+  # inventory item
     def new(self, request, session):
         if request.method == 'GET':
             if not self.__can_create(session): abort(403)
@@ -230,7 +230,7 @@ class Inventory:
                 data={}, submit_button_text='Create')
         abort(405)
 
-	# Creates a new inventory item based on the user provided information
+  # Creates a new inventory item based on the user provided information
     def create(self, request, session):
         if request.method == 'POST':
             if not self.__can_create(session): abort(403)
@@ -238,7 +238,7 @@ class Inventory:
             return self.__create_item(request, session, data)
         abort(405)
 
-	# Deletes the specified inventory item from the database
+  # Deletes the specified inventory item from the database
     def delete(self, request, session, id):
         if request.method == 'GET':
             if not self.__can_delete(session): abort(403)
